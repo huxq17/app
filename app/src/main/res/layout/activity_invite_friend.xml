@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <include
+        android:id="@+id/nav_layout"
+        layout="@layout/layout_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/v_invte_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/wallet_head_bg"
+        app:layout_constraintTop_toBottomOf="@id/nav_layout" />
+
+    <TextView
+        android:id="@+id/v_invite_num_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:text="邀请好友数量"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/v_invite_num"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/v_invte_head" />
+
+    <TextView
+        android:id="@+id/v_invite_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="10"
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
+        app:layout_constraintLeft_toLeftOf="@id/v_invite_num_tips"
+        app:layout_constraintRight_toRightOf="@id/v_invite_num_tips"
+        app:layout_constraintTop_toBottomOf="@id/v_invite_num_tips" />
+
+    <TextView
+        android:id="@+id/v_my_account_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我的帐号"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/v_invite_num"
+        app:layout_constraintLeft_toLeftOf="@id/v_my_account"
+        app:layout_constraintRight_toRightOf="@id/v_my_account"
+        app:layout_constraintTop_toTopOf="@id/v_invte_head" />
+
+    <TextView
+        android:id="@+id/v_my_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:text="18017362412"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_my_account_tips" />
+
+    <View
+        android:id="@+id/content_top_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/prof_left_margin"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/v_invte_head" />
+
+    <TextView
+        android:id="@+id/v_invite_code"
+        style="@style/ContentTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="我的邀请码：A123456789"
+        app:layout_constraintTop_toBottomOf="@id/content_top_divider" />
+
+    <TextView
+        android:id="@+id/v_copy_code"
+        android:layout_width="130dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/invite_copycode_round_corner"
+        android:gravity="center"
+        android:text="复制邀请码"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_invite_code" />
+
+    <View
+        android:id="@+id/content_bottom_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/prof_left_margin"
+        android:layout_marginRight="@dimen/prof_left_margin"
+        android:layout_marginTop="20dp"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/v_copy_code" />
+
+    <RadioGroup
+        android:id="@+id/tab_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/content_bottom_divider">
+
+        <RadioButton
+            android:id="@+id/rb_invite_type"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/invaite_tab_select_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="邀请方式"
+            android:textColor="@drawable/invite_textcolor_selector"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_my_invite"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/invaite_tab_select_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="我的邀请"
+            android:textColor="@drawable/invite_textcolor_selector"
+            android:textSize="16sp" />
+    </RadioGroup>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/v_invite_type_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_select" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_my_invite"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_select">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/bgSpace"
+            app:layout_constraintBottom_toBottomOf="@id/v_myinvite_account"
+            app:layout_constraintTop_toTopOf="@id/v_myinvite_account" />
+
+        <TextView
+            android:id="@+id/v_myinvite_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="用户帐号"
+            app:layout_constraintLeft_toLeftOf="@id/layout_my_invite"
+            app:layout_constraintRight_toLeftOf="@id/v_myinvite_register_data" />
+
+        <TextView
+            android:id="@+id/v_myinvite_register_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="注册日期"
+            app:layout_constraintLeft_toRightOf="@id/v_myinvite_account"
+            app:layout_constraintRight_toRightOf="@id/layout_my_invite" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/v_my_invite_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_myinvite_account" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

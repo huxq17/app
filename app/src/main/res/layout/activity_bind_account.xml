@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content">
+
+    <include
+        android:id="@+id/nav_layout"
+        layout="@layout/layout_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/bind_wx_account"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/nav_layout">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="绑定微信帐号" />
+
+        <CheckBox
+            android:id="@+id/bind_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:button="@null"
+            android:background="@drawable/bind_bt_bg"
+            android:src="@mipmap/iv_right_enter"
+            android:text="点击绑定"
+            android:checked="true"
+            android:textColor="@drawable/bind_bt_textcolor" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

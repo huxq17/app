@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content">
+
+    <include
+        android:id="@+id/nav_layout"
+        layout="@layout/layout_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/settings_safe"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/nav_layout">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="安全设置" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:src="@mipmap/iv_right_enter" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/settings_safe">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="建议反馈" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:src="@mipmap/iv_right_enter" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_version"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/settings_feedback">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="版本号" />
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:layout_alignParentRight="true"
+            android:text="V1.0" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_clear"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/settings_version">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="清除" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:src="@mipmap/iv_right_enter" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_aboutus"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/settings_clear">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="关于" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:src="@mipmap/iv_right_enter" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/settings_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/settings_logout_bg"
+        android:text="退出登录"
+        android:onClick="logout"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="16sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:stateListAnimator="@null"
+        app:layout_constraintTop_toBottomOf="@id/settings_aboutus" />
+</android.support.constraint.ConstraintLayout>

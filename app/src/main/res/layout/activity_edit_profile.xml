@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/prof_left_margin"
+        android:paddingRight="@dimen/prof_left_margin">
+
+        <com.aiqing.kaiheiba.widget.CircleImageView
+            android:id="@+id/prof_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/avatar_default" />
+
+        <TextView
+            android:id="@+id/prof_name"
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/prof_avatar"
+            android:gravity="center"
+            android:text="UID:123456" />
+
+        <ImageView
+            android:id="@+id/prof_change_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/prof_change_avatar" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/prof_left_margin"
+        android:paddingRight="@dimen/prof_left_margin">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:text="个性签名" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+
+        <EditText
+            android:id="@+id/prof_sign_input"
+            style="@style/ContentTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@null"
+            android:gravity="top|left"
+            android:hint="请输入个性签名(50个字)"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp" />
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/prof_left_margin"
+        android:paddingRight="@dimen/prof_left_margin">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="昵称" />
+
+        <EditText
+            android:id="@+id/prof_edit_nickname"
+            style="@style/ContentTextStyle"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:hint="请输入昵称" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bgSpace" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/prof_left_margin"
+        android:paddingRight="@dimen/prof_left_margin">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="性别" />
+
+        <RadioGroup
+            android:id="@+id/rg_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:checkedButton="@id/rb_gender_secret"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_gender_male"
+                style="@style/ContentTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/s_male_bg"
+                android:text="  男" />
+
+            <RadioButton
+                android:id="@+id/rb_gender_female"
+                style="@style/ContentTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:button="@drawable/s_female_bg"
+                android:text="  女" />
+
+            <RadioButton
+                android:id="@+id/rb_gender_secret"
+                style="@style/ContentTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/s_unknow_bg"
+                android:text="  保密" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bgSpace" />
+
+    <RelativeLayout
+        android:id="@+id/prof_date_item"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/prof_left_margin"
+        android:paddingRight="@dimen/prof_left_margin">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="生日" />
+
+        <TextView
+            android:id="@+id/prof_birthday_show"
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="1998.03.08" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bgSpace" />
+
+    <RelativeLayout
+        android:id="@+id/prof_area_item"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/prof_left_margin"
+        android:paddingRight="@dimen/prof_left_margin">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="地区" />
+
+        <TextView
+            android:id="@+id/prof_show"
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="上海" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/prof_submit"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_prof_submit"
+        android:text="保     存"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+</LinearLayout>

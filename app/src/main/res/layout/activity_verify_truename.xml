@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content">
+
+    <include
+        android:id="@+id/nav_layout"
+        layout="@layout/layout_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/verify_truename"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/nav_layout">
+
+        <TextView
+            android:id="@+id/verify_truename_tag"
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="输入真实姓名:" />
+
+        <EditText
+            android:id="@+id/verify_truename_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:layout_toRightOf="@id/verify_truename_tag"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/verify_idcard"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/verify_truename">
+
+        <TextView
+            android:id="@+id/verify_idcard_tag"
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="输入身份证号:" />
+
+
+        <EditText
+            android:id="@+id/verify_idcard_tag_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:layout_toRightOf="@id/verify_idcard_tag"
+            android:background="@null" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/verify_truename_submit"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="250dp"
+        android:layout_height="@dimen/bt_submit_height"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/up_save_bt"
+        android:stateListAnimator="@null"
+        android:text="提  交"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:onClick="submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verify_idcard" />
+
+</android.support.constraint.ConstraintLayout>

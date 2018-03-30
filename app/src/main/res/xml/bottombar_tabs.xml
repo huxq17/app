@@ -1,0 +1,18 @@
+<tabs>
+    <tab
+        icon="@drawable/s_home_game"
+        id="@+id/menu_home_game"
+        title="游戏" />
+    <tab
+        icon="@drawable/s_home_playground"
+        id="@+id/menu_home_playground"
+        title="广场" />
+    <tab
+        icon="@drawable/s_home_im"
+        id="@+id/menu_home_im"
+        title="聊天" />
+    <tab
+        icon="@drawable/s_home_my"
+        id="@+id/menu_home_my"
+        title="我的" />
+</tabs>

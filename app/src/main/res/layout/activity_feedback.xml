@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content">
+
+    <include
+        android:id="@+id/nav_layout"
+        layout="@layout/layout_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/nav_layout" />
+
+    <EditText
+        android:id="@+id/feedback_input"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:gravity="top|left"
+        android:background="@null"
+        android:padding="@dimen/prof_left_margin"
+        android:hint="请描述您的问题（500字）:"
+        app:layout_constraintTop_toBottomOf="@id/top_divider" />
+
+    <View
+        android:id="@+id/middle_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/feedback_input" />
+
+    <Button
+        android:id="@+id/feedback_submit"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="250dp"
+        android:layout_height="@dimen/bt_submit_height"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/up_save_bt"
+        android:stateListAnimator="@null"
+        android:text="提  交"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feedback_input" />
+
+</android.support.constraint.ConstraintLayout>

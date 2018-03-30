@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="25dp">
+
+    <Button
+        android:id="@+id/jumpToIM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToIM"
+        android:text="聊天" />
+
+    <Button
+        android:id="@+id/jumpToPersonalProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToPersonalProfile"
+        android:text="我的资料"
+        app:layout_constraintBottom_toTopOf="@+id/jumpToMyFollow"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/jumpToMyFollow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToMyFollow"
+        android:text="我的关注"
+        app:layout_constraintBottom_toTopOf="@+id/jumpToMyFans"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToPersonalProfile" />
+
+    <Button
+        android:id="@+id/jumpToMyFans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToMyFans"
+        android:text="我的粉丝"
+        app:layout_constraintBottom_toTopOf="@+id/jumpToMyDowload"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToMyFollow" />
+
+    <Button
+        android:id="@+id/jumpToMyDowload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToMyDowload"
+        android:text="我的下载"
+        app:layout_constraintBottom_toTopOf="@+id/jumpToMyWallet"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToMyFans" />
+
+    <Button
+        android:id="@+id/jumpToMyWallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToMyWallet"
+        android:text="我的钱包"
+        app:layout_constraintBottom_toTopOf="@+id/jumpToTradeRecord"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToMyDowload" />
+
+    <Button
+        android:id="@+id/jumpToTradeRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToTradeRecord"
+        android:text="交易记录"
+        app:layout_constraintBottom_toTopOf="@+id/jumpToInviteFriend"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToMyWallet" />
+
+    <Button
+        android:id="@+id/jumpToInviteFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToInviteFriend"
+        android:text="邀请好友"
+        app:layout_constraintBottom_toTopOf="@+id/jumpToSettings"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToTradeRecord" />
+
+    <Button
+        android:id="@+id/jumpToSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToSettings"
+        android:text="设置"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToTradeRecord" />
+
+    <Button
+        android:id="@+id/jumpToLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpToLogin"
+        android:text="登录"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jumpToSettings" />
+</android.support.constraint.ConstraintLayout>

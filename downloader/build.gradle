@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+
+def extensions = rootProject.ext
+android {
+    compileSdkVersion extensions.compileSdkVersion
+    buildToolsVersion extensions.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion extensions.minSdkVersion
+        targetSdkVersion extensions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            testCoverageEnabled = true
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:support-annotations:${extensions.androidSupportVersion}"
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content">
+
+    <include
+        android:id="@+id/nav_layout"
+        layout="@layout/layout_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/layout_record_select"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/nav_layout">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="2018.03" />
+
+        <ImageView
+            android:id="@+id/v_record_select_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:src="@mipmap/iv_record_select_time" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/tab_top_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/layout_record_select" />
+
+    <com.aiqing.kaiheiba.widget.tablayout.TabLayout
+        android:id="@+id/record_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorColor="#0E99DA"
+        app:tabPaddingBottom="0dp"
+        app:tabPaddingEnd="0dp"
+        app:tabPaddingStart="0dp"
+        app:tabPaddingTop="0dp"
+        app:tabSelectedTextColor="#2295CB"
+        android:background="@android:color/white"
+        app:tabTextColor="#7F7F7F"
+        app:tabTextAppearance="@style/ContentTextStyle"
+        app:layout_constraintTop_toBottomOf="@id/tab_top_divider" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/record_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/record_tab_layout" />
+</android.support.constraint.ConstraintLayout>

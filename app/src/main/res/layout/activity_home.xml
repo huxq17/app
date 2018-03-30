@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!-- This could be your fragment container, or something -->
+    <FrameLayout
+        android:id="@+id/main_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+    <RadioGroup
+        android:id="@+id/tab_home"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_home_game"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="5dp"
+            android:drawableTop="@drawable/s_home_game"
+            android:gravity="center_horizontal"
+            android:text="游戏"
+            android:textColor="@color/contentTextColor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_home_playground"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="5dp"
+            android:drawableTop="@drawable/s_home_playground"
+            android:gravity="center_horizontal"
+            android:text="广场"
+            android:textColor="@color/contentTextColor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_home_im"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="5dp"
+            android:drawableTop="@drawable/s_home_im"
+            android:gravity="center_horizontal"
+            android:text="聊天"
+            android:textColor="@color/contentTextColor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_home_my"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="5dp"
+            android:drawableTop="@drawable/s_home_my"
+            android:gravity="center_horizontal"
+            android:text="我的"
+            android:textColor="@color/contentTextColor"
+            android:textSize="16sp" />
+
+    </RadioGroup>
+
+</LinearLayout>

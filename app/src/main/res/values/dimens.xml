@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="content_text">16sp</dimen>
+    <dimen name="prof_left_margin">20dp</dimen>
+    <dimen name="settings_item_height">50dp</dimen>
+    <dimen name="bt_submit_height">45dp</dimen>
+    <dimen name="devider_height">1dp</dimen>
+</resources>

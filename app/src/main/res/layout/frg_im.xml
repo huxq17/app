@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/tab_im"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_im_sessionlist"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/invaite_tab_select_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="聊天"
+            android:textColor="@drawable/invite_textcolor_selector"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_im_contactlist"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/invaite_tab_select_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="联系人"
+            android:textColor="@drawable/invite_textcolor_selector"
+            android:textSize="16sp" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:id="@+id/frg_sessionlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/frg_contactlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
