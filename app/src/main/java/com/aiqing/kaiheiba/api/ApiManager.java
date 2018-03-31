@@ -17,32 +17,48 @@ public enum ApiManager {
     INSTANCE;
     private static final HashMap<Class, Object> mCachedApi = new LinkedHashMap<>();
     public static final String BASE_URL = "http://116.62.139.161/";
+    OkHttpClient okHttpClient;
 
-    @SuppressWarnings("unchecked")
-    public <T> T getApi(Class<T> apiClass) {
-        Object cacheApi = mCachedApi.get(apiClass);
-        T api = null;
-        if (cacheApi != null && cacheApi.getClass() == apiClass) {
-            api = (T) cacheApi;
-        }
-        if (api == null) {
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+    private OkHttpClient getOkHttpClient() {
+        if (okHttpClient == null) {
+            okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(new CustomInterceptor())
                     .connectTimeout(5, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
                     .addInterceptor(new CommonInterceptor())
                     .build();
+        }
+        return okHttpClient;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getApi(Class<T> tClass, String baseUrl) {
+        Object cacheApi = mCachedApi.get(tClass);
+        T api = null;
+        if (cacheApi != null && cacheApi.getClass() == tClass) {
+            api = (T) cacheApi;
+        }
+        if (api == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(okHttpClient)
+                    .baseUrl(baseUrl)
+                    .client(getOkHttpClient())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory2.create())
                     .build();
-            api = retrofit.create(apiClass);
-            mCachedApi.put(apiClass, api);
+            api = retrofit.create(tClass);
+            mCachedApi.put(tClass, api);
         }
         return api;
     }
+
+
+    public <T> T getApi(Class<T> apiClass) {
+        return getApi(apiClass, BASE_URL);
+    }
+
+//    public <T> T getDownloadApi(Class<T> apiClass, String url) {
+//        return getApi(apiClass, url);
+//    }
 
     public void clear() {
         mCachedApi.clear();

@@ -45,7 +45,7 @@ public class UserService {
     }
 
     public static void setAvatar(String avatar) {
-        User user = new User();
+        User user = XPrefs.get(User.class);
         user.avatar = avatar;
         XPrefs.saveAll(user);
     }

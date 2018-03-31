@@ -1,8 +1,8 @@
 package retrofit2.converter.gson;
 
-import com.aiqing.kaiheiba.utils.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
+import com.huxq17.xprefs.LogUtils;
 
 import java.io.IOException;
 

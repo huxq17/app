@@ -29,7 +29,6 @@ import com.aiqing.kaiheiba.imageloader.ImageLoader;
 import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import com.aiqing.kaiheiba.utils.DatePicker;
-import com.aiqing.kaiheiba.utils.LogUtils;
 import com.aiqing.kaiheiba.widget.ActionSheet;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
@@ -37,6 +36,7 @@ import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
+import com.huxq17.xprefs.LogUtils;
 import com.lljjcoder.style.citylist.CityListSelectActivity;
 import com.lljjcoder.style.citylist.bean.CityInfoBean;
 
@@ -173,6 +173,7 @@ public class EditPersonProfileAct extends BaseActivity {
     private void setAvatar(String url) {
         if (!TextUtils.isEmpty(url)) {
             ServiceAgency.getService(ImageLoader.class).loadImage(url, ivAvatar);
+
             UserService.setAvatar(url);
         }
     }
