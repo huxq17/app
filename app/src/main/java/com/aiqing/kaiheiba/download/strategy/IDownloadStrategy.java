@@ -1,9 +1,7 @@
 package com.aiqing.kaiheiba.download.strategy;
 
-import android.content.Context;
-
-import com.aiqing.kaiheiba.download.DownloadInfo;
+import com.aiqing.kaiheiba.download.IDownloadTask;
 
 public interface IDownloadStrategy {
-    int download(DownloadInfo info, int ThreadNum, Context context);
+    int download(IDownloadTask downLoadTask);
 }

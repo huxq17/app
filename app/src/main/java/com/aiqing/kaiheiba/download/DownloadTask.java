@@ -2,6 +2,8 @@ package com.aiqing.kaiheiba.download;
 
 import android.content.Context;
 
+import com.aiqing.kaiheiba.download.downloader.NetworkDownloader;
+import com.aiqing.kaiheiba.download.downloader.OkHttpDownloader;
 import com.aiqing.kaiheiba.download.strategy.IDownloadStrategy;
 import com.aiqing.kaiheiba.download.strategy.StrategyFactory;
 import com.aiqing.kaiheiba.utils.Utils;
@@ -9,21 +11,20 @@ import com.aiqing.kaiheiba.utils.Utils;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
-/**
- * Created by Administrator on 2018/3/31.
- */
 
-public class DownloadTask implements IDownLoadTask {
+public class DownloadTask implements IDownloadTask {
     private DownloadInfo mDownloadInfo;
     private Context mContext;
-    CountDownLatch mLatch;
+    private CountDownLatch mLatch;
     IDownloadStrategy mDownloadStrategy;
     private boolean mRunning = false;
+    private NetworkDownloader downloader;
 
     public DownloadTask(final DownloadInfo info, final Context context, final Object tag) {
         this.mDownloadInfo = info;
         mContext = context;
         Utils.createDirIfNotExists(mDownloadInfo.fileDir);
+        downloader = new OkHttpDownloader();
     }
 
     public void start() {
@@ -34,14 +35,18 @@ public class DownloadTask implements IDownLoadTask {
         long completed = 0;
         //如果文件不存在就删除数据库中的缓存
         deleteCache(mDownloadInfo, mDownloadInfo.url);
-        completed = mDownloadStrategy.download(mDownloadInfo, threadNum, mContext);
+        mDownloadInfo.threadNum = threadNum;
+        completed = mDownloadStrategy.download(this);
+
         synchronized (this) {
             mDownloadInfo.computeProgress(this, completed);
         }
-        try {
-            mLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (mLatch != null) {
+            try {
+                mLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         if (!mDownloadInfo.hasDownloadSuccess()) {
             notifyFail();
@@ -74,7 +79,22 @@ public class DownloadTask implements IDownLoadTask {
     }
 
     @Override
-    public void onBlockStart(int blockSize) {
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
+    public NetworkDownloader getDownloader() {
+        return downloader;
+    }
+
+    @Override
+    public DownloadInfo getDownloadInfo() {
+        return mDownloadInfo;
+    }
+
+    @Override
+    public void onReady(int blockSize) {
         mLatch = new CountDownLatch(blockSize);
     }
 
@@ -84,7 +104,9 @@ public class DownloadTask implements IDownLoadTask {
 
     @Override
     public void onBlockFinish() {
-        mLatch.countDown();
+        if (mLatch != null && mRunning) {
+            mLatch.countDown();
+        }
     }
 
     private void deleteCache(DownloadInfo info, String url) {
