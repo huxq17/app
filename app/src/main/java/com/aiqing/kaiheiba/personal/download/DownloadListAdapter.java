@@ -20,16 +20,20 @@ import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.Utils;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
 
+import java.io.File;
+
 public class DownloadListAdapter extends
         BaseRecyclerViewAdapter<DownloadItemBean, DownloadListAdapter.ViewHolder> {
 
     private static final String TAG = "DownloadListAdapter";
     private final Context context;
     private DownloadManager downloadManager;
+    private MyDownloadAct act;
 
     public DownloadListAdapter(Context context) {
         super(context);
         this.context = context;
+        act = (MyDownloadAct) context;
         downloadManager = DownloadManager.with(context);
     }
 
@@ -109,14 +113,21 @@ public class DownloadListAdapter extends
 
             }
             refresh();
-//            bt_action.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (downloadInfo != null) {
-//
-//                    }
-//                }
-//            });
+            bt_action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String text = bt_action.getText().toString();
+                    if (text.equals("删除")) {
+                        downloadManager.delete((String) bt_action.getTag());
+                        Utils.deleteFileSafely(new File(downloadInfo.filePath));
+                    } else if (text.equals("取消")) {
+                        downloadManager.cancel((String) bt_action.getTag());
+                        String tempPath = com.aiqing.kaiheiba.download.Utils.getTempPath(downloadInfo.filePath);
+                        Utils.deleteFileSafely(new File(tempPath));
+                    }
+                    act.mockData();
+                }
+            });
             ServiceAgency.getService(ImageLoader.class).loadImage(downloadInfo.avatarUrl, iv_icon);
             tv_name.setText(downloadInfo.name);
             int round = DensityUtil.dip2px(context, 5);
@@ -173,12 +184,6 @@ public class DownloadListAdapter extends
             } else {
                 bt_action.setText("取消");
                 bt_action.setTag(downloadInfo.url);
-                bt_action.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        downloadManager.cancel((String) bt_action.getTag());
-                    }
-                });
             }
         }
     }

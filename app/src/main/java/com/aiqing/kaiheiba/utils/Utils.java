@@ -7,6 +7,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.andbase.tractor.utils.LogUtils;
+
 import java.io.Closeable;
 import java.io.File;
 

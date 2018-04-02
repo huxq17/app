@@ -8,14 +8,16 @@ public class DownloadGroup {
     public long length;
     public int progress;
     public String downloadName;
+    public String filePath;
 
-    public DownloadGroup(String name, String avatar, String downloadName, String url, long length, int progress) {
+    public DownloadGroup(String name, String avatar, String downloadName, String url, long length, int progress, String filePath) {
         this.name = name;
         this.url = url;
         this.length = length;
         this.progress = progress;
         this.avatar = avatar;
         this.downloadName = downloadName;
+        this.filePath = filePath;
     }
 
     public void getUrlsByName(String name) {

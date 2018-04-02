@@ -82,7 +82,7 @@ public class MyDownloadAct extends BaseActivity {
 //        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
-    private void mockData() {
+    public void mockData() {
         List<DownloadItemBean> beans = new ArrayList<>();
         List<DownloadGroup> list = DBService.getInstance(this).getGroups("1");
         if (list == null) return;
@@ -94,6 +94,7 @@ public class MyDownloadAct extends BaseActivity {
             bean.avatarUrl = entity.avatar;
             bean.name = entity.downloadName;
             bean.url = entity.url;
+            bean.filePath = entity.filePath;
             beans.add(bean);
         }
         mAdapter.setData(beans);

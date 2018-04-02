@@ -8,7 +8,6 @@ import com.aiqing.kaiheiba.download.downloader.NetworkDownloader;
 import com.aiqing.kaiheiba.download.strategy.IDownloadStrategy;
 import com.aiqing.kaiheiba.utils.Utils;
 import com.andbase.tractor.task.Task;
-import com.huxq17.xprefs.LogUtils;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
@@ -41,7 +40,6 @@ public class DownloadTask extends Task implements IDownloadTask {
         deleteCache(mDownloadInfo, mDownloadInfo.url);
         mDownloadInfo.threadNum = threadNum;
         completed = mDownloadStrategy.download(this);
-        LogUtils.d("completed=" + completed);
         synchronized (this) {
             mDownloadInfo.computeProgress(this, completed);
         }
@@ -69,7 +67,6 @@ public class DownloadTask extends Task implements IDownloadTask {
 
     @Override
     public void cancelTask() {
-        LogUtils.e("canceltask");
         for (int i = 0; i < mLatch.getCount(); i++) {
             mLatch.countDown();
         }
@@ -77,7 +74,8 @@ public class DownloadTask extends Task implements IDownloadTask {
 
 
     public void notifyUpdate(int progress) {
-        DownloadGroup downloadGroup = new DownloadGroup(mDownloadInfo.group, mDownloadInfo.avatar, mDownloadInfo.downloadName, mDownloadInfo.url, mDownloadInfo.fileLength, mDownloadInfo.progress);
+        DownloadGroup downloadGroup = new DownloadGroup(mDownloadInfo.group, mDownloadInfo.avatar, mDownloadInfo.downloadName,
+                mDownloadInfo.url, mDownloadInfo.fileLength, mDownloadInfo.progress,mDownloadInfo.filePath);
         DBService.getInstance(mContext).insertGroup(downloadGroup);
         Intent intent = new Intent();
         intent.putExtra(DownloadListener.DOWNLOAD_LOADING, progress);

@@ -17,7 +17,6 @@ public class DownloadInfo {
     public String filePath;//文件保存路径
     public String fileDir;//保存文件的文件夹路径
     public String filename;//保存的文件名
-    public String tempFileName;
     public String tempFilePath;
     public int threadNum;
     public int progress;
@@ -31,8 +30,7 @@ public class DownloadInfo {
         this.group = group;
         this.filePath = this.fileDir + this.filename;
         this.threadNum = threadNum;
-        this.tempFileName = filename + ".temp";
-        this.tempFilePath = this.fileDir + this.tempFileName;
+        this.tempFilePath = Utils.getTempPath(filePath);
         this.avatar = avatar;
         this.downloadName = downloadName;
     }

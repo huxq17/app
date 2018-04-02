@@ -7,7 +7,6 @@ import com.aiqing.kaiheiba.download.downloader.OkHttpDownloader;
 import com.aiqing.kaiheiba.download.strategy.IDownloadStrategy;
 import com.aiqing.kaiheiba.download.strategy.StrategyFactory;
 import com.andbase.tractor.task.TaskPool;
-import com.huxq17.xprefs.LogUtils;
 
 
 public enum DownloadManager {
@@ -83,7 +82,12 @@ public enum DownloadManager {
     }
 
     public void cancel(String url) {
-        LogUtils.e("cancel url="+url);
         TaskPool.getInstance().cancelTask(url);
+        DBService.getInstance(context).deleteGroup(url);
+        DBService.getInstance(context).delete(url);
+    }
+
+    public void delete(String url) {
+        DBService.getInstance(context).deleteGroup(url);
     }
 }

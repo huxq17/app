@@ -69,7 +69,8 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
                 }
             }
             if (mRunningThreadNum > 0) {
-                DownloadGroup downloadGroup = new DownloadGroup(downloadInfo.group,downloadInfo.avatar,downloadInfo.downloadName, downloadInfo.url, fileLength, downloadInfo.progress);
+                DownloadGroup downloadGroup = new DownloadGroup(downloadInfo.group,downloadInfo.avatar,
+                        downloadInfo.downloadName, downloadInfo.url, fileLength, downloadInfo.progress,downloadInfo.filePath);
                 DBService.getInstance(context).insertGroup(downloadGroup);
                 downloadTask.onReady(mRunningThreadNum);
             }
@@ -96,6 +97,7 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
                 InputStream inputStream = null;
                 try {
                     NetworkDownloader.Response response = downloadTask.getDownloader().load(url, range);
+                    com.andbase.tractor.utils.LogUtils.e("test open");
                     inputStream = response.inputStream;
                     if (inputStream != null) {
                         File saveFile = new File(filepath);
@@ -132,13 +134,14 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
                         }
                     }
                 } catch (IOException e) {
-                    LogUtils.e("download block ioe");
                     e.printStackTrace();
                 } finally {
+                    com.andbase.tractor.utils.LogUtils.e("test finally");
                     if (!info.hasDownloadSuccess()) {
                         DBService.getInstance(context).updataInfos(downloadId, curPos, realEndPos, url);
                     }
                     Utils.close(inputStream);
+                    com.andbase.tractor.utils.LogUtils.e("test close");
                     Utils.close(accessFile);
                     downloadTask.onBlockFinish();
                 }

@@ -37,7 +37,6 @@ public class OkHttpDownloader implements NetworkDownloader {
             return null;
         }
         ResponseBody responseBody = response.body();
-        responseBody.contentLength();
         return new Response(responseBody.byteStream(), responseBody.contentLength());
     }
 }

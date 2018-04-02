@@ -64,7 +64,7 @@ public class DBService {
     public synchronized List<DownloadGroup> getGroups(String group) {
         List<DownloadGroup> groups = new ArrayList<>();
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        String sql = "select url,length ,progress,avatar,download_name from " + DOWNLOAD_GROUP_TABLE + " where name=?";
+        String sql = "select url,length ,progress,avatar,download_name,file_path from " + DOWNLOAD_GROUP_TABLE + " where name=?";
         Cursor cursor = database.rawQuery(sql, new String[]{group});
         while (cursor.moveToNext()) {
             String url = cursor.getString(0);
@@ -72,7 +72,8 @@ public class DBService {
             int progress = cursor.getInt(2);
             String avatar = cursor.getString(3);
             String downloadName = cursor.getString(4);
-            DownloadGroup bean = new DownloadGroup(group, avatar, downloadName, url, length, progress);
+            String filePath = cursor.getString(5);
+            DownloadGroup bean = new DownloadGroup(group, avatar, downloadName, url, length, progress, filePath);
             groups.add(bean);
         }
         cursor.close();
@@ -91,17 +92,24 @@ public class DBService {
         Object[] bindArgs = {threadId, startposition, endposition, url};
         database.execSQL(sql, bindArgs);
         database.close();
-        LogUtils.i("updataInfos total=" + totalCount + ";threadid=" + threadId + ";startposition=" + startposition + ";endposition=" + endposition);
+        LogUtils.d("updataInfos total=" + totalCount + ";threadid=" + threadId + ";startposition=" + startposition + ";endposition=" + endposition);
     }
 
     public synchronized void insertGroup(DownloadGroup group) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        String sql = "replace into " + DOWNLOAD_GROUP_TABLE + "(name,url,length,progress) values(?,?,?,?)";
-        Object[] bindArgs = {group.name, group.url, group.length, group.progress};
+        String sql = "replace into " + DOWNLOAD_GROUP_TABLE + "(name, url,length,progress,avatar,download_name,file_path) values(?,?,?,?,?,?,?)";
+        Object[] bindArgs = {group.name, group.url, group.length, group.progress,group.avatar,group.downloadName,group.filePath};
         database.execSQL(sql, bindArgs);
         database.close();
     }
-
+    /**
+     * 下载完成后删除数据库中的数据
+     */
+    public synchronized void deleteGroup(String url) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        int count = database.delete(DOWNLOAD_GROUP_TABLE, "url=?", new String[]{url});
+        database.close();
+    }
     /**
      * 关闭数据库
      */

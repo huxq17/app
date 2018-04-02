@@ -1,6 +1,8 @@
 package com.aiqing.kaiheiba.download;
 
 
+import java.io.File;
+
 public class DownloadRequestCreator {
     private DownloadInfo downloadInfo;
     private String url;
@@ -38,7 +40,7 @@ public class DownloadRequestCreator {
     }
 
     public void saveTo(String path, String fileName) {
-        DownloadInfo downloadInfo = new DownloadInfo(url, group, avatar, downloadName, path, fileName, threadNum);
+        DownloadInfo downloadInfo = new DownloadInfo(url, group, avatar, downloadName, path.concat(File.separator), fileName, threadNum);
         downloadManager.add(downloadInfo);
     }
 
