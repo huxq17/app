@@ -12,8 +12,11 @@ import android.widget.RadioGroup;
 import com.aiqing.kaiheiba.common.BaseFragment;
 import com.aiqing.kaiheiba.login.LoginAct;
 import com.aiqing.kaiheiba.neteasyim.IMFragment;
+import com.aiqing.kaiheiba.personal.download.MyBusinessInfLocal;
+import com.aiqing.kaiheiba.personal.download.MyDownloadAct;
 import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.netease.nim.uikit.common.activity.UI;
+import com.taobao.weex.WXEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,15 +50,15 @@ public class HomeActivity extends UI {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rb_home_game) {
-                    if (homeFragment == null) {
-                        homeFragment = WeexFragment.newInstance(WeexFragment.gameurl);
-                        fragmentList.add(homeFragment);
-                    }
-                    replaceFragment(homeFragment);
-//                    String url="https://t.alipayobjects.com/L1/71/100/and/alipay_wap_main.apk";
-//                    MyBusinessInfLocal myBusinessInfLocal = new MyBusinessInfLocal(
-//                            url.hashCode(), "", "", url);
-//                    MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
+//                    if (homeFragment == null) {
+//                        homeFragment = WeexFragment.newInstance(WeexFragment.gameurl);
+//                        fragmentList.add(homeFragment);
+//                    }
+//                    replaceFragment(homeFragment);
+                    String url="https://t.alipayobjects.com/L1/71/100/and/alipay_wap_main.apk";
+                    MyBusinessInfLocal myBusinessInfLocal = new MyBusinessInfLocal(
+                            url.hashCode(), "", "", url);
+                    MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
                 } else if (checkedId == R.id.rb_home_playground) {
                     if (gameFragment == null) {
                         gameFragment = WeexFragment.newInstance(WeexFragment.homeurl);

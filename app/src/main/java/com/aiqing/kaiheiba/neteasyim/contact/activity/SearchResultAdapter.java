@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.bean.AccountBean;
 import com.aiqing.kaiheiba.imageloader.ImageLoader;
-import com.aiqing.kaiheiba.utils.LogUtils;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
+import com.huxq17.xprefs.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -26,19 +26,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return context.deleteDatabase(dbName);
     }
 
-    /**
-     * 在download.db数据库下创建一个download_info表存储下载信息
-     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table download_info(thread_id integer, "
                 + "startposition integer,endposition integer,url char," +
                 "primary key(thread_id,url))");
+        db.execSQL("create table download_group(name char, url char primary key,length integer,progress integer,avatar char,download_name char)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS download_info");
+        db.execSQL("DROP TABLE IF EXISTS download_group");
         onCreate(db);
     }
 

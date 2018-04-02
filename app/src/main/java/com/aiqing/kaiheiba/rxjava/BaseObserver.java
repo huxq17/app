@@ -1,10 +1,10 @@
 package com.aiqing.kaiheiba.rxjava;
 
 import com.aiqing.kaiheiba.App;
-import com.aiqing.kaiheiba.common.Base;
 import com.aiqing.kaiheiba.bean.BaseResponse;
+import com.aiqing.kaiheiba.common.Base;
 import com.aiqing.kaiheiba.login.LoginAct;
-import com.aiqing.kaiheiba.utils.LogUtils;
+import com.huxq17.xprefs.LogUtils;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;

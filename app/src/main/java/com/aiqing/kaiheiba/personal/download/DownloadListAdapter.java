@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseRecyclerViewAdapter;
+import com.aiqing.kaiheiba.download.DownloadManager;
 import com.aiqing.kaiheiba.imageloader.ImageLoader;
 import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.Utils;
@@ -24,10 +25,12 @@ public class DownloadListAdapter extends
 
     private static final String TAG = "DownloadListAdapter";
     private final Context context;
+    private DownloadManager downloadManager;
 
     public DownloadListAdapter(Context context) {
         super(context);
         this.context = context;
+        downloadManager = DownloadManager.with(context);
     }
 
     @Override
@@ -106,15 +109,16 @@ public class DownloadListAdapter extends
 
             }
             refresh();
-            bt_action.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (downloadInfo != null) {
-
-                    }
-                }
-            });
-
+//            bt_action.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (downloadInfo != null) {
+//
+//                    }
+//                }
+//            });
+            ServiceAgency.getService(ImageLoader.class).loadImage(downloadInfo.avatarUrl, iv_icon);
+            tv_name.setText(downloadInfo.name);
             int round = DensityUtil.dip2px(context, 5);
             int strokenWidth = DensityUtil.dip2px(context, 1);
             int background = Color.TRANSPARENT;
@@ -128,9 +132,7 @@ public class DownloadListAdapter extends
         }
 
         private void refresh() {
-            int process = downloadInfo.process;
-//                long completeTime = downloadInfo.getCompleteTime();
-//                LogUtils.e("complete=" + completeTime);
+            int percent = downloadInfo.progress;
 //                long downloadSize = downloadInfo.getSize();
 //                switch (downloadInfo.getStatus()) {
 //                    case DownloadInfo.STATUS_NONE:
@@ -164,8 +166,20 @@ public class DownloadListAdapter extends
 //                        bt_action.setText("停止");
 //                        break;
 //                }
-            pb.setProgress(process);
-            tv_size.setText(String.format("%d%%", process));
+            pb.setProgress(percent);
+            tv_size.setText(String.format("%d%%", percent));
+            if (percent == 100) {
+                bt_action.setText("删除");
+            } else {
+                bt_action.setText("取消");
+                bt_action.setTag(downloadInfo.url);
+                bt_action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        downloadManager.cancel((String) bt_action.getTag());
+                    }
+                });
+            }
         }
     }
 }

@@ -1,43 +1,47 @@
 package com.aiqing.kaiheiba.download;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.aiqing.kaiheiba.download.downloader.NetworkDownloader;
-import com.aiqing.kaiheiba.download.downloader.OkHttpDownloader;
 import com.aiqing.kaiheiba.download.strategy.IDownloadStrategy;
-import com.aiqing.kaiheiba.download.strategy.StrategyFactory;
 import com.aiqing.kaiheiba.utils.Utils;
+import com.andbase.tractor.task.Task;
+import com.huxq17.xprefs.LogUtils;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
+import static com.aiqing.kaiheiba.download.DownloadListener.DOWNLOAD_ACTION;
+import static com.aiqing.kaiheiba.download.DownloadListener.DOWNLOAD_URL;
 
-public class DownloadTask implements IDownloadTask {
+
+public class DownloadTask extends Task implements IDownloadTask {
     private DownloadInfo mDownloadInfo;
     private Context mContext;
     private CountDownLatch mLatch;
-    IDownloadStrategy mDownloadStrategy;
-    private boolean mRunning = false;
+    private IDownloadStrategy mDownloadStrategy;
     private NetworkDownloader downloader;
 
-    public DownloadTask(final DownloadInfo info, final Context context, final Object tag) {
+    public DownloadTask(final DownloadInfo info, NetworkDownloader networkDownloader, IDownloadStrategy downloadStrategy, final Context context, final Object tag) {
+        super(info.url, null);
         this.mDownloadInfo = info;
         mContext = context;
         Utils.createDirIfNotExists(mDownloadInfo.fileDir);
-        downloader = new OkHttpDownloader();
+        downloader = networkDownloader;
+        mDownloadStrategy = downloadStrategy;
     }
 
-    public void start() {
-        mRunning = true;
+    @Override
+    public void onRun() {
         int threadNum = mDownloadInfo.threadNum;
-        threadNum = threadNum < 1 ? 1 : threadNum;
-        mDownloadStrategy = StrategyFactory.getDownloadStrategy(threadNum);
         long completed = 0;
         //如果文件不存在就删除数据库中的缓存
         deleteCache(mDownloadInfo, mDownloadInfo.url);
         mDownloadInfo.threadNum = threadNum;
         completed = mDownloadStrategy.download(this);
-
+        LogUtils.d("completed=" + completed);
         synchronized (this) {
             mDownloadInfo.computeProgress(this, completed);
         }
@@ -52,7 +56,7 @@ public class DownloadTask implements IDownloadTask {
             notifyFail();
 //            LogUtils.d("download failed! " + "size=" + size + " allocated=" + allocated + " and spendTime=" + (System.currentTimeMillis() - starttime));
         } else {
-            String group = mDownloadInfo.group;
+//            String group = mDownloadInfo.group;
             //删除没有group的一次性任务
 //            if (group == null || group.isEmpty()) {
             DBService.getInstance(mContext).delete(mDownloadInfo.url);
@@ -61,18 +65,38 @@ public class DownloadTask implements IDownloadTask {
             notifySuccess();
 //            LogUtils.d("download finshed! " + "size=" + size + " allocated=" + allocated + " and spendTime=" + (System.currentTimeMillis() - starttime));
         }
-        mRunning = false;
     }
 
-    public boolean isRunning() {
-        return mRunning;
+    @Override
+    public void cancelTask() {
+        LogUtils.e("canceltask");
+        for (int i = 0; i < mLatch.getCount(); i++) {
+            mLatch.countDown();
+        }
     }
+
 
     public void notifyUpdate(int progress) {
+        DownloadGroup downloadGroup = new DownloadGroup(mDownloadInfo.group, mDownloadInfo.avatar, mDownloadInfo.downloadName, mDownloadInfo.url, mDownloadInfo.fileLength, mDownloadInfo.progress);
+        DBService.getInstance(mContext).insertGroup(downloadGroup);
+        Intent intent = new Intent();
+        intent.putExtra(DownloadListener.DOWNLOAD_LOADING, progress);
+        intent.putExtra(DOWNLOAD_URL, mDownloadInfo.url);
+        intent.addCategory(mDownloadInfo.group);
+        notifyListener(intent);
     }
 
     private void notifyFail() {
+//        Intent intent = new Intent();
+//        intent.putExtra(DownloadListener.DOWNLOAD_FAILED, "下载失败");
+//        intent.putExtra(DOWNLOAD_URL, mDownloadInfo.url);
+//        intent.addCategory(mDownloadInfo.group);
+//        notifyListener(intent);
+    }
 
+    private void notifyListener(Intent intent) {
+        intent.setAction(DOWNLOAD_ACTION);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
     private void notifySuccess() {
@@ -104,7 +128,7 @@ public class DownloadTask implements IDownloadTask {
 
     @Override
     public void onBlockFinish() {
-        if (mLatch != null && mRunning) {
+        if (mLatch != null && isRunning()) {
             mLatch.countDown();
         }
     }
@@ -115,4 +139,5 @@ public class DownloadTask implements IDownloadTask {
             DBService.getInstance(mContext).delete(url);
         }
     }
+
 }

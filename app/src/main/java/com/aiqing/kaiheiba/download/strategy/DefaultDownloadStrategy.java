@@ -5,8 +5,10 @@ import android.content.Context;
 
 import com.aiqing.kaiheiba.download.DBService;
 import com.aiqing.kaiheiba.download.DownloadException;
+import com.aiqing.kaiheiba.download.DownloadGroup;
 import com.aiqing.kaiheiba.download.DownloadInfo;
 import com.aiqing.kaiheiba.download.DownloadTask;
+import com.aiqing.kaiheiba.download.Executor;
 import com.aiqing.kaiheiba.download.IDownloadTask;
 import com.aiqing.kaiheiba.download.downloader.NetworkDownloader;
 import com.aiqing.kaiheiba.utils.Utils;
@@ -20,13 +22,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DefaultDownloadStrategy implements IDownloadStrategy {
     private Context context;
     private IDownloadTask downloadTask;
-    private ExecutorService excutor = Executors.newCachedThreadPool();
 
     @Override
     public int download(IDownloadTask downloadTask) {
@@ -43,6 +42,7 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
             if (fileLength <= 0) {
                 throw new DownloadException("获取不到下载文件大小");
             }
+            downloadInfo.fileLength = fileLength;
             long block = fileLength % threadNum == 0 ? fileLength / threadNum : fileLength / threadNum + 1;
             for (int i = 0; i < threadNum; i++) {
                 final long startPos = i * block;
@@ -69,6 +69,8 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
                 }
             }
             if (mRunningThreadNum > 0) {
+                DownloadGroup downloadGroup = new DownloadGroup(downloadInfo.group,downloadInfo.avatar,downloadInfo.downloadName, downloadInfo.url, fileLength, downloadInfo.progress);
+                DBService.getInstance(context).insertGroup(downloadGroup);
                 downloadTask.onReady(mRunningThreadNum);
             }
         }
@@ -77,18 +79,19 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
 
     private void downBlock(final DownloadInfo info) {
         final long startPos = info.startPos;
+        final long endPos = info.endPos;
         final String url = info.url;
         final String filepath = info.tempFilePath;
         final int downloadId = info.downloadId;
-        excutor.execute(new Runnable() {
+        Executor.execute(new Runnable() {
             @Override
             public void run() {
                 long curPos = startPos;
-                long endPos = info.endPos;
+                long realEndPos = endPos;
                 String range = null;
                 RandomAccessFile accessFile = null;
-                if (startPos != -1 && endPos != -1) {
-                    range = "bytes=" + startPos + "-" + endPos;
+                if (startPos != -1 && realEndPos != -1) {
+                    range = "bytes=" + startPos + "-" + realEndPos;
                 }
                 InputStream inputStream = null;
                 try {
@@ -101,7 +104,7 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
                             info.fileLength = response.contentLength;
                             accessFile.setLength(info.fileLength);
                             curPos = 0;
-                            endPos = info.fileLength;
+                            realEndPos = info.fileLength;
                             accessFile.seek(curPos);
                         } else {
                             accessFile.seek(startPos);
@@ -109,14 +112,14 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
                         final int buffSize = 8192;
                         byte[] buffer = new byte[buffSize];
                         int len = 0;
-                        while (curPos <= endPos) {
+                        while (curPos <= realEndPos) {
                             len = inputStream.read(buffer);
                             if (len == -1) {
 //                            notifyDownloadFailed(null);
                                 break;
                             }
-                            if (curPos + len > endPos) {
-                                len = (int) (endPos - curPos + 1);//获取正确读取的字节数
+                            if (curPos + len > realEndPos) {
+                                len = (int) (realEndPos - curPos + 1);//获取正确读取的字节数
                             }
                             synchronized (downloadTask) {
                                 if (!info.computeProgress((DownloadTask) downloadTask, len)) {
@@ -127,13 +130,13 @@ public class DefaultDownloadStrategy implements IDownloadStrategy {
                                 accessFile.write(buffer, 0, len);
                             }
                         }
-                        LogUtils.d("curPos=" + curPos + ";endPos=" + endPos);
                     }
                 } catch (IOException e) {
+                    LogUtils.e("download block ioe");
                     e.printStackTrace();
                 } finally {
                     if (!info.hasDownloadSuccess()) {
-                        DBService.getInstance(context).updataInfos(downloadId, curPos, endPos, url);
+                        DBService.getInstance(context).updataInfos(downloadId, curPos, realEndPos, url);
                     }
                     Utils.close(inputStream);
                     Utils.close(accessFile);

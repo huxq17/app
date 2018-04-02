@@ -1,1 +1,1 @@
-include ':app', ':downloader', ':uikit', ':im'
+include ':app', ':downloader', ':uikit', ':im', ':tractor'

@@ -7,7 +7,7 @@ import com.huxq17.xprefs.LogUtils;
  * 记载下载器详细信息的类
  */
 public class DownloadInfo {
-    public String group;//处于group里的下载任务会一直存在，除非手动去删除
+    public String group = "";//处于group里的下载任务会一直存在，除非手动去删除
     public int downloadId;//下载器id
     public long startPos = -1;//开始点
     public long endPos = -1;//结束点
@@ -20,16 +20,21 @@ public class DownloadInfo {
     public String tempFileName;
     public String tempFilePath;
     public int threadNum;
-    private int progress;
+    public int progress;
+    public String avatar;
+    public String downloadName;
 
-    public DownloadInfo(String url, String fileDir, String filename, int threadNum) {
+    public DownloadInfo(String url, String group, String avatar, String downloadName, String fileDir, String filename, int threadNum) {
         this.url = url;
         this.fileDir = fileDir;
         this.filename = filename;
+        this.group = group;
         this.filePath = this.fileDir + this.filename;
         this.threadNum = threadNum;
         this.tempFileName = filename + ".temp";
         this.tempFilePath = this.fileDir + this.tempFileName;
+        this.avatar = avatar;
+        this.downloadName = downloadName;
     }
 
     public DownloadInfo(int downloadId,

@@ -15,7 +15,7 @@ import com.aiqing.kaiheiba.neteasyim.main.main.reminder.ReminderManager;
 import com.aiqing.kaiheiba.neteasyim.session.SessionHelper;
 import com.aiqing.kaiheiba.neteasyim.session.extension.GuessAttachment;
 import com.aiqing.kaiheiba.neteasyim.session.extension.StickerAttachment;
-import com.aiqing.kaiheiba.utils.LogUtils;
+import com.huxq17.xprefs.LogUtils;
 import com.netease.nim.uikit.business.recent.RecentContactsCallback;
 import com.netease.nim.uikit.business.recent.RecentContactsFragment;
 import com.netease.nim.uikit.common.activity.UI;

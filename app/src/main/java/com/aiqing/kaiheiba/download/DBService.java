@@ -14,7 +14,8 @@ import java.util.List;
 public class DBService {
     private DBHelper dbHelper;
     private static DBService instance;
-    private static final String DOWNLOAD_TABLE = "download_info";
+    private static final String DOWNLOAD_INFO_TABLE = "download_info";
+    private static final String DOWNLOAD_GROUP_TABLE = "download_group";
 
     private DBService(Context context) {
         dbHelper = new DBHelper(context);
@@ -48,7 +49,7 @@ public class DBService {
     public synchronized List<DownloadInfo> getInfos(String urlstr) {
         List<DownloadInfo> list = new ArrayList<DownloadInfo>();
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        String sql = "select thread_id,startposition,endposition,url from "+DOWNLOAD_TABLE+" where url=?";
+        String sql = "select thread_id,startposition,endposition,url from " + DOWNLOAD_INFO_TABLE + " where url=?";
         Cursor cursor = database.rawQuery(sql, new String[]{urlstr});
         while (cursor.moveToNext()) {
             DownloadInfo info = new DownloadInfo(cursor.getInt(0), cursor.getInt(1), cursor.getLong(2),
@@ -60,19 +61,45 @@ public class DBService {
         return list;
     }
 
+    public synchronized List<DownloadGroup> getGroups(String group) {
+        List<DownloadGroup> groups = new ArrayList<>();
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        String sql = "select url,length ,progress,avatar,download_name from " + DOWNLOAD_GROUP_TABLE + " where name=?";
+        Cursor cursor = database.rawQuery(sql, new String[]{group});
+        while (cursor.moveToNext()) {
+            String url = cursor.getString(0);
+            int length = cursor.getInt(1);
+            int progress = cursor.getInt(2);
+            String avatar = cursor.getString(3);
+            String downloadName = cursor.getString(4);
+            DownloadGroup bean = new DownloadGroup(group, avatar, downloadName, url, length, progress);
+            groups.add(bean);
+        }
+        cursor.close();
+        database.close();
+        return groups;
+    }
 
     /**
      * 更新数据库中的下载信息
      */
     public synchronized void updataInfos(int threadId, long startposition, long endposition, String url) {
-        long totalCount = getCount(DOWNLOAD_TABLE);
+        long totalCount = getCount(DOWNLOAD_INFO_TABLE);
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         // 如果存在就更新，不存在就插入
-        String sql = "replace into " + DOWNLOAD_TABLE + "(thread_id,startposition,endposition,url) values(?,?,?,?)";
+        String sql = "replace into " + DOWNLOAD_INFO_TABLE + "(thread_id,startposition,endposition,url) values(?,?,?,?)";
         Object[] bindArgs = {threadId, startposition, endposition, url};
         database.execSQL(sql, bindArgs);
         database.close();
         LogUtils.i("updataInfos total=" + totalCount + ";threadid=" + threadId + ";startposition=" + startposition + ";endposition=" + endposition);
+    }
+
+    public synchronized void insertGroup(DownloadGroup group) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        String sql = "replace into " + DOWNLOAD_GROUP_TABLE + "(name,url,length,progress) values(?,?,?,?)";
+        Object[] bindArgs = {group.name, group.url, group.length, group.progress};
+        database.execSQL(sql, bindArgs);
+        database.close();
     }
 
     /**
@@ -86,9 +113,9 @@ public class DBService {
      * 下载完成后删除数据库中的数据
      */
     public synchronized void delete(String url) {
-        long totalCount = getCount(DOWNLOAD_TABLE);
+        long totalCount = getCount(DOWNLOAD_INFO_TABLE);
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        int count = database.delete(DOWNLOAD_TABLE, "url=?", new String[]{url});
+        int count = database.delete(DOWNLOAD_INFO_TABLE, "url=?", new String[]{url});
 //        Log.i("delete", "delete total=" + totalCount + ";delete count=" + count + ";url=" + url);
         database.close();
     }
@@ -109,7 +136,7 @@ public class DBService {
 
     public synchronized void deleteByIdAndUrl(int id, String url) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        int count = database.delete(DOWNLOAD_TABLE, "thread_id=? and url=?", new String[]{
+        int count = database.delete(DOWNLOAD_INFO_TABLE, "thread_id=? and url=?", new String[]{
                 id + "", url});
         Log.i("delete", "delete id=" + id + "," + "count=" + count);
         database.close();

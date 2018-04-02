@@ -2,7 +2,7 @@ package com.aiqing.kaiheiba.okhttp;
 
 import android.text.TextUtils;
 
-import com.aiqing.kaiheiba.utils.LogUtils;
+import com.huxq17.xprefs.LogUtils;
 
 import java.io.IOException;
 

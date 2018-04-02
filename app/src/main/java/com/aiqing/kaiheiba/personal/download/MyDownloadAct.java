@@ -1,12 +1,10 @@
 package com.aiqing.kaiheiba.personal.download;
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -15,26 +13,24 @@ import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.common.BaseRecyclerViewAdapter;
 import com.aiqing.kaiheiba.decoration.RecyclerViewDivider;
+import com.aiqing.kaiheiba.download.DBService;
+import com.aiqing.kaiheiba.download.DownloadGroup;
+import com.aiqing.kaiheiba.download.DownloadListener;
+import com.aiqing.kaiheiba.download.DownloadManager;
 import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.FileManager;
-import com.aiqing.kaiheiba.utils.LogUtils;
 import com.arialyy.annotations.Download;
-import com.arialyy.aria.core.Aria;
 import com.arialyy.aria.core.download.DownloadTask;
-import com.arialyy.aria.core.inf.AbsEntity;
+import com.huxq17.xprefs.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.woblog.android.downloader.DownloadService;
-import cn.woblog.android.downloader.callback.DownloadManager;
-import cn.woblog.android.downloader.domain.DownloadInfo;
 
 public class MyDownloadAct extends BaseActivity {
     RecyclerView mDownloadRV;
     DownloadListAdapter mAdapter;
-    private DownloadManager downloadManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,18 +51,10 @@ public class MyDownloadAct extends BaseActivity {
 //                toast("path=" + path);
             }
         });
-        downloadManager = DownloadService
-                .getDownloadManager(this.getApplicationContext());
         mockData();
-        Aria.download(this).register();
+//        Aria.download(this).register();
+        DownloadManager.with(this).register(listener);
     }
-
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            mockData();
-        }
-    };
 
     //在这里处理任务执行中的状态，如进度进度条的刷新
     @Download.onTaskRunning
@@ -90,26 +78,25 @@ public class MyDownloadAct extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        DownloadManager.with(this).unregister(this);
 //        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     private void mockData() {
         List<DownloadItemBean> beans = new ArrayList<>();
-        List<AbsEntity> list = Aria.download(App.getContext()).getTotleTaskList();
-        LogUtils.e("list="+list);
+        List<DownloadGroup> list = DBService.getInstance(this).getGroups("1");
         if (list == null) return;
-        for (AbsEntity entity : list) {
+        for (DownloadGroup entity : list) {
             DownloadItemBean bean = new DownloadItemBean();
-            bean.avatarUrl = entity.getKey();
-            bean.process = entity.getPercent();
-            LogUtils.e("entity.getCompleteTime()=" + entity.getCompleteTime()+";bean.process ="+bean.process );
+//            bean.avatarUrl = entity.getKey();
+            bean.length = entity.length;
+            bean.progress = entity.progress;
+            bean.avatarUrl = entity.avatar;
+            bean.name = entity.downloadName;
+            bean.url = entity.url;
             beans.add(bean);
         }
         mAdapter.setData(beans);
-    }
-
-    private List<DownloadInfo> getDownloadListData() {
-        return downloadManager.findAll();
     }
 
     public static void start(Context context, MyBusinessInfLocal myBusinessInfo) {
@@ -121,7 +108,7 @@ public class MyDownloadAct extends BaseActivity {
     }
 
     public static void download(MyBusinessInfLocal myBusinessInfo) {
-        String name = "123123";
+        String name = "123123.apk";
         String url = myBusinessInfo.getUrl();
 //        DownloadManager downloadManager = DownloadService.getDownloadManager(App.getContext());
         File d = FileManager.getDownloadPath();
@@ -142,21 +129,36 @@ public class MyDownloadAct extends BaseActivity {
 //            e.printStackTrace();
 //        }
         LogUtils.e("path=" + path + ";d.getAbsolutePath()=" + d.getAbsolutePath());
-        Aria.download(App.getContext())
-                .load(url,true)
-                .resetState()//读取下载地址
-                .setDownloadPath(path)    //设置文件保存的完整路径
-                .start();
+        DownloadManager.with(App.getContext())
+                .download(url)
+                .group("1")
+                .threadNum(2)
+                .avatar("")
+                .downloadName(name)
+                .saveTo(d.getAbsolutePath(), name);
     }
 
     public static final String DOWNLOAD_REFRESH = "download_refresh";
 
-    private static void notifyRefresh() {
-        Intent intent = new Intent(DOWNLOAD_REFRESH);
-        notify(intent);
-    }
+    public DownloadListener listener = new DownloadListener("1") {
+        @Override
+        public void onStart() {
 
-    private static void notify(Intent intent) {
-        LocalBroadcastManager.getInstance(App.getContext()).sendBroadcast(intent);
-    }
+        }
+
+        @Override
+        public void onLoading(int progress, String url) {
+            mockData();
+        }
+
+        @Override
+        public void onFailed(String msg) {
+
+        }
+
+        @Override
+        public void onSuccess() {
+
+        }
+    };
 }
