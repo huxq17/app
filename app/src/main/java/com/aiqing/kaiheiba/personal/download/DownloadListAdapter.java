@@ -24,8 +24,7 @@ import java.io.File;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
-public class DownloadListAdapter extends
-        BaseRecyclerViewAdapter<DownloadItemBean, DownloadListAdapter.ViewHolder> {
+public class DownloadListAdapter extends BaseRecyclerViewAdapter<DownloadItemBean, DownloadListAdapter.ViewHolder> {
 
     private static final String TAG = "DownloadListAdapter";
     private final Context context;

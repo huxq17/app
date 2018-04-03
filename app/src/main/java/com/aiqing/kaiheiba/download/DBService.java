@@ -1,6 +1,7 @@
 package com.aiqing.kaiheiba.download;
 
 import android.app.Application;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -108,6 +109,14 @@ public class DBService {
         String sql = "replace into " + DOWNLOAD_GROUP_TABLE + "(name,avatar,download_name, url,file_path,progress) values(?,?,?,?,?,?)";
         Object[] bindArgs = {group.name, group.avatar, group.downloadName, group.url, group.filePath, group.progress};
         database.execSQL(sql, bindArgs);
+        database.close();
+    }
+
+    public synchronized void updateDownloadId(String id, int progress) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("progress", progress);
+        database.update(DOWNLOAD_GROUP_TABLE, values, "name=?", new String[]{id});
         database.close();
     }
 

@@ -1,20 +1,23 @@
 package com.aiqing.kaiheiba.personal.download;
 
 
+import android.Manifest;
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.aiqing.kaiheiba.App;
 import com.aiqing.kaiheiba.R;
@@ -65,10 +68,58 @@ public class MyDownloadAct extends BaseActivity {
                 int progress = itemBean.progress;
                 if (progress == 100) {
                     LogUtils.e("to install itemBean.filePath=" + itemBean.filePath);
-                    Utils.install(MyDownloadAct.this, itemBean.filePath);
+                    installPath = itemBean.filePath;
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        boolean b = getPackageManager().canRequestPackageInstalls();
+                        if (b) {
+                            install();
+                        } else {
+                            //请求安装未知应用来源的权限
+                            ActivityCompat.requestPermissions(MyDownloadAct.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, INSTALL_PACKAGES_REQUESTCODE);
+                        }
+                    } else {
+                        install();
+                    }
                 }
             }
         });
+    }
+
+    private String installPath;
+
+    private void install() {
+        Utils.install(MyDownloadAct.this, installPath);
+    }
+
+    private static final int INSTALL_PACKAGES_REQUESTCODE = 1;
+    private static final int GET_UNKNOWN_APP_SOURCES = 2;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case INSTALL_PACKAGES_REQUESTCODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    install();
+                } else {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                    startActivityForResult(intent, GET_UNKNOWN_APP_SOURCES);
+                }
+                break;
+
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case GET_UNKNOWN_APP_SOURCES:
+                install();
+                break;
+
+            default:
+                break;
+        }
     }
 
     public void register() {
@@ -125,28 +176,32 @@ public class MyDownloadAct extends BaseActivity {
                 beans.add(bean);
             } else {
                 Cursor cursor = ((DownloadManager) getSystemService(DOWNLOAD_SERVICE)).query(query.setFilterById(id));
-                if (cursor != null && cursor.moveToFirst()) {
-                    //下载的文件到本地的目录
-                    String address = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                    //已经下载的字节数
-                    long bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                    //总需下载的字节数
-                    long bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                    //Notification 标题
-                    String title = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
-                    //描述
-                    String description = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
-                    //下载对应id
-                    long downloadId = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
-                    //下载文件名称
+                try {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        //下载的文件到本地的目录
+                        String address = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                        //已经下载的字节数
+                        long bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                        //总需下载的字节数
+                        long bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                        //Notification 标题
+                        String title = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
+                        //描述
+                        String description = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
+                        //下载对应id
+                        long downloadId = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+                        //下载文件名称
 //                    String filename = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-                    //下载文件的URL链接
-                    String url = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));
-                    group.progress = (int) (100 * bytes_downloaded / bytes_total);
-                    bean.progress = group.progress;
-                    LogUtils.e("bytes_downloaded=" + bytes_downloaded + ";bytes_total=" + bytes_total + "; bean.progress=" + bean.progress);
-                    beans.add(bean);
-                    DBService.getInstance(App.getContext()).insertDownloadId(group);
+                        //下载文件的URL链接
+                        String url = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));
+                        group.progress = (int) (100 * bytes_downloaded / bytes_total);
+                        bean.progress = group.progress;
+                        LogUtils.e("bytes_downloaded=" + bytes_downloaded + ";bytes_total=" + bytes_total + "; bean.progress=" + bean.progress);
+                        beans.add(bean);
+                        DBService.getInstance(App.getContext()).insertDownloadId(group);
+                    }
+                } finally {
+                    Utils.close(cursor);
                 }
             }
         }
@@ -178,6 +233,7 @@ public class MyDownloadAct extends BaseActivity {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, name);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         File downloadPath = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath().concat("/").concat(name));
         if (downloadPath.exists()) downloadPath.delete();
         long id = downloadManager.enqueue(request);
@@ -191,15 +247,7 @@ public class MyDownloadAct extends BaseActivity {
 //                .avatar("")
 //                .downloadName(name)
 //                .saveTo(d.getAbsolutePath(), name);
-        IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                long ID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            }
-        };
-
-        context.registerReceiver(broadcastReceiver, intentFilter);
+//        IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
     }
 
     public static final String DOWNLOAD_REFRESH = "download_refresh";
