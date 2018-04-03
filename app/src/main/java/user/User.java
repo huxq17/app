@@ -13,4 +13,5 @@ public class User {
     public String imToken = "";
     public String accid = "";
     public String appKey = "";
+    public String isRealAuth="";
 }

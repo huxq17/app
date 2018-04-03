@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseRecyclerViewAdapter;
-import com.aiqing.kaiheiba.download.DownloadManager;
+import com.aiqing.kaiheiba.download.DBService;
 import com.aiqing.kaiheiba.imageloader.ImageLoader;
 import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.Utils;
@@ -22,19 +22,21 @@ import com.buyi.huxq17.serviceagency.ServiceAgency;
 
 import java.io.File;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
+
 public class DownloadListAdapter extends
         BaseRecyclerViewAdapter<DownloadItemBean, DownloadListAdapter.ViewHolder> {
 
     private static final String TAG = "DownloadListAdapter";
     private final Context context;
-    private DownloadManager downloadManager;
     private MyDownloadAct act;
+    private android.app.DownloadManager downloadManager;
 
     public DownloadListAdapter(Context context) {
         super(context);
         this.context = context;
         act = (MyDownloadAct) context;
-        downloadManager = DownloadManager.with(context);
+        downloadManager = (android.app.DownloadManager) act.getSystemService(DOWNLOAD_SERVICE);
     }
 
     @Override
@@ -46,14 +48,6 @@ public class DownloadListAdapter extends
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         DownloadItemBean data = getData(position);
-//        try {
-//            MyBusinessInfLocal myDownloadInfoById = dbController.findMyDownloadInfoById(data.getUri().hashCode());
-//            if (myDownloadInfoById != null) {
-//                holder.bindBaseInfo(myDownloadInfoById);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
         holder.bindData(data, position, context);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -98,32 +92,17 @@ public class DownloadListAdapter extends
             // Get download task status
             downloadInfo = data;
             // Set a download listener
-            if (downloadInfo != null) {
-//                downloadInfo.setDownloadListener(new MyDownloadListener(new SoftReference(ViewHolder.this)) {
-//                    //  Call interval about one second
-//                    @Override
-//                    public void onRefresh() {
-//                        LogUtils.e(" download onrefresh");
-//                        if (getUserTag() != null && getUserTag().get() != null) {
-//                            ViewHolder viewHolder = (ViewHolder) getUserTag().get();
-//                            viewHolder.refresh();
-//                        }
-//                    }
-//                });
-
-            }
             refresh();
             bt_action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String text = bt_action.getText().toString();
                     if (text.equals("删除")) {
-                        downloadManager.delete((String) bt_action.getTag());
+                        DBService.getInstance(context).deleteGroup(downloadInfo.url);
                         Utils.deleteFileSafely(new File(downloadInfo.filePath));
                     } else if (text.equals("取消")) {
-                        downloadManager.cancel((String) bt_action.getTag());
-                        String tempPath = com.aiqing.kaiheiba.download.Utils.getTempPath(downloadInfo.filePath);
-                        Utils.deleteFileSafely(new File(tempPath));
+                        downloadManager.remove(downloadInfo.id);
+                        DBService.getInstance(context).deleteGroup(downloadInfo.url);
                     }
                     act.mockData();
                 }

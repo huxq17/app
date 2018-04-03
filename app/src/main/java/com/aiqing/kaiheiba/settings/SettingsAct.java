@@ -8,9 +8,9 @@ import android.view.View;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.login.LoginAct;
-import com.huxq17.xprefs.XPrefs;
 
 import user.User;
+import user.UserService;
 
 public class SettingsAct extends BaseActivity {
     @Override
@@ -40,14 +40,13 @@ public class SettingsAct extends BaseActivity {
         findViewById(R.id.settings_clear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               toast("清除成功");
+                toast("清除成功");
             }
         });
     }
 
     public void logout(View v) {
-        User user = new User();
-        XPrefs.saveAll(user);
+        UserService.save(new User());
         LoginAct.start(this, true);
     }
 

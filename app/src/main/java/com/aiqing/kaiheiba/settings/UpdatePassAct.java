@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import user.User;
+import user.UserService;
 
 public class UpdatePassAct extends BaseActivity {
     private EditText etCurPass, etNewPass, etEnsurePass;
@@ -89,7 +90,10 @@ public class UpdatePassAct extends BaseActivity {
                     @Override
                     protected void onSuccess(User dataBean) {
                         toast("修改密码成功");
-                        LoginAct.start(UpdatePassAct.this);
+                        User user = new User();
+                        user.mobile = UserService.getMobile();
+                        UserService.save(user);
+                        LoginAct.start(UpdatePassAct.this, true);
                         finish();
                     }
                 });

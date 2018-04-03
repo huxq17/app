@@ -31,7 +31,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table download_info(thread_id integer, "
                 + "startposition integer,endposition integer,url char," +
                 "primary key(thread_id,url))");
-        db.execSQL("create table download_group(name char, url char primary key,length integer,progress integer,avatar char,download_name char,file_path char)");
+        db.execSQL("create table download_group(name char, url char primary key,length integer,progress integer," +
+                "avatar char,download_name char,file_path char)");
     }
 
     @Override

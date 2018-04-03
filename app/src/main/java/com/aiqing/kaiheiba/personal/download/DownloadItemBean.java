@@ -9,6 +9,7 @@ public class DownloadItemBean {
     public long length;
     public DownloadStatus status;
     public String url;
+    public long id;
 
     public int getPercent() {
         return (int) (progress * 100 / length);

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.aiqing.kaiheiba.neteasyim.session.SessionHelper;
 import com.aiqing.kaiheiba.weex.WeexImageAdapter;
 import com.aiqing.kaiheiba.weex.WeexJumpModule;
+import com.aiqing.kaiheiba.weex.WeexShareModule;
 import com.aiqing.kaiheiba.weex.WeexUploadModule;
 import com.aiqing.kaiheiba.weex.WeexValueModule;
 import com.huxq17.xprefs.XPrefs;
@@ -22,8 +23,6 @@ import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 
-import cn.woblog.android.downloader.DownloadService;
-import cn.woblog.android.downloader.config.Config;
 import user.UserService;
 
 public class App extends MultiDexApplication {
@@ -42,27 +41,28 @@ public class App extends MultiDexApplication {
             WXSDKEngine.registerModule("imagePicker", ImagePickerModule.class);
             WXSDKEngine.registerModule("profile", WeexJumpModule.class);
             WXSDKEngine.registerModule("imageUploader", WeexUploadModule.class);
+            WXSDKEngine.registerModule("sharePost", WeexShareModule.class);
         } catch (WXException e) {
             e.printStackTrace();
         }
         CityListLoader.getInstance().loadCityData(this);
-        Config config = new Config();
-        //set database path.
-//    config.setDatabaseName("/sdcard/a/d.db");
-//      config.setDownloadDBController(dbController);
-
-        //set download quantity at the same time.
-        config.setDownloadThread(5);
-
-        //set each download info thread number
-        config.setEachDownloadThread(3);
-
-        // set connect timeout,unit millisecond
-        config.setConnectTimeout(10000);
-
-        // set read data timeout,unit millisecond
-        config.setReadTimeout(10000);
-        DownloadService.getDownloadManager(this.getApplicationContext(), config);
+//        Config config = new Config();
+//        //set database path.
+////    config.setDatabaseName("/sdcard/a/d.db");
+////      config.setDownloadDBController(dbController);
+//
+//        //set download quantity at the same time.
+//        config.setDownloadThread(5);
+//
+//        //set each download info thread number
+//        config.setEachDownloadThread(3);
+//
+//        // set connect timeout,unit millisecond
+//        config.setConnectTimeout(10000);
+//
+//        // set read data timeout,unit millisecond
+//        config.setReadTimeout(10000);
+//        DownloadService.getDownloadManager(this.getApplicationContext(), config);
         SDKOptions options = new SDKOptions();
         // SDK初始化（启动后台服务，若已经存在用户登录信息， SDK 将完成自动登录）
         NIMClient.init(this, loginInfo(), options);

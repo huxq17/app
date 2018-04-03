@@ -43,7 +43,6 @@ public class WeexUploadModule extends WXModule {
 
     @JSMethod
     public void uploadImg(Map<String, Object> map, JSCallback callback) {
-        LogUtils.e("uploadImag imgDataArr=" + map.get("imgDataArr"));
         imgs = (JSONArray) map.get("imgDataArr");
         if (imgs.size() == 0) {
             return;

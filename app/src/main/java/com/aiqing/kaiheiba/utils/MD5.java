@@ -79,8 +79,8 @@ public class MD5 {
             builder.append(Integer.toHexString((b >> 4) & 0xf));
             builder.append(Integer.toHexString((b >> 0) & 0xf));
         }
-        return builder.toString();
-//        return builder.toString().substring(3, 9);
+//        return builder.toString();
+        return builder.toString().substring(3, 9);
     }
 
     public static String md5(String str) {

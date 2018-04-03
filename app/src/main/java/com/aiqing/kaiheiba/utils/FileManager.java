@@ -22,4 +22,12 @@ public class FileManager {
         }
         return dir;
     }
+    public static File getImagePath() {
+        String cacheDir = "/kaiheiba/download/img";
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + cacheDir + "/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
 }

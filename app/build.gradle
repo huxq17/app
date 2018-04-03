@@ -55,7 +55,7 @@ dependencies {
     implementation 'pub.devrel:easypermissions:1.2.0'
     compile 'com.buyi.huxq17:serviceagency:1.0.0'
     compile 'liji.library.dev:citypickerview:3.1.6'
-    implementation project(':downloader')
+//    implementation project(':downloader')
     implementation project(':im')
     implementation project(':tractor')
     compile 'com.j256.ormlite:ormlite-android:5.0'
@@ -70,7 +70,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:27.1.0'
     compile 'com.taobao.android:weex_inspector:0.8.0.0'
     compile 'com.weexext:imagepicker:1.0.1'
-    compile 'com.arialyy.aria:aria-core:3.3.14'
+//    compile 'com.arialyy.aria:aria-core:3.3.14'
     annotationProcessor 'com.arialyy.aria:aria-compiler:3.3.14'
 
 }

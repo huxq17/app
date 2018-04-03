@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
-
-import com.andbase.tractor.utils.LogUtils;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 public class Utils {
     public static Drawable setStrokenBg(int strokenWidth, int round, int strokenColor, int background) {
@@ -25,16 +28,6 @@ public class Utils {
             gd.setStroke(strokenWidth, strokenColor);
         }
         return gd;
-    }
-
-    public static void install(Context context, String path) {
-        if (context == null) {
-            throw new RuntimeException("context==null");
-        }
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(path)),
-                "application/vnd.android.package-archive");
-        context.startActivity(intent);
     }
 
     public static boolean deleteFileSafely(File file) {
@@ -99,5 +92,37 @@ public class Utils {
             parentFile.mkdirs();
         }
         return file.renameTo(newFile);
+    }
+
+    public static String sortHashMap(LinkedHashMap hashMap) {
+        Object[] key = hashMap.keySet().toArray();
+        Arrays.sort(key);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < key.length; i++) {
+            if (sb.length() > 0) {
+                sb.append("&");
+            }
+            try {
+                sb.append(key[i]).append("=").append(URLDecoder.decode("" + hashMap.get(key[i]), "utf-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
+
+    public static void install(Context context, String file) {
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        Uri u;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (currentApiVersion < 24) {
+            u = Uri.fromFile(new File(file));
+        } else {
+            u = FileProvider.getUriForFile(context, "com.aiqing.kaiheiba.provider", new File(file));
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        intent.setDataAndType(u, "application/vnd.android.package-archive");
+        context.startActivity(intent);
     }
 }

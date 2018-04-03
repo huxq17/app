@@ -122,6 +122,11 @@
         android:background="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/settings_safe_bind_mobile">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+
         <TextView
             style="@style/ContentTextStyle"
             android:layout_width="wrap_content"

@@ -2,7 +2,6 @@ package com.aiqing.kaiheiba.api;
 
 
 import com.aiqing.kaiheiba.okhttp.CommonInterceptor;
-import com.aiqing.kaiheiba.okhttp.CustomInterceptor;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,7 +21,6 @@ public enum ApiManager {
     private OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
             okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new CustomInterceptor())
                     .connectTimeout(5, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
                     .addInterceptor(new CommonInterceptor())

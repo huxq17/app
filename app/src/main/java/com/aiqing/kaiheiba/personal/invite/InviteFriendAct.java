@@ -91,7 +91,7 @@ public class InviteFriendAct extends BaseActivity {
                             inviteList = list;
                             MyInviteAdapter.setData(inviteList);
                         }
-                        tvInviteNum.setText(""+inviteList.size());
+                        tvInviteNum.setText("" + inviteList.size());
                         inviteCode = accountBean.getInviteCode();
                         tvInviteCode.setText("我的邀请码：" + inviteCode);
                         tvMyAccount.setText(UserService.getUserId());

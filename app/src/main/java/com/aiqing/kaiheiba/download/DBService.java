@@ -98,10 +98,39 @@ public class DBService {
     public synchronized void insertGroup(DownloadGroup group) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         String sql = "replace into " + DOWNLOAD_GROUP_TABLE + "(name, url,length,progress,avatar,download_name,file_path) values(?,?,?,?,?,?,?)";
-        Object[] bindArgs = {group.name, group.url, group.length, group.progress,group.avatar,group.downloadName,group.filePath};
+        Object[] bindArgs = {group.name, group.url, group.length, group.progress, group.avatar, group.downloadName, group.filePath};
         database.execSQL(sql, bindArgs);
         database.close();
     }
+
+    public synchronized void insertDownloadId(DownloadGroup group) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        String sql = "replace into " + DOWNLOAD_GROUP_TABLE + "(name,avatar,download_name, url,file_path,progress) values(?,?,?,?,?,?)";
+        Object[] bindArgs = {group.name, group.avatar, group.downloadName, group.url, group.filePath, group.progress};
+        database.execSQL(sql, bindArgs);
+        database.close();
+    }
+
+    public synchronized List<DownloadGroup> queryDownloadList() {
+        List<DownloadGroup> groups = new ArrayList<>();
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        String sql = "select name,url,download_name,avatar,file_path,progress from " + DOWNLOAD_GROUP_TABLE;
+        Cursor cursor = database.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(0);
+            String url = cursor.getString(1);
+            String download_name = cursor.getString(2);
+            String avatar = cursor.getString(3);
+            String filePath = cursor.getString(4);
+            int progress = cursor.getInt(5);
+            DownloadGroup bean = new DownloadGroup(id, avatar, download_name, url, filePath, progress);
+            groups.add(bean);
+        }
+        cursor.close();
+        database.close();
+        return groups;
+    }
+
     /**
      * 下载完成后删除数据库中的数据
      */
@@ -110,6 +139,7 @@ public class DBService {
         int count = database.delete(DOWNLOAD_GROUP_TABLE, "url=?", new String[]{url});
         database.close();
     }
+
     /**
      * 关闭数据库
      */

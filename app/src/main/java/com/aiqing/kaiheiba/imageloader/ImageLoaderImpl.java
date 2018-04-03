@@ -16,7 +16,6 @@ public class ImageLoaderImpl implements ImageLoader {
         if (url == null || url.isEmpty()) return;
         Picasso.with(imageview.getContext())
                 .load(url)
-                .centerCrop()
                 .into(imageview);
     }
 

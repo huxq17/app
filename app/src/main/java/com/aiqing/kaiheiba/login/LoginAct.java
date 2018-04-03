@@ -56,6 +56,16 @@ public class LoginAct extends BaseActivity {
                 etPass.setSelection(getText(etPass).length());
             }
         });
+        inflateMobile();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        inflateMobile();
+    }
+
+    private void inflateMobile() {
         String mobile = UserService.getMobile();
         if (!isEmpty(mobile)) {
             etMobile.setText(mobile);

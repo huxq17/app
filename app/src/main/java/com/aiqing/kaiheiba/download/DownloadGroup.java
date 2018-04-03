@@ -20,6 +20,15 @@ public class DownloadGroup {
         this.filePath = filePath;
     }
 
+    public DownloadGroup(String name, String avatar, String gameName, String url, String filePath, int progress) {
+        this.name = name;
+        this.url = url;
+        this.downloadName = gameName;
+        this.filePath = filePath;
+        this.avatar = avatar;
+        this.progress = progress;
+    }
+
     public void getUrlsByName(String name) {
 
     }

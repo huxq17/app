@@ -28,17 +28,18 @@ public class VerifyTrueNameAct extends BaseActivity {
     }
 
     public void submit(View v) {
-        if(isEmpty(etName)||isEmpty(etID)){
+        if (isEmpty(etName) || isEmpty(etID)) {
             toast("请完善信息");
             return;
         }
         ApiManager.INSTANCE.getApi(UserApi.class)
-                .verifyTrueName(UserService.getUserToken(),getText(etName),getText(etID))
+                .verifyTrueName(UserService.getUserToken(), getText(etName), getText(etID))
                 .compose(RxSchedulers.<BaseResponse<Object>>compose())
                 .subscribe(new BaseObserver<Object>() {
                     @Override
                     protected void onSuccess(Object o) {
                         toast("验证成功");
+                        UserService.setIsRealAuth("1");
                         finish();
                     }
                 });
