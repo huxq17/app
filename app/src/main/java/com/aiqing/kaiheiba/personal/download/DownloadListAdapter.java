@@ -20,13 +20,10 @@ import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.Utils;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
 
-import java.io.File;
-
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class DownloadListAdapter extends BaseRecyclerViewAdapter<DownloadItemBean, DownloadListAdapter.ViewHolder> {
 
-    private static final String TAG = "DownloadListAdapter";
     private final Context context;
     private MyDownloadAct act;
     private android.app.DownloadManager downloadManager;
@@ -98,7 +95,8 @@ public class DownloadListAdapter extends BaseRecyclerViewAdapter<DownloadItemBea
                     String text = bt_action.getText().toString();
                     if (text.equals("删除")) {
                         DBService.getInstance(context).deleteGroup(downloadInfo.url);
-                        Utils.deleteFileSafely(new File(downloadInfo.filePath));
+//                        Utils.deleteFileSafely(new File(downloadInfo.filePath));
+                        downloadManager.remove(downloadInfo.id);
                     } else if (text.equals("取消")) {
                         downloadManager.remove(downloadInfo.id);
                         DBService.getInstance(context).deleteGroup(downloadInfo.url);

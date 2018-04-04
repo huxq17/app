@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.aiqing.kaiheiba.personal.download.MyBusinessInfLocal;
 import com.huxq17.xprefs.LogUtils;
 
 import java.util.ArrayList;
@@ -140,9 +141,23 @@ public class DBService {
         return groups;
     }
 
-    /**
-     * 下载完成后删除数据库中的数据
-     */
+    public synchronized MyBusinessInfLocal queryDownloadById(String id) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        String sql = "select url,download_name,avatar from " + DOWNLOAD_GROUP_TABLE;
+        Cursor cursor = database.rawQuery(sql, null);
+        MyBusinessInfLocal myBusinessInfLocal = null;
+        while (cursor.moveToNext()) {
+            String downloadurl = cursor.getString(0);
+            String downName = cursor.getString(1);
+            String downIcon = cursor.getString(2);
+            myBusinessInfLocal = new MyBusinessInfLocal(
+                    downloadurl.hashCode(), downName, downIcon, downloadurl);
+        }
+        cursor.close();
+        database.close();
+        return myBusinessInfLocal;
+    }
+
     public synchronized void deleteGroup(String url) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         int count = database.delete(DOWNLOAD_GROUP_TABLE, "url=?", new String[]{url});

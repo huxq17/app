@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.RadioGroup;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 
 import com.aiqing.kaiheiba.common.BaseFragment;
 import com.aiqing.kaiheiba.login.LoginAct;
@@ -25,13 +27,14 @@ import user.UserService;
 
 
 public class HomeActivity extends UI {
-    RadioGroup mBottomBar;
+    private LinearLayout mBottomBar;
     private FragmentTransaction transaction;
     private WeexFragment homeFragment;
     private WeexFragment gameFragment;
     private BaseFragment imFragment;
     private BaseFragment myFragment;
     List<Fragment> fragmentList = new ArrayList<>();
+    RadioButton rbGame, rbPlayGround, rbIM, rbMy;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,56 +46,36 @@ public class HomeActivity extends UI {
     private int lastSelectedId;
 
     private void initView() {
-        mBottomBar = findViewById(R.id.tab_home);
+        mBottomBar = findViewById(R.id.tab_bottom_home);
 //        mBottomBar.noTabletGoodness();
 //        mBottomBar.useFixedMode();
-        mBottomBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rb_home_game) {
-//                    if (homeFragment == null) {
-//                        homeFragment = WeexFragment.newInstance(WeexFragment.gameurl);
-//                        fragmentList.add(homeFragment);
-//                    }
-//                    replaceFragment(homeFragment);
-                    String url="https://t.alipayobjects.com/L1/71/100/and/alipay_wap_main.apk";
-                    MyBusinessInfLocal myBusinessInfLocal = new MyBusinessInfLocal(
-                            url.hashCode(), "", "", url);
-                    MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
-                } else if (checkedId == R.id.rb_home_playground) {
-                    if (gameFragment == null) {
-                        gameFragment = WeexFragment.newInstance(WeexFragment.homeurl);
-                        fragmentList.add(gameFragment);
-                    }
-                    replaceFragment(gameFragment);
-                } else if (checkedId == R.id.rb_home_im) {
-                    if (!UserService.isLogin()) {
-                        LoginAct.start(HomeActivity.this);
-                        mBottomBar.check(lastSelectedId);
-                        return;
-                    }
-                    if (imFragment == null) {
-                        imFragment = IMFragment.newInstance();
-                        fragmentList.add(imFragment);
-                    }
-                    replaceFragment(imFragment);
+        rbGame = findView(R.id.rb_home_game);
+        rbPlayGround = findView(R.id.rb_home_playground);
+        rbIM = findView(R.id.rb_home_im);
+        rbMy = findView(R.id.rb_home_my);
+        toggle(R.id.rb_home_playground);
+    }
 
-                } else if (checkedId == R.id.rb_home_my) {
-                    if (!UserService.isLogin()) {
-                        LoginAct.start(HomeActivity.this);
-                        mBottomBar.check(lastSelectedId);
-                        return;
-                    }
-                    if (myFragment == null) {
-                        myFragment = WeexFragment.newInstance(WeexFragment.mypageurl);
-                        fragmentList.add(myFragment);
-                    }
-                    replaceFragment(myFragment);
-                }
-                lastSelectedId = checkedId;
+    public void toggle(int id) {
+        int count = mBottomBar.getChildCount();
+        for (int i = 0; i < count; i++) {
+            RadioButton button = (RadioButton) mBottomBar.getChildAt(i);
+            if (id == button.getId()) {
+                button.performClick();
+            } else {
+                button.setChecked(false);
             }
-        });
-        mBottomBar.check(R.id.rb_home_playground);
+        }
+    }
+
+    public void closeOther(int id) {
+        int count = mBottomBar.getChildCount();
+        for (int i = 0; i < count; i++) {
+            RadioButton button = (RadioButton) mBottomBar.getChildAt(i);
+            if (id != button.getId()) {
+                button.setChecked(false);
+            }
+        }
     }
 
     @Override
@@ -122,4 +105,57 @@ public class HomeActivity extends UI {
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
+
+    public void onCheck(View v) {
+        int checkedId = v.getId();
+        switch (checkedId) {
+            case R.id.rb_home_game:
+                //                    if (homeFragment == null) {
+//                        homeFragment = WeexFragment.newInstance(WeexFragment.gameurl);
+//                        fragmentList.add(homeFragment);
+//                    }
+//                    replaceFragment(homeFragment);
+                String url = "https://t.alipayobjects.com/L1/71/100/and/alipay_wap_main.apk";
+                MyBusinessInfLocal myBusinessInfLocal = new MyBusinessInfLocal(
+                        url.hashCode(), "", "", url);
+                MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
+                break;
+            case R.id.rb_home_playground:
+                if (gameFragment == null) {
+                    gameFragment = WeexFragment.newInstance(WeexFragment.homeurl);
+                    fragmentList.add(gameFragment);
+                }
+                replaceFragment(gameFragment);
+                break;
+            case R.id.rb_home_im:
+                if (!UserService.isLogin()) {
+                    LoginAct.start(HomeActivity.this);
+//                    toggle(lastSelectedId);
+                    rbIM.setChecked(false);
+                    return;
+                }
+                if (imFragment == null) {
+                    imFragment = IMFragment.newInstance();
+                    fragmentList.add(imFragment);
+                }
+                replaceFragment(imFragment);
+                break;
+            case R.id.rb_home_my:
+                if (!UserService.isLogin()) {
+                    LoginAct.start(HomeActivity.this);
+//                    toggle(lastSelectedId);
+                    rbMy.setChecked(false);
+                    return;
+                }
+                if (myFragment == null) {
+                    myFragment = WeexFragment.newInstance(WeexFragment.mypageurl);
+                    fragmentList.add(myFragment);
+                }
+                replaceFragment(myFragment);
+                break;
+        }
+        lastSelectedId = checkedId;
+        closeOther(checkedId);
+    }
+
 }

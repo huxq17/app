@@ -12,8 +12,8 @@
         android:layout_weight="1" />
 
 
-    <RadioGroup
-        android:id="@+id/tab_home"
+    <LinearLayout
+        android:id="@+id/tab_bottom_home"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal">
@@ -27,6 +27,7 @@
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/s_home_game"
             android:gravity="center_horizontal"
+            android:onClick="onCheck"
             android:text="游戏"
             android:textColor="@color/contentTextColor"
             android:textSize="16sp" />
@@ -40,6 +41,7 @@
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/s_home_playground"
             android:gravity="center_horizontal"
+            android:onClick="onCheck"
             android:text="广场"
             android:textColor="@color/contentTextColor"
             android:textSize="16sp" />
@@ -53,6 +55,7 @@
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/s_home_im"
             android:gravity="center_horizontal"
+            android:onClick="onCheck"
             android:text="聊天"
             android:textColor="@color/contentTextColor"
             android:textSize="16sp" />
@@ -66,10 +69,11 @@
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/s_home_my"
             android:gravity="center_horizontal"
+            android:onClick="onCheck"
             android:text="我的"
             android:textColor="@color/contentTextColor"
             android:textSize="16sp" />
 
-    </RadioGroup>
+    </LinearLayout>
 
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.aiqing.kaiheiba.R;
@@ -117,7 +118,8 @@ public class IMFragment extends BaseFragment implements TabFragment.State, Remin
                 }
             }
         });
-        tab.check(checkedId);
+//        tab.check(checkedId);
+        ((RadioButton) tab.findViewById(checkedId)).toggle();
         registerMsgUnreadInfoObserver(true);
         registerSystemMessageObservers(true);
         requestSystemMessageUnreadCount();

@@ -1,11 +1,8 @@
 package com.aiqing.kaiheiba.utils;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import java.io.Closeable;
@@ -111,18 +108,7 @@ public class Utils {
         return sb.toString();
     }
 
-    public static void install(Context context, String file) {
-        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        Uri u;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (currentApiVersion < 24) {
-            u = Uri.fromFile(new File(file));
-        } else {
-            u = FileProvider.getUriForFile(context, "com.aiqing.kaiheiba.provider", new File(file));
-            //添加这一句表示对目标应用临时授权该Uri所代表的文件
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
-        intent.setDataAndType(u, "application/vnd.android.package-archive");
-        context.startActivity(intent);
+    public static void install(Activity context, String authority, String file) {
+        Apk.with(context).from(file).authority(authority).install();
     }
 }

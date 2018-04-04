@@ -1,20 +1,14 @@
 package com.aiqing.kaiheiba.personal.download;
 
 
-import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -26,11 +20,10 @@ import com.aiqing.kaiheiba.common.BaseRecyclerViewAdapter;
 import com.aiqing.kaiheiba.decoration.RecyclerViewDivider;
 import com.aiqing.kaiheiba.download.DBService;
 import com.aiqing.kaiheiba.download.DownloadGroup;
-import com.aiqing.kaiheiba.download.DownloadListener;
+import com.aiqing.kaiheiba.utils.Apk;
 import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.FileManager;
 import com.aiqing.kaiheiba.utils.Utils;
-import com.huxq17.xprefs.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,73 +46,27 @@ public class MyDownloadAct extends BaseActivity {
         mDownloadRV.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.HORIZONTAL,
                 DensityUtil.dip2px(this, 10), getResources().getColor(R.color.bg_content)));
         mDownloadRV.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-//                String path = mAdapter.getData(position).getPath();
-//                toast("path=" + path);
-            }
-        });
         mockData();
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 DownloadItemBean itemBean = mAdapter.getData(position);
+
                 int progress = itemBean.progress;
                 if (progress == 100) {
-                    LogUtils.e("to install itemBean.filePath=" + itemBean.filePath);
-                    installPath = itemBean.filePath;
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        boolean b = getPackageManager().canRequestPackageInstalls();
-                        if (b) {
-                            install();
-                        } else {
-                            //请求安装未知应用来源的权限
-                            ActivityCompat.requestPermissions(MyDownloadAct.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, INSTALL_PACKAGES_REQUESTCODE);
-                        }
-                    } else {
-                        install();
-                    }
+                    Apk.with(MyDownloadAct.this)
+                            .from(itemBean.filePath)
+                            .authority("com.aiqing.kaiheiba.provider")
+                            .install();
                 }
             }
         });
     }
 
-    private String installPath;
-
-    private void install() {
-        Utils.install(MyDownloadAct.this, installPath);
-    }
-
-    private static final int INSTALL_PACKAGES_REQUESTCODE = 1;
-    private static final int GET_UNKNOWN_APP_SOURCES = 2;
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case INSTALL_PACKAGES_REQUESTCODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    install();
-                } else {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
-                    startActivityForResult(intent, GET_UNKNOWN_APP_SOURCES);
-                }
-                break;
-
-        }
-    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case GET_UNKNOWN_APP_SOURCES:
-                install();
-                break;
-
-            default:
-                break;
-        }
+        Apk.INSTANCE.onActivityResult(requestCode, resultCode, data);
     }
 
     public void register() {
@@ -195,8 +142,8 @@ public class MyDownloadAct extends BaseActivity {
                         //下载文件的URL链接
                         String url = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));
                         group.progress = (int) (100 * bytes_downloaded / bytes_total);
+//                        group.filePath = address;
                         bean.progress = group.progress;
-                        LogUtils.e("bytes_downloaded=" + bytes_downloaded + ";bytes_total=" + bytes_total + "; bean.progress=" + bean.progress);
                         beans.add(bean);
                         DBService.getInstance(App.getContext()).insertDownloadId(group);
                     }
@@ -232,12 +179,13 @@ public class MyDownloadAct extends BaseActivity {
         String path = d.getAbsolutePath().concat("/").concat(name);
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, name);
+        request.setAllowedOverMetered(true);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         File downloadPath = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath().concat("/").concat(name));
         if (downloadPath.exists()) downloadPath.delete();
         long id = downloadManager.enqueue(request);
-        LogUtils.e("downloadPath=" + downloadPath);
         DownloadGroup downloadGroup = new DownloadGroup(id + "", avatar, name, url, downloadPath.getAbsolutePath(), 0);
         DBService.getInstance(App.getContext()).insertDownloadId(downloadGroup);
 //        DownloadManager.with(App.getContext())
@@ -249,28 +197,4 @@ public class MyDownloadAct extends BaseActivity {
 //                .saveTo(d.getAbsolutePath(), name);
 //        IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
     }
-
-    public static final String DOWNLOAD_REFRESH = "download_refresh";
-
-    public DownloadListener listener = new DownloadListener("1") {
-        @Override
-        public void onStart() {
-
-        }
-
-        @Override
-        public void onLoading(int progress, String url) {
-            mockData();
-        }
-
-        @Override
-        public void onFailed(String msg) {
-
-        }
-
-        @Override
-        public void onSuccess() {
-
-        }
-    };
 }
