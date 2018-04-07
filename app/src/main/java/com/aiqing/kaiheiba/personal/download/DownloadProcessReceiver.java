@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 
 import com.aiqing.kaiheiba.download.DBService;
+import com.andbase.tractor.utils.LogUtils;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
@@ -26,7 +27,7 @@ public class DownloadProcessReceiver extends BroadcastReceiver {
                 int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     DBService.getInstance(context).updateDownloadId(id + "", 100);
-                } else if (true || status == DownloadManager.STATUS_FAILED) {
+                } else if (status == DownloadManager.STATUS_FAILED) {
                     MyBusinessInfLocal info = DBService.getInstance(context).queryDownloadById(id + "");
                     downloadManager.remove(id);
                     MyDownloadAct.download(info);

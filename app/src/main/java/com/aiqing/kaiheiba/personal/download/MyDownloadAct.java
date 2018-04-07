@@ -182,7 +182,7 @@ public class MyDownloadAct extends BaseActivity {
 //        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, name);
         request.setAllowedOverMetered(true);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         File downloadPath = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath().concat("/").concat(name));
         if (downloadPath.exists()) downloadPath.delete();
         long id = downloadManager.enqueue(request);
