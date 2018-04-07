@@ -158,4 +158,9 @@ public class HomeActivity extends UI {
         closeOther(checkedId);
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        moveTaskToBack(true);
+    }
 }

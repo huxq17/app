@@ -17,7 +17,6 @@ import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.Code;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.rxjava.BaseObserver;
-import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.LoginInfo;
@@ -29,6 +28,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import user.User;
@@ -111,6 +111,7 @@ public class LoginAct extends BaseActivity {
                         return loginNetEasyIM(bean);
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<User>() {
                     @Override
                     protected void onSuccess(User user) {
@@ -162,7 +163,7 @@ public class LoginAct extends BaseActivity {
                 }
 
             }
-        }).compose(RxSchedulers.<LoginApi.Bean>compose());
+        });
     }
 
     public static void start(Context context) {
