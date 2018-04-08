@@ -8,6 +8,7 @@ import android.view.View;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.login.LoginAct;
+import com.aiqing.kaiheiba.utils.VersionUpgrade;
 
 import user.User;
 import user.UserService;
@@ -41,6 +42,14 @@ public class SettingsAct extends BaseActivity {
             @Override
             public void onClick(View v) {
                 toast("清除成功");
+            }
+        });
+        findViewById(R.id.settings_version).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new VersionUpgrade(SettingsAct.this)
+                        .setToast()
+                        .check();
             }
         });
     }

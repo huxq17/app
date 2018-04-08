@@ -111,4 +111,5 @@ public enum ApkInstaller {
     private void openSetting() {
         Apk.openSetting(contextWeakRef.get(), GET_UNKNOWN_APP_SOURCES);
     }
+
 }

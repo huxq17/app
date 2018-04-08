@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.VersionApi;
@@ -33,11 +34,24 @@ public class VersionUpgrade {
         XPrefs.saveAll(VersionUpgrade.this);
     }
 
+    public void resetLastAlertTime() {
+        lastAlertTime = -1;
+        XPrefs.saveAll(VersionUpgrade.this);
+    }
+
     public VersionUpgrade() {
     }
 
     public VersionUpgrade(Activity activity) {
         this.activity = activity;
+    }
+
+    public boolean toastNoUpgrade;
+
+    public VersionUpgrade setToast() {
+        toastNoUpgrade = true;
+        resetLastAlertTime();
+        return this;
     }
 
     public void check() {
@@ -55,6 +69,10 @@ public class VersionUpgrade {
                             long curTime = System.currentTimeMillis();
                             if (lastAlertTime < 0 || curTime - lastAlertTime > 24 * 60 * 60 * 1000) {
                                 alert(androidBean);
+                            }
+                        } else {
+                            if (toastNoUpgrade) {
+                                Toast.makeText(activity, "已经是最新版本", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -80,6 +98,7 @@ public class VersionUpgrade {
                     @Override
                     public void onClick(View v) {
                         if (Apk.canInstallApk(activity)) {
+                            setLastAlertTime();
                             downloadApk(url);
                             alertDialog.dismiss();
                         } else {

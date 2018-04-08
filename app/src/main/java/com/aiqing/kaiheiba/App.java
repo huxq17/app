@@ -13,7 +13,6 @@ import com.aiqing.kaiheiba.weex.WeexJumpModule;
 import com.aiqing.kaiheiba.weex.WeexShareModule;
 import com.aiqing.kaiheiba.weex.WeexUploadModule;
 import com.aiqing.kaiheiba.weex.WeexValueModule;
-import com.huxq17.xprefs.LogUtils;
 import com.huxq17.xprefs.XPrefs;
 import com.imagepicker.ImagePickerModule;
 import com.lljjcoder.style.citylist.utils.CityListLoader;
@@ -66,7 +65,6 @@ public class App extends MultiDexApplication {
             @Override
             public void onActivityStarted(Activity activity) {
                 curAct = activity;
-                LogUtils.e("onActivityStarted activity="+activity);
             }
 
             @Override
