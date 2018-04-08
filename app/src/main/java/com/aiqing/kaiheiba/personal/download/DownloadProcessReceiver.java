@@ -5,9 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Environment;
 
-import com.aiqing.kaiheiba.App;
 import com.aiqing.kaiheiba.download.DBService;
 import com.aiqing.kaiheiba.utils.Apk;
 
@@ -30,11 +28,16 @@ public class DownloadProcessReceiver extends BroadcastReceiver {
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     DBService.getInstance(context).updateDownloadId(id + "", 100);
                     String address = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                    Context context1 = App.getCurAct() == null ? context : App.getCurAct();
-                    Apk.with(context1)
-                            .from(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath().concat("/").concat("kaiheiba.apk"))
+                    Apk.with(context)
+                            .fromUri(address)
                             .authority("com.aiqing.kaiheiba.provider")
                             .install();
+//                    if (address.endsWith("kaiheiba.apk") ) {
+//                        Apk.with(context)
+//                                .from(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath().concat("/").concat("kaiheiba.apk"))
+//                                .authority("com.aiqing.kaiheiba.provider")
+//                                .install();
+//                    }
                 } else if (status == DownloadManager.STATUS_FAILED) {
                     MyBusinessInfLocal info = DBService.getInstance(context).queryDownloadById(id + "");
                     downloadManager.remove(id);

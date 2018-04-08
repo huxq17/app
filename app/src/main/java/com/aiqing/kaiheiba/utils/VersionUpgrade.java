@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.widget.Button;
 
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.VersionApi;
@@ -62,33 +64,52 @@ public class VersionUpgrade {
     private void alert(VersionApi.Bean.DataBean.AndroidBean androidBean) {
         final String url = androidBean.getUrl();
         final String version = androidBean.getVersion();
-        AlertDialog alertDialog = new AlertDialog.Builder(activity)
+        final AlertDialog alertDialog = new AlertDialog.Builder(activity)
                 .setTitle("更新到" + version + "版本？")
                 .setMessage("解决了若干bug并且进行了体验上的优化。")
                 .setCancelable(false)
-                .setNegativeButton("下次再说", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setLastAlertTime();
-                    }
-                })
-                .setPositiveButton("更新", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        File d = FileManager.getDownloadPath();
-                        String path = d.getAbsolutePath().concat("/").concat("");
-                        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(DOWNLOAD_SERVICE);
-                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-                        request.setDestinationInExternalFilesDir(activity, Environment.DIRECTORY_DOWNLOADS, "kaiheiba.apk");
-                        request.setAllowedOverMetered(true);
-//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-                        File downloadPath = new File(activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath().concat("/").concat("kaiheiba.apk"));
-                        if (downloadPath.exists()) downloadPath.delete();
-                        long id = downloadManager.enqueue(request);
-                    }
-                })
+                .setNegativeButton("下次再说", null)
+                .setPositiveButton("更新", null)
                 .create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button positionButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                positionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Apk.canInstallApk(activity)) {
+                            downloadApk(url);
+                            alertDialog.dismiss();
+                        } else {
+                            Apk.openSetting(activity, -1);
+                        }
+                    }
+                });
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setLastAlertTime();
+                        alertDialog.dismiss();
+                    }
+                });
+            }
+        });
         alertDialog.show();
+    }
+
+    private void downloadApk(String url) {
+        File d = FileManager.getDownloadPath();
+        String path = d.getAbsolutePath().concat("/").concat("");
+        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+        request.setDestinationInExternalFilesDir(activity, Environment.DIRECTORY_DOWNLOADS, "kaiheiba.apk");
+        request.setAllowedOverMetered(true);
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+        File downloadPath = new File(activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath().concat("/").concat("kaiheiba.apk"));
+        if (downloadPath.exists()) downloadPath.delete();
+        long id = downloadManager.enqueue(request);
     }
 }
