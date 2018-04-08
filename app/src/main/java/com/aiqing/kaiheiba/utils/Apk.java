@@ -1,7 +1,7 @@
 package com.aiqing.kaiheiba.utils;
 
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 public enum Apk {
@@ -9,7 +9,7 @@ public enum Apk {
     private String uri;
     private ApkInstaller apkInstaller;
 
-    public static ApkInstaller with(Activity context) {
+    public static ApkInstaller with(Context context) {
         return ApkInstaller.INSTANCE.init(INSTANCE, context);
     }
 

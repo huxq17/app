@@ -63,12 +63,6 @@ public class MyDownloadAct extends BaseActivity {
         });
     }
 
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Apk.INSTANCE.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void register() {
         getWindow().getDecorView().postDelayed(queryRunnable, 300);
     }

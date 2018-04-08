@@ -14,11 +14,10 @@ import android.widget.RadioButton;
 import com.aiqing.kaiheiba.common.BaseFragment;
 import com.aiqing.kaiheiba.login.LoginAct;
 import com.aiqing.kaiheiba.neteasyim.IMFragment;
-import com.aiqing.kaiheiba.personal.download.MyBusinessInfLocal;
-import com.aiqing.kaiheiba.personal.download.MyDownloadAct;
+import com.aiqing.kaiheiba.utils.Apk;
+import com.aiqing.kaiheiba.utils.VersionUpgrade;
 import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.netease.nim.uikit.common.activity.UI;
-import com.taobao.weex.WXEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +40,9 @@ public class HomeActivity extends UI {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
+        new VersionUpgrade(this).check();
     }
 
-    private int lastSelectedId;
 
     private void initView() {
         mBottomBar = findViewById(R.id.tab_bottom_home);
@@ -110,15 +109,15 @@ public class HomeActivity extends UI {
         int checkedId = v.getId();
         switch (checkedId) {
             case R.id.rb_home_game:
-                //                    if (homeFragment == null) {
-//                        homeFragment = WeexFragment.newInstance(WeexFragment.gameurl);
-//                        fragmentList.add(homeFragment);
-//                    }
-//                    replaceFragment(homeFragment);
-                String url = "https://t.alipayobjects.com/L1/71/100/and/alipay_wap_main.apk";
-                MyBusinessInfLocal myBusinessInfLocal = new MyBusinessInfLocal(
-                        url.hashCode(), "", "", url);
-                MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
+                if (homeFragment == null) {
+                    homeFragment = WeexFragment.newInstance(WeexFragment.gameurl);
+                    fragmentList.add(homeFragment);
+                }
+                replaceFragment(homeFragment);
+//                String url = "https://t.alipayobjects.com/L1/71/100/and/alipay_wap_main.apk";
+//                MyBusinessInfLocal myBusinessInfLocal = new MyBusinessInfLocal(
+//                        url.hashCode(), "", "", url);
+//                MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
                 break;
             case R.id.rb_home_playground:
                 if (gameFragment == null) {
@@ -154,8 +153,12 @@ public class HomeActivity extends UI {
                 replaceFragment(myFragment);
                 break;
         }
-        lastSelectedId = checkedId;
         closeOther(checkedId);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Apk.INSTANCE.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -8,11 +8,13 @@ import com.aiqing.kaiheiba.utils.Device;
 import com.aiqing.kaiheiba.utils.DeviceHelper;
 import com.aiqing.kaiheiba.utils.MD5;
 import com.aiqing.kaiheiba.utils.Utils;
+import com.andbase.tractor.utils.LogUtils;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -72,11 +74,25 @@ public class CommonInterceptor implements Interceptor {
             requestBuilder.header("X-Auth-UserId", userId);
             requestBuilder.header("X-Auth-Token", userToken);
         }
-        Request request = requestBuilder.method(originalRequest.method(), originalRequest.body())
+        Request.Builder requestBuild = requestBuilder.method(originalRequest.method(), originalRequest.body());
                 //添加到请求里
-                .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),
-                        postBodyString))
-                .build();
+
+        String method = originalRequest.method();
+        if(method.equals("POST")){
+            requestBuild.post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),
+                    postBodyString));
+        }else if (method.equals("GET")){
+//            requestBuild.get("")
+           HttpUrl httpUrl =  originalRequest.url();
+            String url = httpUrl.toString();
+            int index = url.indexOf("?");
+            if (index > 0) {
+                url = url.substring(0, index);
+            }
+            requestBuild.url(url+"?"+postBodyString);
+        }
+        Request request = requestBuild.build();
+        LogUtils.d("request url="+request.url().toString()+";method="+request.method());
         return chain.proceed(request);
     }
 

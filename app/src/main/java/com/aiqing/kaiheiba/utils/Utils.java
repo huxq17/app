@@ -1,6 +1,9 @@
 package com.aiqing.kaiheiba.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
@@ -111,4 +114,22 @@ public class Utils {
     public static void install(Activity context, String authority, String file) {
         Apk.with(context).from(file).authority(authority).install();
     }
+
+    public static String getAppVersionName(Context context) {
+        String versionName = "";
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+            versionName = pi.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (versionName == null || versionName.length() <= 0) {
+            versionName = "";
+        }
+
+        return versionName;
+    }
+
 }

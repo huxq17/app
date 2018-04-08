@@ -11,25 +11,34 @@ import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.andbase.tractor.utils.LogUtils;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 
 public enum ApkInstaller {
     INSTANCE;
     private Apk apk;
+    private String path;
     private String uri;
-    private WeakReference<Activity> contextWeakRef;
+    private WeakReference<Context> contextWeakRef;
     // use for android N
     private String authority;
 
-    public ApkInstaller init(Apk apk, Activity context) {
+
+    public ApkInstaller init(Apk apk, Context context) {
         this.apk = apk;
         contextWeakRef = new WeakReference<>(context);
         return this;
     }
 
-    public ApkInstaller from(String uri) {
-        this.uri = uri;
+    public ApkInstaller from(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public ApkInstaller fromUri(String path) {
+        this.uri = path;
         return this;
     }
 
@@ -88,12 +97,16 @@ public enum ApkInstaller {
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         Uri u;
         if (currentApiVersion < 24) {
-            u = Uri.fromFile(new File(uri));
+            if (!TextUtils.isEmpty(uri)) {
+                u = Uri.parse(uri);
+            } else {
+                u = Uri.fromFile(new File(path));
+            }
         } else {
             if (TextUtils.isEmpty(authority)) {
                 throw new RuntimeException("authority is isEmpty");
             }
-            u = FileProvider.getUriForFile(context, authority, new File(uri));
+            u = FileProvider.getUriForFile(context, authority, new File(path));
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         intent.setDataAndType(u, "application/vnd.android.package-archive");
@@ -102,7 +115,12 @@ public enum ApkInstaller {
     }
 
     private void openSetting() {
-        Activity context = contextWeakRef.get();
+        Context context = contextWeakRef.get();
+        Activity activity = null;
+        if (context instanceof Activity) {
+            activity = (Activity) context;
+            LogUtils.e("context is activity");
+        }
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= 26) {
             Toast.makeText(context, "请允许安装应用", Toast.LENGTH_SHORT).show();
@@ -113,7 +131,11 @@ public enum ApkInstaller {
             Toast.makeText(context, "请勾选从外部来源安装应用", Toast.LENGTH_SHORT).show();
             intent.setAction(android.provider.Settings.ACTION_SECURITY_SETTINGS);
         }
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivityForResult(intent, GET_UNKNOWN_APP_SOURCES);
+        if (activity == null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            activity.startActivityForResult(intent, GET_UNKNOWN_APP_SOURCES);
+        }
     }
 }

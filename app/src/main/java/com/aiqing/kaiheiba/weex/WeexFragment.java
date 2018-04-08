@@ -22,10 +22,10 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     private FrameLayout rootView;
     private WXSDKInstance mWxInstance;
     private String tag;
-    public static String gameurl = "http://172.16.244.1:8080/dist/index.weex.js";
+    public static String gameurl = "http://weex.17kaiheiba.com/bundle/index.weex.js";
 //    public static String gameurl = "http://192.168.1.115:8080/dist/index.weex.js";
-    public static String homeurl = "http://172.16.244.1:8080/dist/home.weex.js";
-    public static String mypageurl = "http://192.168.1.115:8080/dist/mypage.weex.js";
+    public static String homeurl = "http://weex.17kaiheiba.com/bundle/home.weex.js";
+    public static String mypageurl = "http://weex.17kaiheiba.com/bundle/myPage.weex.js";
 
     public WeexFragment() {
     }

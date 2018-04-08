@@ -1,6 +1,7 @@
 package com.aiqing.kaiheiba.common;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
+import com.aiqing.kaiheiba.utils.Apk;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -67,7 +69,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public void onTitleClick() {
     }
-
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Apk.INSTANCE.onActivityResult(requestCode, resultCode, data);
+    }
     @Override
     public void onClick(View v) {
         int id = v.getId();
