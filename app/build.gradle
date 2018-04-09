@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'service_agency'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'aiyou'
+            keyPassword 'aiyou1234'
+            storeFile file('E:/keystore/aiyou.keystore')
+            storePassword 'aiyou1234'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.aiqing.kaiheiba"
@@ -25,11 +33,14 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+//            signingConfig signingConfigs.config
         }
     }
 }
@@ -37,11 +48,11 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.0'
+    compile 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.android.support:design:27.1.0'
     implementation 'com.jakewharton:disklrucache:2.0.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -55,22 +66,20 @@ dependencies {
     implementation 'pub.devrel:easypermissions:1.2.0'
     compile 'com.buyi.huxq17:serviceagency:1.0.0'
     compile 'liji.library.dev:citypickerview:3.1.6'
-//    implementation project(':downloader')
+    //    implementation project(':downloader')
     implementation project(':im')
     implementation project(':tractor')
+//    implementation project(':weex_sdk')
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.j256.ormlite:ormlite-core:5.0'
-
-//    // 基础功能 (必需)
-//    compile 'com.netease.nimlib:basesdk:4.4.0'
+    // 基础功能 (必需)
+    //    compile 'com.netease.nimlib:basesdk:4.4.0'
     compile 'com.android.support:multidex:1.0.2'
-//    compile 'com.roughike:bottom-bar:2.3.1'
-
-    compile 'com.taobao.android:weex_sdk:0.16.0'
+    //    compile 'com.roughike:bottom-bar:2.3.1'
+    compile 'com.taobao.android:weex_sdk:0.18.0'
     compile 'com.android.support:recyclerview-v7:27.1.0'
-    compile 'com.taobao.android:weex_inspector:0.8.0.0'
+//    compile 'com.taobao.android:weex_inspector:0.8.0.0'
     compile 'com.weexext:imagepicker:1.0.1'
-//    compile 'com.arialyy.aria:aria-core:3.3.14'
     annotationProcessor 'com.arialyy.aria:aria-compiler:3.3.14'
-
+    implementation 'com.alibaba:fastjson:1.1.46.android'
 }

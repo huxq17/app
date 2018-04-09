@@ -143,8 +143,25 @@ public class DBService {
 
     public synchronized MyBusinessInfLocal queryDownloadById(String id) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        String sql = "select url,download_name,avatar from " + DOWNLOAD_GROUP_TABLE;
-        Cursor cursor = database.rawQuery(sql, null);
+        String sql = "select url,download_name,avatar from " + DOWNLOAD_GROUP_TABLE + " where name=?";
+        Cursor cursor = database.rawQuery(sql, new String[]{id});
+        MyBusinessInfLocal myBusinessInfLocal = null;
+        while (cursor.moveToNext()) {
+            String downloadurl = cursor.getString(0);
+            String downName = cursor.getString(1);
+            String downIcon = cursor.getString(2);
+            myBusinessInfLocal = new MyBusinessInfLocal(
+                    downloadurl.hashCode(), downName, downIcon, downloadurl);
+        }
+        cursor.close();
+        database.close();
+        return myBusinessInfLocal;
+    }
+
+    public synchronized MyBusinessInfLocal queryDownloadByUrl(String url) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        String sql = "select url,download_name,avatar from " + DOWNLOAD_GROUP_TABLE + " where url=?";
+        Cursor cursor = database.rawQuery(sql, new String[]{url});
         MyBusinessInfLocal myBusinessInfLocal = null;
         while (cursor.moveToNext()) {
             String downloadurl = cursor.getString(0);

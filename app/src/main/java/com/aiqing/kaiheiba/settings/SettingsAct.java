@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.login.LoginAct;
+import com.aiqing.kaiheiba.utils.Utils;
 import com.aiqing.kaiheiba.utils.VersionUpgrade;
 
 import user.User;
@@ -52,6 +54,7 @@ public class SettingsAct extends BaseActivity {
                         .check();
             }
         });
+        ((TextView)findViewById(R.id.setting_tv_version)).setText("V"+ Utils.getAppVersionName(this));
     }
 
     public void logout(View v) {

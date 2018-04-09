@@ -71,7 +71,7 @@ public class EditPersonProfileAct extends BaseActivity {
 
     public static File tempFile;
     private ImageView ivAvatar;
-    private TextView tvArea, tvDate;
+    private TextView tvArea, tvDate, tvName;
     private DatePicker datePicker;
     private EditText etSign, etNickName;
     private Button btSubmit;
@@ -100,6 +100,7 @@ public class EditPersonProfileAct extends BaseActivity {
                 pickDate();
             }
         });
+        tvName = findViewById(R.id.prof_name);
 
         datePicker = new DatePicker(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -172,9 +173,8 @@ public class EditPersonProfileAct extends BaseActivity {
 
     private void setAvatar(String url) {
         if (!TextUtils.isEmpty(url)) {
-            ServiceAgency.getService(ImageLoader.class).loadImage(url, ivAvatar);
-
-            UserService.setAvatar(url);
+            ServiceAgency.getService(ImageLoader.class).loadImage(OssToken.Client.OSSDomain + url, ivAvatar);
+            UserService.setAvatar(OssToken.Client.OSSDomain + url);
         }
     }
 
@@ -343,7 +343,8 @@ public class EditPersonProfileAct extends BaseActivity {
                             .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
                                 @Override
                                 public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
-                                    String avatarUrl = OssToken.Client.OSSDomain + tempFile.getName();
+                                    String avatarUrl = tempFile.getName();
+//                                    String avatarUrl = OssToken.Client.OSSDomain + tempFile.getName();
                                     return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
                                 }
                             })
@@ -352,7 +353,7 @@ public class EditPersonProfileAct extends BaseActivity {
                                 @Override
                                 protected void onSuccess(Object bean) {
                                     toast("头像上传成功");
-                                    String avatarUrl = OssToken.Client.OSSDomain + tempFile.getName();
+                                    String avatarUrl = tempFile.getName();
                                     setAvatar(avatarUrl);
                                 }
 
@@ -403,6 +404,7 @@ public class EditPersonProfileAct extends BaseActivity {
                         }
                         tvDate.setText(accountBean.getBorn());
                         tvArea.setText(accountBean.getProvince());
+                        tvName.setText("UID:" + accountBean.getAccountId());
                     }
                 });
     }

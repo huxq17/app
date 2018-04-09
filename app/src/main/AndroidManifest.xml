@@ -66,7 +66,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".splash.SplashAct"
+        <activity
+            android:name=".splash.SplashAct"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -103,15 +104,15 @@
         <activity android:name=".neteasyim.file.browser.FileBrowserActivity" />
         <activity
             android:name=".HomeActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity android:name=".settings.AboutUsAct" />
         <activity
             android:name=".weex.WeexActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <action android:name="com.alibaba.weex.protocol.openurl" />
+                <action android:name="com.aiqing.weex.protocol.openurl" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="com.taobao.android.intent.category.WEEX" />
@@ -122,11 +123,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name="cn.woblog.android.downloader.DownloadService">
-            <intent-filter>
-                <action android:name="cn.woblog.android.downloader.DOWNLOAD_SERVICE" />
-            </intent-filter>
-        </service>
         <!-- APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
            如果 SDKOptions 中提供了，取 SDKOptions 中的值。 -->
         <meta-data

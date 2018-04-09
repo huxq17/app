@@ -19,6 +19,7 @@ public abstract class BaseRecyclerViewAdapter<D, VH extends ViewHolder> extends
 
     protected OnItemClickListener onItemClickListener;
     private List<D> data = new ArrayList<>();
+    protected boolean isClick = false;
 
     public BaseRecyclerViewAdapter() {
     }
@@ -36,6 +37,7 @@ public abstract class BaseRecyclerViewAdapter<D, VH extends ViewHolder> extends
     }
 
     public void setData(List<D> data) {
+        if (isClick) return;
         this.data.clear();
         this.data.addAll(data);
         notifyDataSetChanged();
@@ -56,6 +58,7 @@ public abstract class BaseRecyclerViewAdapter<D, VH extends ViewHolder> extends
         this.data.add(position, data);
         notifyItemChanged(position);
     }
+
 
     /**
      * @param onItemClickListener

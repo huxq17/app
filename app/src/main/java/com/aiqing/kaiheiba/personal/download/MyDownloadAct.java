@@ -64,7 +64,7 @@ public class MyDownloadAct extends BaseActivity {
     }
 
     public void register() {
-        getWindow().getDecorView().postDelayed(queryRunnable, 300);
+        getWindow().getDecorView().postDelayed(queryRunnable, 200);
     }
 
     public void unregister() {
@@ -150,7 +150,10 @@ public class MyDownloadAct extends BaseActivity {
     }
 
     public static void start(Context context, MyBusinessInfLocal myBusinessInfo) {
-        download(myBusinessInfo);
+        String url = myBusinessInfo.getUrl();
+        if (DBService.getInstance(App.getContext()).queryDownloadByUrl(url) == null) {
+            download(myBusinessInfo);
+        }
         Intent intent = new Intent(context, MyDownloadAct.class);
 //        intent.putExtra(DOWN, myBusinessInfo);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -163,7 +166,7 @@ public class MyDownloadAct extends BaseActivity {
             name = "11233123.apk";
         }
         if (!name.endsWith(".apk")) {
-            name.concat(".apk");
+            name = name.concat(".apk");
         }
         Context context = App.getContext();
         String url = myBusinessInfo.getUrl();

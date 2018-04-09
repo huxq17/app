@@ -9,8 +9,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.widget.Toast;
 
-import com.andbase.tractor.utils.LogUtils;
-
 public enum Apk {
     INSTANCE;
     private String uri;
@@ -21,7 +19,9 @@ public enum Apk {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ApkInstaller.INSTANCE.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == code) {
+            ApkInstaller.INSTANCE.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     public static boolean canInstallApk(Context context) {
@@ -41,11 +41,13 @@ public enum Apk {
         return false;
     }
 
+    int code = -2;
+
     public static void openSetting(Context context, int code) {
+        code = code;
         Activity activity = null;
         if (context instanceof Activity) {
             activity = (Activity) context;
-            LogUtils.e("context is activity");
         }
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= 26) {

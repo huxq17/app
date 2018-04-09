@@ -73,7 +73,7 @@ public class WeexUploadModule extends WXModule {
                 .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
                     @Override
                     public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
-                        String avatarUrl = OssToken.Client.OSSDomain + file.getName();
+                        String avatarUrl = file.getName();
                         return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
                     }
                 })
@@ -81,7 +81,7 @@ public class WeexUploadModule extends WXModule {
                 .subscribe(new BaseObserver<Object>() {
                     @Override
                     protected void onSuccess(Object bean) {
-                        String avatarUrl = OssToken.Client.OSSDomain + file.getName();
+                        String avatarUrl = file.getName();
                         list.add(avatarUrl);
                         uploadedSize++;
                         if (uploadedSize == imgs.size()) {

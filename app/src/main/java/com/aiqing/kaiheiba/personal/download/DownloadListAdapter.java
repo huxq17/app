@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,23 +38,15 @@ public class DownloadListAdapter extends BaseRecyclerViewAdapter<DownloadItemBea
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(
+        ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(context).inflate(
                 R.layout.item_my_download, parent, false));
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         DownloadItemBean data = getData(position);
         holder.bindData(data, position, context);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position);
-                }
-            }
-        });
     }
 
 
@@ -66,8 +59,36 @@ public class DownloadListAdapter extends BaseRecyclerViewAdapter<DownloadItemBea
         private final Button bt_action;
         private DownloadItemBean downloadInfo;
         private int itemPosition;
+        private View.OnClickListener btOnClickListenr;
 
-        public ViewHolder(View view) {
+        public void setOnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(itemPosition);
+                }
+            });
+        }
+
+        private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        isClick = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        v.performClick();
+                        isClick = false;
+                        break;
+                }
+                return false;
+            }
+        };
+
+        public ViewHolder(final View view) {
             super(view);
             itemView.setClickable(true);
             iv_icon = view.findViewById(R.id.dl_game_avatar);
@@ -75,6 +96,26 @@ public class DownloadListAdapter extends BaseRecyclerViewAdapter<DownloadItemBea
             pb = view.findViewById(R.id.dl_game_process);
             tv_name = view.findViewById(R.id.dl_game_name);
             bt_action = view.findViewById(R.id.dl_game_status);
+            setOnClickListener();
+            itemView.setOnTouchListener(onTouchListener);
+            btOnClickListenr = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String text = bt_action.getText().toString();
+                    if (text.equals("删除")) {
+                        DBService.getInstance(context).deleteGroup(downloadInfo.url);
+//                        Utils.deleteFileSafely(new File(downloadInfo.filePath));
+                        downloadManager.remove(downloadInfo.id);
+                    } else if (text.equals("取消")) {
+                        downloadManager.remove(downloadInfo.id);
+                        DBService.getInstance(context).deleteGroup(downloadInfo.url);
+                    }
+                    act.mockData();
+                }
+            };
+            bt_action.setOnClickListener(btOnClickListenr);
+            bt_action.setOnTouchListener(onTouchListener);
+
         }
 
         public void bindBaseInfo(MyBusinessInfLocal myBusinessInfLocal) {
@@ -89,23 +130,9 @@ public class DownloadListAdapter extends BaseRecyclerViewAdapter<DownloadItemBea
             downloadInfo = data;
             // Set a download listener
             refresh();
-            bt_action.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String text = bt_action.getText().toString();
-                    if (text.equals("删除")) {
-                        DBService.getInstance(context).deleteGroup(downloadInfo.url);
-//                        Utils.deleteFileSafely(new File(downloadInfo.filePath));
-                        downloadManager.remove(downloadInfo.id);
-                    } else if (text.equals("取消")) {
-                        downloadManager.remove(downloadInfo.id);
-                        DBService.getInstance(context).deleteGroup(downloadInfo.url);
-                    }
-                    act.mockData();
-                }
-            });
             ServiceAgency.getService(ImageLoader.class).loadImage(downloadInfo.avatarUrl, iv_icon);
-            tv_name.setText(downloadInfo.name);
+            String name = downloadInfo.name;
+            tv_name.setText(name.replace(".apk", ""));
             int round = DensityUtil.dip2px(context, 5);
             int strokenWidth = DensityUtil.dip2px(context, 1);
             int background = Color.TRANSPARENT;

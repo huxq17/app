@@ -1,19 +1,19 @@
 package com.aiqing.kaiheiba.download.downloader;
 
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.ResponseBody;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+
 public class OkHttpDownloader implements NetworkDownloader {
     private static OkHttpClient defaultOkHttpClient() {
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        client.setReadTimeout(Constants.DEFAULT_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        client.setWriteTimeout(Constants.DEFAULT_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        OkHttpClient  client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .build();
         return client;
     }
 
@@ -30,7 +30,7 @@ public class OkHttpDownloader implements NetworkDownloader {
         if (range != null && !range.isEmpty()) {
             builder.header("RANGE", range);
         }
-        com.squareup.okhttp.Response response = client.newCall(builder.build()).execute();
+        okhttp3.Response response = client.newCall(builder.build()).execute();
         int responseCode = response.code();
         if (responseCode >= 300) {
             response.body().close();

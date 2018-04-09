@@ -31,7 +31,7 @@ public class HomeActivity extends UI {
     private WeexFragment homeFragment;
     private WeexFragment gameFragment;
     private BaseFragment imFragment;
-    private BaseFragment myFragment;
+    private WeexFragment myFragment;
     List<Fragment> fragmentList = new ArrayList<>();
     RadioButton rbGame, rbPlayGround, rbIM, rbMy;
 
@@ -64,6 +64,14 @@ public class HomeActivity extends UI {
             } else {
                 button.setChecked(false);
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (rbMy.isChecked()) {
+            myFragment.send();
         }
     }
 
@@ -150,6 +158,7 @@ public class HomeActivity extends UI {
                     myFragment = WeexFragment.newInstance(WeexFragment.mypageurl);
                     fragmentList.add(myFragment);
                 }
+                myFragment.send();
                 replaceFragment(myFragment);
                 break;
         }

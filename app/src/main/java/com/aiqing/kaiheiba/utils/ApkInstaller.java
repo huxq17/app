@@ -75,6 +75,7 @@ public enum ApkInstaller {
     }
 
     private void installApk() {
+        if(contextWeakRef==null)return;
         Context context = contextWeakRef.get();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
