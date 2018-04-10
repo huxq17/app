@@ -44,5 +44,4 @@ ext {
     appTargetCompatibility = 1.7
 
 //    gradle
-    androidGradleVersion = '2.2.2'
 }

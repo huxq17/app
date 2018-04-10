@@ -1,1 +1,1 @@
-include ':app', ':downloader', ':uikit', ':im', ':tractor'
+include ':app', ':downloader', ':uikit', ':im', ':tractor', ':weexsdk'

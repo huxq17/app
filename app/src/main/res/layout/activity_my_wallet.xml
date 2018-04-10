@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
-        android:text="余额: 1000 (元)"
+        android:text="余额: 0.00 (元)"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/v_wallet_head"
@@ -95,6 +95,7 @@
         android:id="@+id/content_bottom_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/v_wallet_trade_record"
         android:background="@color/bgSpace" />
 </android.support.constraint.ConstraintLayout>

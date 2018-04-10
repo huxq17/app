@@ -64,6 +64,7 @@
         android:layout_marginTop="10dp"
         android:textColor="@android:color/white"
         android:textSize="18sp"
+        android:text=" "
         app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/v_my_account_tips" />

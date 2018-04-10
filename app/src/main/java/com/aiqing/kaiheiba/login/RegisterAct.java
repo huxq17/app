@@ -61,6 +61,12 @@ public class RegisterAct extends BaseActivity implements View.OnClickListener {
             }
         });
         cbGetMobileCode.setOnClickListener(this);
+        findViewById(R.id.tv_protocol).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProtocolAct.start(RegisterAct.this);
+            }
+        });
     }
 
     public static void start(Context context) {

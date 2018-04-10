@@ -2,7 +2,6 @@ package com.aiqing.kaiheiba;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -13,6 +12,7 @@ import com.aiqing.kaiheiba.weex.WeexJumpModule;
 import com.aiqing.kaiheiba.weex.WeexShareModule;
 import com.aiqing.kaiheiba.weex.WeexUploadModule;
 import com.aiqing.kaiheiba.weex.WeexValueModule;
+import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.huxq17.xprefs.XPrefs;
 import com.imagepicker.ImagePickerModule;
 import com.lljjcoder.style.citylist.utils.CityListLoader;
@@ -43,6 +43,11 @@ public class App extends MultiDexApplication {
         MultiDex.install(this);
         context = this;
         XPrefs.bind(this);
+        try {
+            BindingX.register();
+        } catch (WXException e) {
+            e.printStackTrace();
+        }
         InitConfig initConfig = new InitConfig.Builder().setImgAdapter(new WeexImageAdapter()).build();
         WXSDKEngine.initialize(this, initConfig);
         WXEnvironment.sLogLevel = LogLevel.ERROR;
@@ -56,42 +61,6 @@ public class App extends MultiDexApplication {
             e.printStackTrace();
         }
         CityListLoader.getInstance().loadCityData(this);
-        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-                curAct = activity;
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-
-            }
-        });
 //        Config config = new Config();
 //        //set database path.
 ////    config.setDatabaseName("/sdcard/a/d.db");

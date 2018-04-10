@@ -1,6 +1,7 @@
 package com.aiqing.kaiheiba.api;
 
 
+import com.aiqing.kaiheiba.BuildConfig;
 import com.aiqing.kaiheiba.okhttp.CommonInterceptor;
 
 import java.util.HashMap;
@@ -16,16 +17,18 @@ public enum ApiManager {
     INSTANCE;
     private static final HashMap<Class, Object> mCachedApi = new LinkedHashMap<>();
     public static final String BASE_URL = "http://api.17kaiheiba.com/";
-//    public static final String BASE_URL = "http://116.62.139.161/";
+    //    public static final String BASE_URL = "http://116.62.139.161/";
     OkHttpClient okHttpClient;
 
     private OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
-            okHttpClient = new OkHttpClient.Builder()
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
                     .connectTimeout(5, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
-                    .addInterceptor(new CommonInterceptor())
-                    .build();
+                    .addInterceptor(new CommonInterceptor());
+            if (BuildConfig.DEBUG) {
+            }
+            okHttpClient = builder.build();
         }
         return okHttpClient;
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
+import com.aiqing.kaiheiba.api.OssToken;
 import com.aiqing.kaiheiba.api.RelationshipApi;
 import com.aiqing.kaiheiba.bean.AccountBean;
 import com.aiqing.kaiheiba.bean.BaseResponse;
@@ -32,21 +34,39 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
         ImageView fansAgender;
         TextView fansDes;
         Button isFollowFans;
+        View.OnClickListener onClickListener;
+        FollowAdapter followAdapter;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, FollowAdapter adapter) {
             super(view);
+            followAdapter = adapter;
             fansAvatar = view.findViewById(R.id.fans_avatar);
             fansName = view.findViewById(R.id.fans_name);
             fansAgender = view.findViewById(R.id.fans_gender);
             fansDes = view.findViewById(R.id.fans_des);
             isFollowFans = view.findViewById(R.id.fans_follow);
+            onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final int position = getAdapterPosition();
+                    int followid = followAdapter.getData(position).getAccountFollowId();
+                    ApiManager.INSTANCE.getApi(RelationshipApi.class).unfollow(followid).compose(RxSchedulers.<BaseResponse<Object>>compose())
+                            .subscribe(new BaseObserver<Object>() {
+                                @Override
+                                protected void onSuccess(Object o) {
+                                    followAdapter.deleteData(position);
+                                }
+                            });
+                }
+            };
+            isFollowFans.setOnClickListener(onClickListener);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_fans, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, this);
     }
 
     @Override
@@ -55,8 +75,11 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
         AccountBean accountBean = dataBean.getAccount();
         holder.fansName.setText(accountBean.getNickname());
         holder.fansDes.setText(accountBean.getSign());
-
-        int gender = Integer.parseInt(accountBean.getGender());
+        String genderS = accountBean.getGender();
+        if (genderS == null) {
+            return;
+        }
+        int gender = Integer.parseInt(genderS);
         if (gender == 0) {
             holder.fansAgender.setImageResource(R.mipmap.prof_unknow_);
         } else if (gender == 1) {
@@ -64,7 +87,12 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
         } else if (gender == 2) {
             holder.fansAgender.setImageResource(R.mipmap.prof_female_n);
         }
-        ServiceAgency.getService(ImageLoader.class).loadImage(accountBean.getAvatar(), holder.fansAvatar);
+        String avatarUrl = accountBean.getAvatar();
+        if (!TextUtils.isEmpty(avatarUrl)) {
+            ServiceAgency.getService(ImageLoader.class).loadImage(OssToken.Client.OSSDomain + accountBean.getAvatar(), holder.fansAvatar);
+        } else {
+            holder.fansAvatar.setImageResource(R.mipmap.avatar_default);
+        }
 //        holder.isFollowFans
         boolean isFollow = true;
         Context context = holder.fansName.getContext();
@@ -83,19 +111,5 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
         holder.isFollowFans.setTextColor(textColor);
         holder.isFollowFans.setTextSize(14);
         holder.isFollowFans.setTag(position);
-        holder.isFollowFans.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int position = (int) v.getTag();
-                int followid = getData(position).getAccountFollowId();
-                ApiManager.INSTANCE.getApi(RelationshipApi.class).unfollow(followid).compose(RxSchedulers.<BaseResponse<Object>>compose())
-                        .subscribe(new BaseObserver<Object>() {
-                            @Override
-                            protected void onSuccess(Object o) {
-                                deleteData(position);
-                            }
-                        });
-            }
-        });
     }
 }

@@ -32,7 +32,7 @@
             android:onClick="onCheck"
             android:text="游戏"
             android:textColor="@color/contentTextColor"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <RadioButton
             android:id="@+id/rb_home_playground"
@@ -46,7 +46,7 @@
             android:onClick="onCheck"
             android:text="广场"
             android:textColor="@color/contentTextColor"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <RadioButton
             android:id="@+id/rb_home_im"
@@ -60,7 +60,7 @@
             android:onClick="onCheck"
             android:text="聊天"
             android:textColor="@color/contentTextColor"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <RadioButton
             android:id="@+id/rb_home_my"
@@ -74,7 +74,7 @@
             android:onClick="onCheck"
             android:text="我的"
             android:textColor="@color/contentTextColor"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 

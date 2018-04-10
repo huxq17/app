@@ -71,7 +71,9 @@ public class HomeActivity extends UI {
     protected void onResume() {
         super.onResume();
         if (rbMy.isChecked()) {
-            myFragment.send();
+            if (myFragment != null) {
+                myFragment.send();
+            }
         }
     }
 
@@ -148,12 +150,12 @@ public class HomeActivity extends UI {
                 replaceFragment(imFragment);
                 break;
             case R.id.rb_home_my:
-                if (!UserService.isLogin()) {
-                    LoginAct.start(HomeActivity.this);
-//                    toggle(lastSelectedId);
-                    rbMy.setChecked(false);
-                    return;
-                }
+//                if (!UserService.isLogin()) {
+//                    LoginAct.start(HomeActivity.this);
+////                    toggle(lastSelectedId);
+//                    rbMy.setChecked(false);
+//                    return;
+//                }
                 if (myFragment == null) {
                     myFragment = WeexFragment.newInstance(WeexFragment.mypageurl);
                     fragmentList.add(myFragment);

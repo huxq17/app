@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 
 public class Utils {
     public static Drawable setStrokenBg(int strokenWidth, int round, int strokenColor, int background) {
@@ -132,4 +133,24 @@ public class Utils {
         return versionName;
     }
 
+    /**
+     * 从路径中获取文件名称
+     *
+     * @param path 下载路径
+     * @return
+     */
+    public static String getFilename(String path) {
+        int start = path.lastIndexOf("/");
+        int end = path.indexOf("?");
+        String endPath = null;
+        if (start < 0) {
+            return UUID.randomUUID().toString();
+        }
+        if (end > 0 && end > start) {
+            endPath = path.substring(start + 1, end);
+        } else {
+            endPath = path.substring(start + 1);
+        }
+        return endPath;
+    }
 }

@@ -24,8 +24,6 @@ import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import java.util.ArrayList;
 import java.util.List;
 
-import user.UserService;
-
 public class InviteFriendAct extends BaseActivity {
     RecyclerView mInviteListView;
     InviteTypeAdapter mAdapter;
@@ -94,7 +92,8 @@ public class InviteFriendAct extends BaseActivity {
                         tvInviteNum.setText("" + inviteList.size());
                         inviteCode = accountBean.getInviteCode();
                         tvInviteCode.setText("我的邀请码：" + inviteCode);
-                        tvMyAccount.setText(UserService.getUserId());
+                        mAdapter.setCode(inviteCode);
+                        tvMyAccount.setText(accountBean.getAccountId());
 
                     }
                 });

@@ -92,6 +92,7 @@
         <activity android:name=".login.LoginAct" />
         <activity android:name=".login.ForgetPassAct" />
         <activity android:name=".login.RegisterAct" />
+        <activity android:name=".login.ProtocolAct" />
         <activity android:name=".neteasyim.IMActivity" />
         <activity android:name=".neteasyim.contact.activity.AddFriendActivity" />
         <activity android:name=".neteasyim.contact.activity.BlackListActivity" />
@@ -110,12 +111,24 @@
         <activity
             android:name=".weex.WeexActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="com.aiqing.weex.protocol.openurl" />
+            <!--    <intent-filter>
+                    <action android:name="android.intent.action.VIEW" />
+                    <action android:name="com.taobao.weex.protocol.openurl" />
 
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="com.taobao.android.intent.category.WEEX" />
+
+                    <data android:scheme="http" />
+                    <data android:scheme="https" />
+                    <data android:scheme="file" />
+                </intent-filter>-->
+            <intent-filter>
+                <action android:name="com.taobao.android.intent.action.WEEX" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="com.aiqing.android.intent.category.WEEX" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.taobao.android.intent.category.WEEX" />
 
                 <data android:scheme="http" />
                 <data android:scheme="https" />

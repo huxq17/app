@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    def line
+    new File(projectDir, "src/main/assets/main.js").withReader { line = it.readLine() }
+    def m = line =~ /[A-Z\s]+\s+([0-9\.]+),\s+Build\s+[0-9]+/
+    def jsfmVersion = m[0][1]
+    println jsfmVersion
+
+    def ARMEABI_Size = new File(projectDir, "libs/armeabi/libweexjsc.so").length();
+    def X86_Size = new File(projectDir, "libs/x86/libweexjsc.so").length();
+    println "ARMEABI_Size: " + ARMEABI_Size;
+    println "X86_Size:" + X86_Size;
+
+
+    defaultConfig {
+        buildConfigField "long", "ARMEABI_Size", "${ARMEABI_Size}"
+        buildConfigField "long", "X86_Size", "${X86_Size}"
+        buildConfigField "String", "buildJavascriptFrameworkVersion", "\"${jsfmVersion}\""
+        buildConfigField "String", "buildVersion", "\"${version}\""
+        minSdkVersion 15
+        targetSdkVersion project.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi", "x86"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDir(['libs'])
+        }
+    }
+}
+ext {
+    compileSdkVersion = 27
+    buildToolsVersion = "27.0.3"
+    minSdkVersion = 14
+    appMinSdkVersion = 15
+    targetSdkVersion = 27
+    supportLibVersion = "27.1.0"
+    fastjsonLibVersion = "1.1.46.android"
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    provided "com.android.support:recyclerview-v7:${project.supportLibVersion}"
+    provided "com.android.support:support-v4:${project.supportLibVersion}"
+    provided "com.android.support:appcompat-v7:${project.supportLibVersion}"
+    provided "com.alibaba:fastjson:${project.fastjsonLibVersion}"
+}

@@ -2,6 +2,7 @@ package com.aiqing.kaiheiba.personal.invite;
 
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,12 @@ public class InviteTypeAdapter extends RecyclerView.Adapter<InviteTypeAdapter.Vi
         return new ViewHolder(textView);
     }
 
+    String code;
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView imageView = (TextView) holder.itemView;
@@ -45,8 +52,9 @@ public class InviteTypeAdapter extends RecyclerView.Adapter<InviteTypeAdapter.Vi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.share(v.getContext(), "邀请好友", "您的好友" + UserService.getNickName() + "在“一起开黑吧”——专注游戏社交的移动APP邀你一起开黑，" +
-                        "点击就可加入战斗！请复制本链接在浏览器内打开：" + "http://192.168.1.115:8080/share.html?code=1212223");
+                if (!TextUtils.isEmpty(code))
+                    ShareUtils.share(v.getContext(), "邀请好友", "您的好友" + UserService.getNickName() + "在“一起开黑吧”——专注游戏社交的移动APP邀你一起开黑，" +
+                            "点击就可加入战斗！请复制本链接在浏览器内打开：" + "http://weex.17kaiheiba.com/share/share.html?code=" + code);
             }
         });
 

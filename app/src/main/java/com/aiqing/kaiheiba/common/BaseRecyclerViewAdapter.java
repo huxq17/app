@@ -51,6 +51,9 @@ public abstract class BaseRecyclerViewAdapter<D, VH extends ViewHolder> extends
     public void deleteData(int position) {
         this.data.remove(position);
         notifyItemRemoved(position);
+//        if(position != data.size()){ // 如果移除的是最后一个，忽略
+//            notifyItemRangeChanged(position, data.size() - position);
+//        }
     }
 
     public void modifyData(int position, D data) {

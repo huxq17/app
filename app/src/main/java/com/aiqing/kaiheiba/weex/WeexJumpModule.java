@@ -17,6 +17,8 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
 
+import user.UserService;
+
 public class WeexJumpModule extends WXModule {
 
     @JSMethod
@@ -89,6 +91,12 @@ public class WeexJumpModule extends WXModule {
 
 
     private void jumpTo(Class<?> activity) {
+        if (!UserService.isLogin() && (activity != MyDownloadAct.class)) {
+            LoginAct.start(WXEnvironment.getApplication());
+//                    toggle(lastSelectedId);
+            return;
+        }
+
         Intent intent = new Intent(WXEnvironment.getApplication(), activity);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         WXEnvironment.getApplication().startActivity(intent);

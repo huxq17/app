@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
+import com.aiqing.kaiheiba.api.OssToken;
 import com.aiqing.kaiheiba.api.RelationshipApi;
 import com.aiqing.kaiheiba.bean.AccountBean;
 import com.aiqing.kaiheiba.bean.BaseResponse;
@@ -33,21 +34,43 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
         ImageView fansAgender;
         TextView fansDes;
         Button isFollowFans;
+        View.OnClickListener onClickListener;
+        boolean isFollow = false;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view,final FansAdapter adapter) {
             super(view);
             fansAvatar = view.findViewById(R.id.fans_avatar);
             fansName = view.findViewById(R.id.fans_name);
             fansAgender = view.findViewById(R.id.fans_gender);
             fansDes = view.findViewById(R.id.fans_des);
             isFollowFans = view.findViewById(R.id.fans_follow);
+            onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isFollow) {
+                        final int position = getAdapterPosition();
+                        final RelationshipApi.Bean.DataBean dataBean = adapter.getData(position);
+                        int followid = dataBean.getAccountFollowId();
+                        ApiManager.INSTANCE.getApi(RelationshipApi.class).follow(followid)
+                                .compose(RxSchedulers.<BaseResponse<Object>>compose())
+                                .subscribe(new BaseObserver<Object>() {
+                                    @Override
+                                    protected void onSuccess(Object o) {
+                                        dataBean.getAccount().setIsFollowed("1");
+                                        adapter.modifyData(position, dataBean);
+                                    }
+                                });
+                    }
+                }
+            };
+            isFollowFans.setOnClickListener(onClickListener);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_fans, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view,this);
     }
 
     @Override
@@ -67,7 +90,7 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
         }
         String avatarUrl = accountBean.getAvatar();
         if (!TextUtils.isEmpty(avatarUrl)) {
-            ServiceAgency.getService(ImageLoader.class).loadImage(accountBean.getAvatar(), holder.fansAvatar);
+            ServiceAgency.getService(ImageLoader.class).loadImage(OssToken.Client.OSSDomain + accountBean.getAvatar(), holder.fansAvatar);
         } else {
             holder.fansAvatar.setImageResource(R.mipmap.avatar_default);
         }
@@ -101,27 +124,7 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
         holder.isFollowFans.setText(btText);
         holder.isFollowFans.setTextColor(textColor);
         holder.isFollowFans.setTag(position);
-        if (!isFollow) {
-            holder.isFollowFans.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final int position = (int) v.getTag();
-                    final RelationshipApi.Bean.DataBean dataBean = getData(position);
-                    int followid = dataBean.getAccountFollowId();
-                    ApiManager.INSTANCE.getApi(RelationshipApi.class).follow(followid)
-                            .compose(RxSchedulers.<BaseResponse<Object>>compose())
-                            .subscribe(new BaseObserver<Object>() {
-                                @Override
-                                protected void onSuccess(Object o) {
-                                    dataBean.getAccount().setIsFollowed("1");
-                                    modifyData(position, dataBean);
-                                }
-                            });
-                }
-            });
-        }else{
-            holder.isFollowFans.setOnClickListener(null);
-        }
+        holder.isFollow = isFollow;
     }
 
 }

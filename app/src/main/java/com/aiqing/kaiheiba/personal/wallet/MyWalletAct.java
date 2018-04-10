@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
-import com.aiqing.kaiheiba.api.UserApi;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 
@@ -33,11 +32,11 @@ public class MyWalletAct extends BaseActivity {
                 toast("敬请期待");
             }
         });
-        ApiManager.INSTANCE.getApi(UserApi.class).queryUserInfo(UserService.getUserToken())
-                .compose(RxSchedulers.<UserApi.WalletBean>compose())
-                .subscribe(new Consumer<UserApi.WalletBean>() {
+        ApiManager.INSTANCE.getApi(WalletApi.class, "http://sdk.17kaiheiba.com").queryUserInfo(UserService.getUserToken())
+                .compose(RxSchedulers.<WalletApi.WalletBean>compose())
+                .subscribe(new Consumer<WalletApi.WalletBean>() {
                     @Override
-                    public void accept(UserApi.WalletBean walletBean) throws Exception {
+                    public void accept(WalletApi.WalletBean walletBean) throws Exception {
                         String money = walletBean.getMoney();
                         tvMoney.setText("余额: " + money + " (元)");
                     }

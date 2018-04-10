@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
+import com.aiqing.kaiheiba.api.OssToken;
 import com.aiqing.kaiheiba.bean.AccountBean;
 import com.aiqing.kaiheiba.imageloader.ImageLoader;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
@@ -66,16 +67,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         } else if (gender == 2) {
             holder.fansAgender.setImageResource(R.mipmap.prof_female_n);
         }
-        String avatarurl = accountBean.getAvatar();
+        String avatarurl = OssToken.Client.OSSDomain + accountBean.getAvatar();
         if (!TextUtils.isEmpty(avatarurl)) {
-            ServiceAgency.getService(ImageLoader.class).loadImage(accountBean.getAvatar(), holder.fansAvatar);
+            ServiceAgency.getService(ImageLoader.class).loadImage(avatarurl, holder.fansAvatar);
         }
         holder.itemView.setTag(accountBean.getAccid());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String account = (String) v.getTag();
-                LogUtils.e("account="+account);
+                LogUtils.e("account=" + account);
                 if (!TextUtils.isEmpty(account))
                     UserProfileActivity.start(holder.itemView.getContext(), account);
             }

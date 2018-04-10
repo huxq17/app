@@ -23,8 +23,9 @@ android {
                 cppFlags ""
             }
         }
-        ndk {
-            abiFilters "armeabi", "x86"
+        ndk{
+            abiFilters "x86"
+            abiFilters "armeabi"
         }
         multiDexEnabled true
         javaCompileOptions {
@@ -69,17 +70,21 @@ dependencies {
     //    implementation project(':downloader')
     implementation project(':im')
     implementation project(':tractor')
-//    implementation project(':weex_sdk')
+    implementation project(':weexsdk')
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.j256.ormlite:ormlite-core:5.0'
     // 基础功能 (必需)
     //    compile 'com.netease.nimlib:basesdk:4.4.0'
-    compile 'com.android.support:multidex:1.0.2'
+    compile 'com.android.support:multidex:1.0.3'
     //    compile 'com.roughike:bottom-bar:2.3.1'
-    compile 'com.taobao.android:weex_sdk:0.18.0'
+//    compile 'com.taobao.android:weex_sdk:0.18.0'
     compile 'com.android.support:recyclerview-v7:27.1.0'
 //    compile 'com.taobao.android:weex_inspector:0.8.0.0'
-    compile 'com.weexext:imagepicker:1.0.1'
-    annotationProcessor 'com.arialyy.aria:aria-compiler:3.3.14'
+    compile ('com.weexext:imagepicker:1.0.1'){
+        exclude(group: 'com.taobao.android', module: 'weex_sdk')
+    }
+//    annotationProcessor 'com.arialyy.aria:aria-compiler:3.3.14'
     implementation 'com.alibaba:fastjson:1.1.46.android'
+    implementation 'com.alibaba.android:bindingx-core:1.0.1'
+    implementation 'com.alibaba.android:bindingx_weex_plugin:1.0.1'
 }

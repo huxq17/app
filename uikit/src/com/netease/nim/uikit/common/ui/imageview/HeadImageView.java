@@ -53,7 +53,8 @@ public class HeadImageView extends CircleImageView {
      */
     public void loadBuddyAvatar(String account) {
         final UserInfo userInfo = NimUIKit.getUserInfoProvider().getUserInfo(account);
-        doLoadImage(userInfo != null ? userInfo.getAvatar() : null, DEFAULT_AVATAR_RES_ID, DEFAULT_AVATAR_THUMB_SIZE);
+//        LogUtil.e("tag","nesteasy avatar="+userInfo.getAvatar());
+        doLoadImage(userInfo != null ? "http://aiqing-lianyun.oss-cn-hangzhou.aliyuncs.com/" + userInfo.getAvatar() : null, DEFAULT_AVATAR_RES_ID, DEFAULT_AVATAR_THUMB_SIZE);
     }
 
     /**
