@@ -103,9 +103,9 @@
             style="@style/ContentTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/prof_left_margin"
-            android:layout_alignParentRight="true"
             android:text="V1.0" />
 
         <View
@@ -184,15 +184,41 @@
 
     <Button
         android:id="@+id/settings_logout"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:background="@drawable/settings_logout_bg"
-        android:text="退出登录"
         android:onClick="logout"
+        android:stateListAnimator="@null"
+        android:text="退出登录"
         android:textColor="@android:color/holo_red_light"
         android:textSize="16sp"
-        style="?android:attr/borderlessButtonStyle"
-        android:stateListAnimator="@null"
         app:layout_constraintTop_toBottomOf="@id/settings_aboutus" />
+
+    <RelativeLayout
+        android:id="@+id/settings_url"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:background="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/settings_logout">
+
+        <EditText
+            android:id="@+id/et_domain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/domain_bt"
+            android:background="@null"
+            android:hint="域名:" />
+
+        <Button
+            android:id="@+id/domain_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="submitDomain"
+            android:text="提交" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

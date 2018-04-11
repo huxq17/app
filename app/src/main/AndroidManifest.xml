@@ -76,6 +76,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyActivity" />
+        <activity android:name=".neteasyim.session.activity.MessageInfoActivity" />
         <activity android:name=".settings.SettingsAct" />
         <activity android:name=".personal.profile.EditPersonProfileAct" />
         <activity android:name=".personal.relationship.MyFansAct" />

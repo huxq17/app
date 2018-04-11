@@ -23,8 +23,11 @@ import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -73,7 +76,7 @@ public class WeexUploadModule extends WXModule {
                 .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
                     @Override
                     public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
-                        String avatarUrl = file.getName();
+                        String avatarUrl = getObjectKey(file.getName());
                         return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
                     }
                 })
@@ -81,7 +84,7 @@ public class WeexUploadModule extends WXModule {
                 .subscribe(new BaseObserver<Object>() {
                     @Override
                     protected void onSuccess(Object bean) {
-                        String avatarUrl = file.getName();
+                        String avatarUrl = getObjectKey(file.getName());
                         list.add(avatarUrl);
                         uploadedSize++;
                         if (uploadedSize == imgs.size()) {
@@ -96,12 +99,19 @@ public class WeexUploadModule extends WXModule {
                 });
     }
 
+    public String getObjectKey(String fileName) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        System.out.println(format.format(calendar.getTime()));
+        return "image/" + format.format(calendar.getTime()) + "/" + fileName;
+    }
+
     public Observable<PutObjectResult> updateAvatar(final OssToken.OSSBean ossBean, final File file) {
         return Observable.create(new ObservableOnSubscribe<PutObjectResult>() {
             @Override
             public void subscribe(ObservableEmitter<PutObjectResult> emitter) throws Exception {
                 OSS oss = OssToken.Client.init(WXEnvironment.getApplication(), ossBean);
-                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun", file.getName(), file.getPath());
+                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun", getObjectKey(file.getName()), file.getPath());
                 try {
                     PutObjectResult putResult = oss.putObject(put);
                     emitter.onNext(putResult);

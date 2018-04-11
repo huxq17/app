@@ -1,15 +1,21 @@
 package com.aiqing.kaiheiba.weex;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.aiqing.kaiheiba.App;
+import com.aiqing.kaiheiba.BuildConfig;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseFragment;
+import com.andbase.tractor.utils.LogUtils;
+import com.huxq17.xprefs.SPUtils;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -22,16 +28,25 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     private FrameLayout rootView;
     private WXSDKInstance mWxInstance;
     private String tag;
-    //    public static String gameurl = "http://172.16.244.1:8080/dist/index.weex.js";
-////    public static String gameurl = "http://192.168.1.115:8080/dist/index.weex.js";
-//    public static String homeurl = "http://172.16.244.1:8080/dist/home.weex.js";
-//    public static String mypageurl = "http://172.16.244.1:8080/dist/myPage.weex.js";
-    public static String gameurl = "http://weex.17kaiheiba.com/bundle/index.weex.js";
-    //    public static String gameurl = "http://192.168.1.115:8080/dist/index.weex.js";
-    public static String homeurl = "http://weex.17kaiheiba.com/bundle/home.weex.js";
-    public static String mypageurl = "http://weex.17kaiheiba.com/bundle/myPage.weex.js";
+    public static final String gameurl = "index.weex.js";
+    public static final String homeurl = "home.weex.js";
+    public static final String mypageurl = "myPage.weex.js";
+    public static final String onlineUrl = "http://weex.17kaiheiba.com/bundle/";
 
     public WeexFragment() {
+    }
+
+    public static String getRoot() {
+        Context context = App.getContext();
+        switch (BuildConfig.BUILD_TYPE) {
+            case "debug":
+                String baseUrl = SPUtils.getString(context, "baseUrl");
+                if (TextUtils.isEmpty(baseUrl)) {
+                    baseUrl = onlineUrl;
+                }
+                return baseUrl;
+        }
+        return onlineUrl;
     }
 
     @Override
@@ -66,7 +81,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
 
     public static WeexFragment newInstance(String url) {
         Bundle args = new Bundle();
-        args.putString(WXSDKInstance.BUNDLE_URL, url);
+        args.putString(WXSDKInstance.BUNDLE_URL, getRoot() + url);
         WeexFragment fragment = new WeexFragment();
         fragment.setArguments(args);
         return fragment;

@@ -12,6 +12,7 @@ import com.aiqing.kaiheiba.weex.WeexJumpModule;
 import com.aiqing.kaiheiba.weex.WeexShareModule;
 import com.aiqing.kaiheiba.weex.WeexUploadModule;
 import com.aiqing.kaiheiba.weex.WeexValueModule;
+import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.huxq17.xprefs.XPrefs;
 import com.imagepicker.ImagePickerModule;
@@ -57,6 +58,7 @@ public class App extends MultiDexApplication {
             WXSDKEngine.registerModule("profile", WeexJumpModule.class);
             WXSDKEngine.registerModule("imageUploader", WeexUploadModule.class);
             WXSDKEngine.registerModule("sharePost", WeexShareModule.class);
+            WXSDKEngine.registerModule("windowSize", WeexWindowSizeModule.class);
         } catch (WXException e) {
             e.printStackTrace();
         }

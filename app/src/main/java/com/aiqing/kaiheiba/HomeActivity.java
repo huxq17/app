@@ -17,6 +17,9 @@ import com.aiqing.kaiheiba.neteasyim.IMFragment;
 import com.aiqing.kaiheiba.utils.Apk;
 import com.aiqing.kaiheiba.utils.VersionUpgrade;
 import com.aiqing.kaiheiba.weex.WeexFragment;
+import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
+import com.andbase.tractor.utils.LogUtils;
+import com.huxq17.xprefs.XPrefs;
 import com.netease.nim.uikit.common.activity.UI;
 
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ public class HomeActivity extends UI {
     private WeexFragment myFragment;
     List<Fragment> fragmentList = new ArrayList<>();
     RadioButton rbGame, rbPlayGround, rbIM, rbMy;
+    private View conentView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,11 +45,13 @@ public class HomeActivity extends UI {
         setContentView(R.layout.activity_home);
         initView();
         new VersionUpgrade(this).check();
+
     }
 
 
     private void initView() {
         mBottomBar = findViewById(R.id.tab_bottom_home);
+        conentView = findViewById(R.id.main_fragment_layout);
 //        mBottomBar.noTabletGoodness();
 //        mBottomBar.useFixedMode();
         rbGame = findView(R.id.rb_home_game);
@@ -53,6 +59,16 @@ public class HomeActivity extends UI {
         rbIM = findView(R.id.rb_home_im);
         rbMy = findView(R.id.rb_home_my);
         toggle(R.id.rb_home_playground);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            WeexWindowSizeModule.WindowSize windowSize = new WeexWindowSizeModule.WindowSize(conentView.getWidth(), conentView.getHeight());
+            LogUtils.d("onWindowFocusChanged conentView.width=" + conentView.getWidth() + ";height=" + conentView.getHeight());
+            XPrefs.saveAll(windowSize);
+        }
     }
 
     public void toggle(int id) {

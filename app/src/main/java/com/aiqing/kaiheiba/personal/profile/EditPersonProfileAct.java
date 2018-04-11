@@ -36,7 +36,6 @@ import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
-import com.huxq17.xprefs.LogUtils;
 import com.lljjcoder.style.citylist.CityListSelectActivity;
 import com.lljjcoder.style.citylist.bean.CityInfoBean;
 
@@ -45,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -322,7 +322,6 @@ public class EditPersonProfileAct extends BaseActivity {
                         if (uri != null) {
                             imageUri = uri;
                         }
-                        LogUtils.e("imageuri=" + imageUri);
                         try {
                             tempFile = new File(getPath(imageUri));
                         } catch (Exception e) {
@@ -343,8 +342,7 @@ public class EditPersonProfileAct extends BaseActivity {
                             .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
                                 @Override
                                 public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
-                                    String avatarUrl = tempFile.getName();
-//                                    String avatarUrl = OssToken.Client.OSSDomain + tempFile.getName();
+                                    String avatarUrl = getObjectKey();
                                     return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
                                 }
                             })
@@ -353,7 +351,7 @@ public class EditPersonProfileAct extends BaseActivity {
                                 @Override
                                 protected void onSuccess(Object bean) {
                                     toast("头像上传成功");
-                                    String avatarUrl = tempFile.getName();
+                                    String avatarUrl = getObjectKey();
                                     setAvatar(avatarUrl);
                                 }
 
@@ -409,12 +407,18 @@ public class EditPersonProfileAct extends BaseActivity {
                 });
     }
 
+    public String getObjectKey() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        return "avatar/" + format.format(calendar.getTime()) + "/" + tempFile.getName();
+    }
+
     public Observable<PutObjectResult> updateAvatar(final OssToken.OSSBean ossBean) {
         return Observable.create(new ObservableOnSubscribe<PutObjectResult>() {
             @Override
             public void subscribe(ObservableEmitter<PutObjectResult> emitter) throws Exception {
                 OSS oss = OssToken.Client.init(EditPersonProfileAct.this.getApplicationContext(), ossBean);
-                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun", tempFile.getName(), tempFile.getPath());
+                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun", getObjectKey(), tempFile.getPath());
                 try {
                     PutObjectResult putResult = oss.putObject(put);
                     emitter.onNext(putResult);

@@ -16,14 +16,14 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 cppFlags ""
             }
         }
-        ndk{
+        ndk {
             abiFilters "x86"
             abiFilters "armeabi"
         }
@@ -39,8 +39,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
+            zipAlignEnabled true//内存对齐
+            // 移除无用的resource文件
+//            shrinkResources true
         }
         debug {
+//            shrinkResources true
 //            signingConfig signingConfigs.config
         }
     }
@@ -80,7 +84,7 @@ dependencies {
 //    compile 'com.taobao.android:weex_sdk:0.18.0'
     compile 'com.android.support:recyclerview-v7:27.1.0'
 //    compile 'com.taobao.android:weex_inspector:0.8.0.0'
-    compile ('com.weexext:imagepicker:1.0.1'){
+    compile('com.weexext:imagepicker:1.0.1') {
         exclude(group: 'com.taobao.android', module: 'weex_sdk')
     }
 //    annotationProcessor 'com.arialyy.aria:aria-compiler:3.3.14'

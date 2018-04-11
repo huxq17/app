@@ -98,7 +98,7 @@ public class WeexJumpModule extends WXModule {
         }
 
         Intent intent = new Intent(WXEnvironment.getApplication(), activity);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         WXEnvironment.getApplication().startActivity(intent);
     }
 }
