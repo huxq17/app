@@ -19,7 +19,6 @@ import com.aiqing.kaiheiba.utils.Apk;
 import com.aiqing.kaiheiba.utils.VersionUpgrade;
 import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
-import com.andbase.tractor.utils.LogUtils;
 import com.huxq17.xprefs.XPrefs;
 import com.netease.nim.uikit.common.activity.UI;
 
@@ -123,23 +122,14 @@ public class HomeActivity extends UI {
 //        transaction.replace(R.id.main_fragment_layout, fragment);
 //        transaction.hide();
         List<Fragment> fs = fm.getFragments();
-        LogUtils.e("fs.size=" + fs.size());
+        transaction.show(fragment);
         for (Fragment f : fs) {
             if (fragment == f) {
-                LogUtils.e("show f=" + f.getClass().getName());
-                transaction.show(f);
+//                transaction.show(f);
             } else {
-                LogUtils.e("hide f=" + f.getClass().getName());
                 transaction.hide(f);
             }
         }
-        transaction.commit();
-    }
-
-    private void defaultFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        transaction = fm.beginTransaction();
-        transaction.add(R.id.main_fragment_layout, fragment);
         transaction.commit();
     }
 
@@ -152,7 +142,7 @@ public class HomeActivity extends UI {
 
     public void onCheck(View v) {
         int checkedId = v.getId();
-        if (curTabId==0&&curTabId == checkedId) return;
+        if (curTabId == 0 && curTabId == checkedId) return;
         switch (checkedId) {
             case R.id.rb_home_game:
                 if (homeFragment == null) {
@@ -160,10 +150,6 @@ public class HomeActivity extends UI {
                     fragmentList.add(homeFragment);
                 }
                 replaceFragment(homeFragment);
-//                String url = "https://t.alipayobjects.com/L1/71/100/and/alipay_wap_main.apk";
-//                MyBusinessInfLocal myBusinessInfLocal = new MyBusinessInfLocal(
-//                        url.hashCode(), "", "", url);
-//                MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
                 break;
             case R.id.rb_home_playground:
                 if (gameFragment == null) {
@@ -175,7 +161,6 @@ public class HomeActivity extends UI {
             case R.id.rb_home_im:
                 if (!UserService.isLogin()) {
                     LoginAct.start(HomeActivity.this);
-//                    toggle(lastSelectedId);
                     rbIM.setChecked(false);
                     return;
                 }
@@ -218,7 +203,6 @@ public class HomeActivity extends UI {
         Class<WeexFragment> clazz = WeexFragment.class;
         WeexFragment frament = getFragmentById(id, clazz);
         if (frament == null) {
-            LogUtils.e("new weex url="+url);
             frament = WeexFragment.newInstance(url, id);
             addFramentToManager(frament);
         }
@@ -226,10 +210,9 @@ public class HomeActivity extends UI {
     }
 
     private void addFramentToManager(Fragment fragment) {
-        LogUtils.e("addFramentToManager frag="+fragment.getClass().getName());
         FragmentManager fm = getSupportFragmentManager();
         transaction = fm.beginTransaction();
-        transaction.add(fragment, null);
+        transaction.add(R.id.main_fragment_layout, fragment);
         transaction.commit();
     }
 
