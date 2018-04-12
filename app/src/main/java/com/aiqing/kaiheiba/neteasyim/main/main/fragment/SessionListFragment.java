@@ -7,15 +7,12 @@ import android.widget.Toast;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.login.LoginAct;
-import com.aiqing.kaiheiba.neteasyim.LogoutHelper;
 import com.aiqing.kaiheiba.neteasyim.MainTab;
-import com.aiqing.kaiheiba.neteasyim.Preferences;
 import com.aiqing.kaiheiba.neteasyim.main.main.activity.MultiportActivity;
 import com.aiqing.kaiheiba.neteasyim.main.main.reminder.ReminderManager;
 import com.aiqing.kaiheiba.neteasyim.session.SessionHelper;
 import com.aiqing.kaiheiba.neteasyim.session.extension.GuessAttachment;
 import com.aiqing.kaiheiba.neteasyim.session.extension.StickerAttachment;
-import com.huxq17.xprefs.LogUtils;
 import com.netease.nim.uikit.business.recent.RecentContactsCallback;
 import com.netease.nim.uikit.business.recent.RecentContactsFragment;
 import com.netease.nim.uikit.common.activity.UI;
@@ -69,7 +66,6 @@ public class SessionListFragment extends MainTabFragment {
 
     @Override
     protected void onInit() {
-        LogUtils.e("onInit");
         findViews();
         registerObservers(true);
         addRecentContactsFragment();
@@ -77,7 +73,7 @@ public class SessionListFragment extends MainTabFragment {
 
     private void registerObservers(boolean register) {
         NIMClient.getService(AuthServiceObserver.class).observeOtherClients(clientsObserver, register);
-        NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(userStatusObserver, register);
+//        NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(userStatusObserver, register);
     }
 
     private void findViews() {
@@ -155,7 +151,6 @@ public class SessionListFragment extends MainTabFragment {
     };
 
     private void kickOut(StatusCode code) {
-        Preferences.saveUserToken("");
 
         if (code == StatusCode.PWD_ERROR) {
             LogUtil.e("Auth", "user password error");
@@ -168,10 +163,7 @@ public class SessionListFragment extends MainTabFragment {
 
     // 注销
     private void onLogout() {
-        // 清理缓存&注销监听&清除状态
-        LogoutHelper.logout();
-
-        LoginAct.start(getActivity());
+        LoginAct.start(getActivity(), true);
         getActivity().finish();
     }
 
@@ -183,7 +175,7 @@ public class SessionListFragment extends MainTabFragment {
         final UI activity = (UI) getActivity();
 
         // 如果是activity从堆栈恢复，FM中已经存在恢复而来的fragment，此时会使用恢复来的，而new出来这个会被丢弃掉
-        fragment = (RecentContactsFragment) activity.addFragment(fragment,getChildFragmentManager());
+        fragment = (RecentContactsFragment) activity.addFragment(fragment, getChildFragmentManager());
 
         fragment.setCallback(new RecentContactsCallback() {
             @Override

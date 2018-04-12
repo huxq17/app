@@ -50,7 +50,7 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
                     if (!isFollow) {
                         final int position = getAdapterPosition();
                         final RelationshipApi.Bean.DataBean dataBean = adapter.getData(position);
-                        int followid = dataBean.getAccountFollowId();
+                        int followid = dataBean.getAccountId();
                         ApiManager.INSTANCE.getApi(RelationshipApi.class).follow(followid)
                                 .compose(RxSchedulers.<BaseResponse<Object>>compose())
                                 .subscribe(new BaseObserver<Object>() {

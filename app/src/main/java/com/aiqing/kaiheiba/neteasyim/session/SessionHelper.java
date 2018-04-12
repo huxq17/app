@@ -191,7 +191,7 @@ public class SessionHelper {
             infoButton.iconId = R.drawable.nim_ic_message_actionbar_p2p_add;
 
             buttons.add(cloudMsgButton);
-            buttons.add(infoButton);
+//            buttons.add(infoButton);
             p2pCustomization.buttons = buttons;
         }
 

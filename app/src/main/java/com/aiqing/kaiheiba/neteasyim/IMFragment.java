@@ -40,8 +40,11 @@ public class IMFragment extends BaseFragment implements TabFragment.State, Remin
     public IMFragment() {
     }
 
-    public static IMFragment newInstance() {
+    public static IMFragment newInstance(int id) {
         IMFragment fragment = new IMFragment();
+        Bundle args = new Bundle();
+        args.putInt(BaseFragment.ID, id);
+        fragment.setArguments(args);
         return fragment;
     }
 

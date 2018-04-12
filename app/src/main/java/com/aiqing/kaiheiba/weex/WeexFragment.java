@@ -14,7 +14,6 @@ import com.aiqing.kaiheiba.App;
 import com.aiqing.kaiheiba.BuildConfig;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseFragment;
-import com.andbase.tractor.utils.LogUtils;
 import com.huxq17.xprefs.SPUtils;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
@@ -79,9 +78,10 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         return rootView;
     }
 
-    public static WeexFragment newInstance(String url) {
+    public static WeexFragment newInstance(String url,int id) {
         Bundle args = new Bundle();
         args.putString(WXSDKInstance.BUNDLE_URL, getRoot() + url);
+        args.putInt(BaseFragment.ID,id);
         WeexFragment fragment = new WeexFragment();
         fragment.setArguments(args);
         return fragment;

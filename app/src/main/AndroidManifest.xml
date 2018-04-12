@@ -76,6 +76,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyActivity" />
+        <activity android:name=".neteasyim.session.activity.MessageHistoryActivity" />
         <activity android:name=".neteasyim.session.activity.MessageInfoActivity" />
         <activity android:name=".settings.SettingsAct" />
         <activity android:name=".personal.profile.EditPersonProfileAct" />
@@ -106,8 +107,7 @@
         <activity android:name=".neteasyim.file.browser.FileBrowserActivity" />
         <activity
             android:name=".HomeActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask" />
         <activity android:name=".settings.AboutUsAct" />
         <activity
             android:name=".weex.WeexActivity"

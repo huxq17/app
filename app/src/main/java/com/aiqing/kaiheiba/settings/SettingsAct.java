@@ -15,9 +15,6 @@ import com.aiqing.kaiheiba.utils.Utils;
 import com.aiqing.kaiheiba.utils.VersionUpgrade;
 import com.huxq17.xprefs.SPUtils;
 
-import user.User;
-import user.UserService;
-
 public class SettingsAct extends BaseActivity {
     EditText etDomain;
 
@@ -74,7 +71,6 @@ public class SettingsAct extends BaseActivity {
     }
 
     public void logout(View v) {
-        UserService.save(new User());
         LoginAct.start(this, true);
     }
 

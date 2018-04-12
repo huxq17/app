@@ -16,6 +16,8 @@ import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.Code;
 import com.aiqing.kaiheiba.common.BaseActivity;
+import com.aiqing.kaiheiba.neteasyim.LogoutHelper;
+import com.aiqing.kaiheiba.neteasyim.Preferences;
 import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -141,6 +143,7 @@ public class LoginAct extends BaseActivity {
                         @Override
                         public void onSuccess(LoginInfo param) {
                             bean.getData().appKey = param.getAppKey();
+                            NimUIKit.loginSuccess(user.accid);
                             e.onNext(bean);
                         }
 
@@ -173,6 +176,11 @@ public class LoginAct extends BaseActivity {
     public static void start(Context context, boolean clearAll) {
         Intent intent = new Intent(context, LoginAct.class);
         if (clearAll) {
+            Preferences.saveUserToken("");
+            User user = new User();
+            user.mobile = UserService.getMobile();
+            UserService.save(user);
+            LogoutHelper.logout();
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
