@@ -14,6 +14,7 @@ import com.aiqing.kaiheiba.App;
 import com.aiqing.kaiheiba.BuildConfig;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseFragment;
+import com.huxq17.xprefs.LogUtils;
 import com.huxq17.xprefs.SPUtils;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
@@ -31,6 +32,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     public static final String homeurl = "home.weex.js";
     public static final String mypageurl = "myPage.weex.js";
     public static final String onlineUrl = "http://weex.17kaiheiba.com/bundle/";
+    private boolean isSucceeded = false;
 
     public WeexFragment() {
     }
@@ -51,12 +53,18 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isSucceeded = false;
         View view = View.inflate(getActivity(), R.layout.frg_weex, null);
         rootView = view.findViewById(R.id.weex_frg_container);
         url = getArguments() == null ? null : getArguments().getString(WXSDKInstance.BUNDLE_URL);
         tag = getArguments() == null ? null : getArguments().getString("tag");
         mWxInstance = new WXSDKInstance(getActivity());
         mWxInstance.registerRenderListener(this);
+        loadJs();
+    }
+
+    private void loadJs() {
+        if (isSucceeded) return;
         Map<String, Object> options = new HashMap<>();
         options.put(WXSDKInstance.BUNDLE_URL, url);
         mWxInstance.renderByUrl(getActivity().getPackageName(), url, options, null, WXRenderStrategy.APPEND_ASYNC);
@@ -78,10 +86,9 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         return rootView;
     }
 
-    public static WeexFragment newInstance(String url,int id) {
+    public static WeexFragment newInstance(String url) {
         Bundle args = new Bundle();
         args.putString(WXSDKInstance.BUNDLE_URL, getRoot() + url);
-        args.putInt(BaseFragment.ID,id);
         WeexFragment fragment = new WeexFragment();
         fragment.setArguments(args);
         return fragment;
@@ -94,16 +101,29 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
 
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
+        isSucceeded = true;
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadJs();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            loadJs();
+        }
     }
 
     @Override
     public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
-
     }
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
-
+        LogUtils.e("onException msg=" + msg);
     }
 }

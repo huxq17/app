@@ -107,7 +107,8 @@
         <activity android:name=".neteasyim.file.browser.FileBrowserActivity" />
         <activity
             android:name=".HomeActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity android:name=".settings.AboutUsAct" />
         <activity
             android:name=".weex.WeexActivity"

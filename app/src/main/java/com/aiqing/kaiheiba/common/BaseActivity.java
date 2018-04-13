@@ -25,6 +25,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 //        this.getWindow().getDecorView().setBackgroundDrawable(null);
         super.onCreate(savedInstanceState);
+        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         loadBase(this);
     }
 
@@ -41,9 +44,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     protected void onResume() {
-        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
         super.onResume();
     }
 
@@ -69,10 +69,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public void onTitleClick() {
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Apk.INSTANCE.onActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();

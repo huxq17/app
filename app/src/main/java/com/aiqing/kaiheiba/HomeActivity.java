@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -16,40 +14,36 @@ import com.aiqing.kaiheiba.login.LoginAct;
 import com.aiqing.kaiheiba.neteasyim.IMFragment;
 import com.aiqing.kaiheiba.neteasyim.UserStatusObserver;
 import com.aiqing.kaiheiba.utils.Apk;
+import com.aiqing.kaiheiba.utils.FragmentController;
 import com.aiqing.kaiheiba.utils.VersionUpgrade;
 import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
 import com.huxq17.xprefs.XPrefs;
 import com.netease.nim.uikit.common.activity.UI;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import user.UserService;
 
 
 public class HomeActivity extends UI {
     private LinearLayout mBottomBar;
-    private FragmentTransaction transaction;
     private WeexFragment homeFragment;
     private WeexFragment gameFragment;
     private BaseFragment imFragment;
     private WeexFragment myFragment;
-    List<Fragment> fragmentList = new ArrayList<>();
     RadioButton rbGame, rbPlayGround, rbIM, rbMy;
     private View conentView;
     private boolean hasRegister;
     UserStatusObserver userStatusObserver;
     private static final String CUR_TAB_ID = "CURRENT_TAB_ID";
     private int curTabId;
+    FragmentController<BaseFragment> fragmentController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
-        fragmentList.clear();
-
+        fragmentController = new FragmentController<>(getSupportFragmentManager());
         userStatusObserver = new UserStatusObserver(this);
         new VersionUpgrade(this).check();
         if (savedInstanceState != null) {
@@ -117,26 +111,12 @@ public class HomeActivity extends UI {
     }
 
     private void replaceFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        transaction = fm.beginTransaction();
-//        transaction.replace(R.id.main_fragment_layout, fragment);
-//        transaction.hide();
-        List<Fragment> fs = fm.getFragments();
-        transaction.show(fragment);
-        for (Fragment f : fs) {
-            if (fragment == f) {
-//                transaction.show(f);
-            } else {
-                transaction.hide(f);
-            }
-        }
-        transaction.commit();
+        fragmentController.show(fragment, R.id.main_fragment_layout);
     }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
@@ -147,14 +127,12 @@ public class HomeActivity extends UI {
             case R.id.rb_home_game:
                 if (homeFragment == null) {
                     homeFragment = getWeexFragmentById(WeexFragment.gameurl, R.id.rb_home_game);
-                    fragmentList.add(homeFragment);
                 }
                 replaceFragment(homeFragment);
                 break;
             case R.id.rb_home_playground:
                 if (gameFragment == null) {
                     gameFragment = getWeexFragmentById(WeexFragment.homeurl, R.id.rb_home_playground);
-                    fragmentList.add(gameFragment);
                 }
                 replaceFragment(gameFragment);
                 break;
@@ -166,14 +144,12 @@ public class HomeActivity extends UI {
                 }
                 if (imFragment == null) {
                     imFragment = getIMFragmentById();
-                    fragmentList.add(imFragment);
                 }
                 replaceFragment(imFragment);
                 break;
             case R.id.rb_home_my:
                 if (myFragment == null) {
                     myFragment = getWeexFragmentById(WeexFragment.mypageurl, R.id.rb_home_my);
-                    fragmentList.add(myFragment);
                 }
                 myFragment.send();
                 replaceFragment(myFragment);
@@ -191,47 +167,23 @@ public class HomeActivity extends UI {
     private BaseFragment getIMFragmentById() {
         int id = R.id.rb_home_im;
         Class<IMFragment> clazz = IMFragment.class;
-        IMFragment frament = getFragmentById(id, clazz);
-        if (frament == null) {
-            frament = IMFragment.newInstance(id);
-            addFramentToManager(frament);
-        }
-        return frament;
-    }
-
-    private WeexFragment getWeexFragmentById(String url, int id) {
-        Class<WeexFragment> clazz = WeexFragment.class;
-        WeexFragment frament = getFragmentById(id, clazz);
-        if (frament == null) {
-            frament = WeexFragment.newInstance(url, id);
-            addFramentToManager(frament);
-        }
-        return frament;
-    }
-
-    private void addFramentToManager(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        transaction = fm.beginTransaction();
-        transaction.add(R.id.main_fragment_layout, fragment);
-        transaction.commit();
-    }
-
-    private <T extends BaseFragment> T getFragmentById(int id, Class<T> tClass) {
-
-        FragmentManager fm = getSupportFragmentManager();
-        T fragment = null;
-        List<Fragment> fs = fm.getFragments();
-        if (fs != null) {
-            for (Fragment f : fs) {
-                if (f.getClass() == tClass) {
-                    BaseFragment baseFragment = (BaseFragment) f;
-                    if (baseFragment.getFragId() == id) {
-                        fragment = (T) baseFragment;
-                        break;
-                    }
-                }
+        IMFragment fragment = fragmentController.getFragmentById(id, clazz, new FragmentController.Supplier<IMFragment>() {
+            @Override
+            public IMFragment get() {
+                return IMFragment.newInstance();
             }
-        }
+        });
+        return fragment;
+    }
+
+    private WeexFragment getWeexFragmentById(final String url, int id) {
+        Class<WeexFragment> clazz = WeexFragment.class;
+        WeexFragment fragment = fragmentController.getFragmentById(id, clazz, new FragmentController.Supplier<WeexFragment>() {
+            @Override
+            public WeexFragment get() {
+                return WeexFragment.newInstance(url);
+            }
+        });
         return fragment;
     }
 
