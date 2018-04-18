@@ -73,8 +73,10 @@ dependencies {
     compile 'liji.library.dev:citypickerview:3.1.6'
     //    implementation project(':downloader')
     implementation project(':im')
+//    implementation project(':avchatkit')
     implementation project(':tractor')
     implementation project(':weexsdk')
+    implementation project(':imagepicker')
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.j256.ormlite:ormlite-core:5.0'
     // 基础功能 (必需)
@@ -84,9 +86,9 @@ dependencies {
 //    compile 'com.taobao.android:weex_sdk:0.18.0'
     compile 'com.android.support:recyclerview-v7:27.1.0'
 //    compile 'com.taobao.android:weex_inspector:0.8.0.0'
-    compile('com.weexext:imagepicker:1.0.1') {
-        exclude(group: 'com.taobao.android', module: 'weex_sdk')
-    }
+//    compile('com.weexext:imagepicker:1.0.1') {
+//        exclude(group: 'com.taobao.android', module: 'weex_sdk')
+//    }
 //    annotationProcessor 'com.arialyy.aria:aria-compiler:3.3.14'
     implementation 'com.alibaba:fastjson:1.1.46.android'
     implementation 'com.alibaba.android:bindingx-core:1.0.1'

@@ -20,9 +20,9 @@ import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
 import com.huxq17.xprefs.XPrefs;
 import com.netease.nim.uikit.common.activity.UI;
+import com.netease.nimlib.sdk.NimIntent;
 
 import user.UserService;
-
 
 public class HomeActivity extends UI {
     private LinearLayout mBottomBar;
@@ -51,8 +51,26 @@ public class HomeActivity extends UI {
         } else {
             curTabId = R.id.rb_home_playground;
         }
+        receiverMsg(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        receiverMsg(intent);
+    }
+
+    private void receiverMsg(Intent intent) {
+        if (intent != null) {
+            Object messages =  intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT);
+//            List<IMMessage> messages = (List<IMMessage>) intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT);
+            if (messages != null) {
+                curTabId = R.id.rb_home_im;
+            }
+        }
         findViewById(curTabId).performClick();
     }
+
 
     @Override
     protected void onResume() {

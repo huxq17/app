@@ -26,6 +26,74 @@ public interface RelationshipApi {
     @POST("/follow/add")
     Observable<BaseResponse<Object>> follow(@Field("account_follow_id") int followid);
 
+    @POST("/member/shield/list")
+    Observable<BlockBean> getBlockedList();
+
+    @FormUrlEncoded
+    @POST("/member/shield/del")
+    Observable<BaseResponse<Object>> unBlock(@Field("shield_id") int shield_id);
+
+    class BlockBean extends BaseResponse<List<BlockBean.DataBean>> {
+
+        public static class DataBean {
+            private int AccountId;
+            private String CreateAt;
+            private int DeleteFlag;
+            private int ID;
+            private AccountBean TargetAccount;
+            private int TargetId;
+
+            public int getAccountId() {
+                return AccountId;
+            }
+
+            public void setAccountId(int AccountId) {
+                this.AccountId = AccountId;
+            }
+
+            public String getCreateAt() {
+                return CreateAt;
+            }
+
+            public void setCreateAt(String CreateAt) {
+                this.CreateAt = CreateAt;
+            }
+
+            public int getDeleteFlag() {
+                return DeleteFlag;
+            }
+
+            public void setDeleteFlag(int DeleteFlag) {
+                this.DeleteFlag = DeleteFlag;
+            }
+
+            public int getID() {
+                return ID;
+            }
+
+            public void setID(int ID) {
+                this.ID = ID;
+            }
+
+            public AccountBean getTargetAccount() {
+                return TargetAccount;
+            }
+
+            public void setTargetAccount(AccountBean TargetAccount) {
+                this.TargetAccount = TargetAccount;
+            }
+
+            public int getTargetId() {
+                return TargetId;
+            }
+
+            public void setTargetId(int TargetId) {
+                this.TargetId = TargetId;
+            }
+
+        }
+    }
+
     class Bean extends BaseResponse<List<Bean.DataBean>> {
 
         public static class DataBean {

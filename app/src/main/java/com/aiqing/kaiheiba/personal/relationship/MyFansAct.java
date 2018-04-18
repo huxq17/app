@@ -1,7 +1,6 @@
 package com.aiqing.kaiheiba.personal.relationship;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +31,7 @@ public class MyFansAct extends BaseActivity {
         mFansList.setLayoutManager(layoutmanager);
         mAdapter = new FansAdapter();
         mFansList.addItemDecoration(new FansDivider(this, LinearLayoutManager.HORIZONTAL,
-                DensityUtil.dip2px(this,1), Color.parseColor("#CDCDCD")));
+                DensityUtil.dip2px(this, 1), getResources().getColor(R.color.bgSpace)));
         mFansList.setAdapter(mAdapter);
         obtainFollowers();
     }
@@ -47,6 +46,7 @@ public class MyFansAct extends BaseActivity {
                     }
                 });
     }
+
     public void applyData(List<RelationshipApi.Bean.DataBean> datas) {
         mAdapter.setData(datas);
     }

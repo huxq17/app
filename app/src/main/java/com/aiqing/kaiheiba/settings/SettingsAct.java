@@ -11,6 +11,7 @@ import com.aiqing.kaiheiba.BuildConfig;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.login.LoginAct;
+import com.aiqing.kaiheiba.personal.blocklist.BlockListAct;
 import com.aiqing.kaiheiba.utils.Utils;
 import com.aiqing.kaiheiba.utils.VersionUpgrade;
 import com.huxq17.xprefs.SPUtils;
@@ -27,6 +28,13 @@ public class SettingsAct extends BaseActivity {
             @Override
             public void onClick(View v) {
                 jumpToSafeSettings();
+            }
+        });
+        findViewById(R.id.settings_blocklist).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsAct.this, BlockListAct.class);
+                startActivity(intent);
             }
         });
         findViewById(R.id.settings_feedback).setOnClickListener(new View.OnClickListener() {

@@ -75,6 +75,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".personal.blocklist.BlockListAct" />
         <activity android:name=".MyActivity" />
         <activity android:name=".neteasyim.session.activity.MessageHistoryActivity" />
         <activity android:name=".neteasyim.session.activity.MessageInfoActivity" />
@@ -137,7 +138,6 @@
                 <data android:scheme="file" />
             </intent-filter>
         </activity>
-
         <!-- APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
            如果 SDKOptions 中提供了，取 SDKOptions 中的值。 -->
         <meta-data

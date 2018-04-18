@@ -81,11 +81,11 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
         }
         int gender = Integer.parseInt(genderS);
         if (gender == 0) {
-            holder.fansAgender.setImageResource(R.mipmap.prof_unknow_);
+            holder.fansAgender.setImageResource(R.mipmap.prof_unknow_s);
         } else if (gender == 1) {
-            holder.fansAgender.setImageResource(R.mipmap.prof_male_n);
+            holder.fansAgender.setImageResource(R.mipmap.prof_male_s);
         } else if (gender == 2) {
-            holder.fansAgender.setImageResource(R.mipmap.prof_female_n);
+            holder.fansAgender.setImageResource(R.mipmap.prof_female_s);
         }
         String avatarUrl = accountBean.getAvatar();
         if (!TextUtils.isEmpty(avatarUrl)) {

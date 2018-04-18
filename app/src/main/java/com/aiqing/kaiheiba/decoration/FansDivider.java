@@ -12,15 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 
-/**
- * Created by ${火龙裸先生} on 2016/10/29.
- * 邮箱：791335000@qq.com
- */
 public class FansDivider extends RecyclerView.ItemDecoration {
     private Paint mPaint;
     private Drawable mDivider;
     private int mDividerHeight = 2;//分割线高度，默认为1px
-    private int mOrientation;//列表的方向：LinearLayoutManager.VERTICAL或LinearLayoutManager.HORIZONTAL
     private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
     /**
@@ -34,7 +29,6 @@ public class FansDivider extends RecyclerView.ItemDecoration {
         if (orientation != LinearLayoutManager.VERTICAL && orientation != LinearLayoutManager.HORIZONTAL) {
             throw new IllegalArgumentException("请输入正确的参数！");
         }
-        mOrientation = orientation;
 
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
@@ -85,29 +79,37 @@ public class FansDivider extends RecyclerView.ItemDecoration {
         drawHorizontal(c, parent);
     }
 
-    //绘制横向 item 分割线
     private void drawHorizontal(Canvas canvas, RecyclerView parent) {
         int left = parent.getPaddingLeft();
         int right = parent.getMeasuredWidth() - parent.getPaddingRight();
         final int childSize = parent.getChildCount();
         int count = childSize;
+        int parentWidth = parent.getMeasuredWidth();
+        int parentHeight = parent.getMeasuredHeight();
+        drawDivider(0, 0, parentWidth, mDividerHeight, canvas);
+        drawDivider(0, 0, mDividerHeight, parentHeight, canvas);
+        drawDivider(parentWidth - mDividerHeight, 0, parentWidth, parentHeight, canvas);
         for (int i = 0; i < count; i++) {
             final View child = parent.getChildAt(i);
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
             int height = mDividerHeight;
             if (i == count - 1) {
                 left = 0;
-                right = parent.getMeasuredWidth();
+                right = parentWidth;
             }
             final int top = child.getBottom() + layoutParams.bottomMargin;
             final int bottom = top + height;
-            if (mDivider != null) {
-                mDivider.setBounds(left, top, right, bottom);
-                mDivider.draw(canvas);
-            }
-            if (mPaint != null) {
-                canvas.drawRect(left, top, right, bottom, mPaint);
-            }
+            drawDivider(left, top, right, bottom, canvas);
+        }
+    }
+
+    private void drawDivider(int left, int top, int right, int bottom, Canvas canvas) {
+        if (mDivider != null) {
+            mDivider.setBounds(left, top, right, bottom);
+            mDivider.draw(canvas);
+        }
+        if (mPaint != null) {
+            canvas.drawRect(left, top, right, bottom, mPaint);
         }
     }
 

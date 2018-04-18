@@ -11,11 +11,48 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
-        android:id="@+id/settings_safe"
+        android:id="@+id/settings_blocklist"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_item_height"
         android:background="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/nav_layout">
+
+        <TextView
+            style="@style/ContentTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/prof_left_margin"
+            android:text="屏蔽列表" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/prof_left_margin"
+            android:src="@mipmap/iv_right_enter" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgSpace" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgSpace" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_safe"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_item_height"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/settings_blocklist">
 
         <TextView
             style="@style/ContentTextStyle"
