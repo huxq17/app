@@ -7,14 +7,12 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.aiqing.imagepicker.ResponseHelper;
 import com.aiqing.imagepicker.media.ImageConfig;
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,13 +25,13 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import static com.aiqing.imagepicker.ImagePickerModule.REQUEST_LAUNCH_IMAGE_CAPTURE;
+import static com.aiqing.imagepicker.ImagePicker.REQUEST_LAUNCH_IMAGE_CAPTURE;
 
 public class MediaUtils
 {
     public static @Nullable
     File createNewFile(@NonNull final Context reactContext,
-                       @NonNull final JSONObject options,
+                       @NonNull final Bundle options,
                        @NonNull final boolean forceLocal)
     {
         final String filename = new StringBuilder("image-")
@@ -62,7 +60,7 @@ public class MediaUtils
     }
 
     public static @NonNull ImageConfig getResizedImage(@NonNull final Context context,
-                                                       @NonNull final JSONObject options,
+                                                       @NonNull final Bundle options,
                                                        @NonNull final ImageConfig imageConfig,
                                                        int initialWidth,
                                                        int initialHeight,
@@ -216,12 +214,11 @@ public class MediaUtils
                 {
                     public void onScanCompleted(String path, Uri uri)
                     {
-                        Log.i("TAG", new StringBuilder("Finished scanning ").append(path).toString());
                     }
                 });
     }
 
-    public static ReadExifResult readExifInterface(@NonNull ResponseHelper responseHelper,
+    public static ReadExifResult readExifInterface(@NonNull Bundle responseHelper,
                                                    @NonNull final ImageConfig imageConfig)
     {
         ReadExifResult result;

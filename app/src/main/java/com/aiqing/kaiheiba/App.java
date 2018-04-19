@@ -8,10 +8,10 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
-import com.aiqing.imagepicker.ImagePickerModule;
 import com.aiqing.kaiheiba.neteasyim.DemoCache;
 import com.aiqing.kaiheiba.neteasyim.mixpush.DemoPushContentProvider;
 import com.aiqing.kaiheiba.neteasyim.session.SessionHelper;
+import com.aiqing.kaiheiba.weex.ImagePickerModule;
 import com.aiqing.kaiheiba.weex.WeexImageAdapter;
 import com.aiqing.kaiheiba.weex.WeexJumpModule;
 import com.aiqing.kaiheiba.weex.WeexShareModule;
@@ -51,42 +51,11 @@ public class App extends MultiDexApplication {
         MultiDex.install(this);
         context = this;
         XPrefs.bind(this);
-        try {
-            BindingX.register();
-        } catch (WXException e) {
-            e.printStackTrace();
-        }
         InitConfig initConfig = new InitConfig.Builder().setImgAdapter(new WeexImageAdapter()).build();
         WXSDKEngine.initialize(this, initConfig);
         WXEnvironment.sLogLevel = LogLevel.ERROR;
-        try {
-            WXSDKEngine.registerModule("environment", WeexValueModule.class);
-            WXSDKEngine.registerModule("imagePicker", ImagePickerModule.class);
-            WXSDKEngine.registerModule("profile", WeexJumpModule.class);
-            WXSDKEngine.registerModule("imageUploader", WeexUploadModule.class);
-            WXSDKEngine.registerModule("sharePost", WeexShareModule.class);
-            WXSDKEngine.registerModule("windowSize", WeexWindowSizeModule.class);
-        } catch (WXException e) {
-            e.printStackTrace();
-        }
         CityListLoader.getInstance().loadCityData(this);
-//        Config config = new Config();
-//        //set database path.
-////    config.setDatabaseName("/sdcard/a/d.db");
-////      config.setDownloadDBController(dbController);
-//
-//        //set download quantity at the same time.
-//        config.setDownloadThread(5);
-//
-//        //set each download info thread number
-//        config.setEachDownloadThread(3);
-//
-//        // set connect timeout,unit millisecond
-//        config.setConnectTimeout(10000);
-//
-//        // set read data timeout,unit millisecond
-//        config.setReadTimeout(10000);
-//        DownloadService.getDownloadManager(this.getApplicationContext(), config);
+
         SDKOptions options = new SDKOptions();
         options.sdkStorageRootPath = getAppCacheDir(this)+"/im";
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
@@ -108,6 +77,21 @@ public class App extends MultiDexApplication {
             // 1、UI相关初始化操作
             // 2、相关Service调用
             initUiKit();
+            try {
+                WXSDKEngine.registerModule("environment", WeexValueModule.class);
+                WXSDKEngine.registerModule("imagePicker", ImagePickerModule.class);
+                WXSDKEngine.registerModule("profile", WeexJumpModule.class);
+                WXSDKEngine.registerModule("imageUploader", WeexUploadModule.class);
+                WXSDKEngine.registerModule("sharePost", WeexShareModule.class);
+                WXSDKEngine.registerModule("windowSize", WeexWindowSizeModule.class);
+            } catch (WXException e) {
+                e.printStackTrace();
+            }
+            try {
+                BindingX.register();
+            } catch (WXException e) {
+                e.printStackTrace();
+            }
         }
     }
 

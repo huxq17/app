@@ -1,4 +1,4 @@
-package com.aiqing.imagepicker;
+package com.aiqing.kaiheiba.weex;
 
 import android.support.annotation.NonNull;
 
@@ -37,13 +37,6 @@ public class ResponseHelper {
     public void putDouble(@NonNull final String key,
                           final double value) {
         response.put(key, value);
-    }
-
-    public void invokeCustomButton(@NonNull final JSCallback callback,
-                                   @NonNull final String action) {
-        cleanResponse();
-        response.put("customButton", action);
-        invokeResponse(callback);
     }
 
     public void invokeCancel(@NonNull final JSCallback callback) {

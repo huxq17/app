@@ -16,7 +16,6 @@ import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
-import com.huxq17.xprefs.LogUtils;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
@@ -54,7 +53,6 @@ public class WeexUploadModule extends WXModule {
         list = new ArrayList<>();
         for (int i = 0; i < imgs.size(); i++) {
             com.alibaba.fastjson.JSONObject img = (JSONObject) imgs.get(i);
-            LogUtils.e("img=" + img);
             Uri uri = Uri.parse(img.getString("path"));
             File file = new File(getPath(uri));
             upload(file);

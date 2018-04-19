@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.aiqing.imagepicker.ImagePicker;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.OssToken;
@@ -29,7 +30,6 @@ import com.aiqing.kaiheiba.imageloader.ImageLoader;
 import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import com.aiqing.kaiheiba.utils.DatePicker;
-import com.aiqing.kaiheiba.widget.ActionSheet;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -76,6 +76,7 @@ public class EditPersonProfileAct extends BaseActivity {
     private EditText etSign, etNickName;
     private Button btSubmit;
     private RadioGroup rgGender;
+    private ImagePicker imagePicker;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -169,6 +170,64 @@ public class EditPersonProfileAct extends BaseActivity {
             }
         });
         obtainProf();
+        imagePicker = new ImagePicker(this, new ImagePicker.OnImagePickerListener() {
+            @Override
+            public void onError(String error) {
+
+            }
+
+            @Override
+            public void onSuccess(Bundle response) {
+                Uri uri = Uri.parse(response.getString("uri"));
+                if (uri != null) {
+                    imageUri = uri;
+                }
+                try {
+                    tempFile = new File(getPath(imageUri));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+                toastL("头像上传中...");
+                ApiManager.INSTANCE.getApi(OssToken.Api.class).getToken()
+                        .subscribeOn(Schedulers.io())
+                        .flatMap(new Function<OssToken.Bean, ObservableSource<PutObjectResult>>() {
+                            @Override
+                            public ObservableSource<PutObjectResult> apply(OssToken.Bean bean) throws Exception {
+                                final OssToken.OSSBean ossBean = bean.getData();
+                                return updateAvatar(ossBean);
+                            }
+                        })
+                        .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
+                            @Override
+                            public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
+                                String avatarUrl = getObjectKey();
+                                return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new BaseObserver<Object>() {
+                            @Override
+                            protected void onSuccess(Object bean) {
+                                toast("头像上传成功");
+                                String avatarUrl = getObjectKey();
+                                setAvatar(avatarUrl);
+                            }
+
+                            @Override
+                            protected void onFailed(String msg) {
+                                super.onFailed(msg);
+                                log(msg);
+                                toast(msg);
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
     }
 
     private void setAvatar(String url) {
@@ -225,29 +284,7 @@ public class EditPersonProfileAct extends BaseActivity {
     }
 
     public void popupDialog() {
-        ActionSheet.createBuilder(this)
-                .setCancelButtonTitle("取消")
-                .setOtherButtonTitles("拍照", "从相册中选取")
-                .setCancelableOnTouchOutside(true)
-                .setListener(new ActionSheet.ActionSheetListener() {
-
-                    @Override
-                    public void onOtherButtonClick(int index) {
-
-                        switch (index) {
-                            case 0:
-                                takePhoto();
-                                break;
-                            case 1:
-                                openAlbum();
-                                break;
-                            case 2:
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }).show();
+        imagePicker.showImagePicker();
     }
 
     private void takePhoto() {
@@ -290,8 +327,15 @@ public class EditPersonProfileAct extends BaseActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        imagePicker.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        imagePicker.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case CityListSelectActivity.CITY_SELECT_RESULT_FRAG:
                 if (resultCode == RESULT_OK) {
@@ -329,39 +373,7 @@ public class EditPersonProfileAct extends BaseActivity {
                             return;
                         }
                     }
-                    toastL("头像上传中...");
-                    ApiManager.INSTANCE.getApi(OssToken.Api.class).getToken()
-                            .subscribeOn(Schedulers.io())
-                            .flatMap(new Function<OssToken.Bean, ObservableSource<PutObjectResult>>() {
-                                @Override
-                                public ObservableSource<PutObjectResult> apply(OssToken.Bean bean) throws Exception {
-                                    final OssToken.OSSBean ossBean = bean.getData();
-                                    return updateAvatar(ossBean);
-                                }
-                            })
-                            .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
-                                @Override
-                                public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
-                                    String avatarUrl = getObjectKey();
-                                    return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
-                                }
-                            })
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new BaseObserver<Object>() {
-                                @Override
-                                protected void onSuccess(Object bean) {
-                                    toast("头像上传成功");
-                                    String avatarUrl = getObjectKey();
-                                    setAvatar(avatarUrl);
-                                }
 
-                                @Override
-                                protected void onFailed(String msg) {
-                                    super.onFailed(msg);
-                                    log(msg);
-                                    toast(msg);
-                                }
-                            });
                 }
                 break;
         }

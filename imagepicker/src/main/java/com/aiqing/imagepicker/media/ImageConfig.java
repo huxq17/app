@@ -1,9 +1,8 @@
 package com.aiqing.imagepicker.media;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.File;
 
@@ -100,17 +99,17 @@ public class ImageConfig
         );
     }
 
-    public @NonNull ImageConfig updateFromOptions(@NonNull final JSONObject options)
+    public @NonNull ImageConfig updateFromOptions(@NonNull final Bundle options)
     {
         int maxWidth = 0;
         if (options.containsKey("maxWidth"))
         {
-            maxWidth = options.getInteger("maxWidth");
+            maxWidth = options.getInt("maxWidth");
         }
         int maxHeight = 0;
         if (options.containsKey("maxHeight"))
         {
-            maxHeight = options.getInteger("maxHeight");
+            maxHeight = options.getInt("maxHeight");
         }
         int quality = 100;
         if (options.containsKey("quality"))
@@ -120,17 +119,17 @@ public class ImageConfig
         int rotation = 0;
         if (options.containsKey("rotation"))
         {
-            rotation = options.getInteger("rotation");
+            rotation = options.getInt("rotation");
         }
-        boolean saveToCameraRoll = false;
-        if (options.containsKey("storageOptions"))
-        {
-            final JSONObject storageOptions = options.getJSONObject("storageOptions");
-            if (storageOptions.containsKey("cameraRoll"))
-            {
-                saveToCameraRoll = storageOptions.getBoolean("cameraRoll");
-            }
-        }
+//        boolean saveToCameraRoll = false;
+//        if (options.containsKey("storageOptions"))
+//        {
+//            final Bundle storageOptions = options.getJSONObject("storageOptions");
+//            if (storageOptions.containsKey("cameraRoll"))
+//            {
+//                saveToCameraRoll = storageOptions.getBoolean("cameraRoll");
+//            }
+//        }
         return new ImageConfig(this.original, this.resized, maxWidth, maxHeight, quality, rotation, saveToCameraRoll);
     }
 

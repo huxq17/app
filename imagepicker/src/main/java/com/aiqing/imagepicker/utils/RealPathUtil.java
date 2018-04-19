@@ -2,6 +2,7 @@ package com.aiqing.imagepicker.utils;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,7 +12,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
@@ -25,14 +25,17 @@ public class RealPathUtil {
             result = Uri.fromFile(file);
         }
         else {
-            final String packageName = context.getApplicationContext().getPackageName();
-            final String authority =  new StringBuilder(packageName).append(".provider").toString();
-            try {
-                result = FileProvider.getUriForFile(context, authority, file);
-            }
-            catch(IllegalArgumentException e) {
-                e.printStackTrace();
-            }
+//            final String packageName = context.getApplicationContext().getPackageName();
+//            final String authority =  new StringBuilder(packageName).append(".provider").toString();
+//            try {
+//                result = FileProvider.getUriForFile(context, authority, file);
+//            }
+//            catch(IllegalArgumentException e) {
+//                e.printStackTrace();
+//            }
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+            result = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         }
         return result;
     }

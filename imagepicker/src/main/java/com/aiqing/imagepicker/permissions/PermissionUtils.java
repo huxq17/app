@@ -6,56 +6,39 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
-import com.aiqing.imagepicker.ImagePickerModule;
-import com.alibaba.fastjson.JSONObject;
+import com.aiqing.imagepicker.ImagePicker;
 
 import java.lang.ref.WeakReference;
 
-public class PermissionUtils
-{
+public class PermissionUtils {
     public static @Nullable
-    AlertDialog explainingDialog(@NonNull final ImagePickerModule module,
-                                 @NonNull final JSONObject options,
-                                 @NonNull final OnExplainingPermissionCallback callback)
-    {
-        if (module.getContext() == null)
-        {
-            return null;
-        }
-        final JSONObject permissionDenied = options.getJSONObject("permissionDenied");
-        final String title = permissionDenied.getString("title");
-        final String text = permissionDenied.getString("text");
-        final String btnReTryTitle = permissionDenied.getString("reTryTitle");
-        final String btnOkTitle = permissionDenied.getString("okTitle");
-        final WeakReference<ImagePickerModule> reference = new WeakReference<>(module);
+    AlertDialog explainingDialog(@NonNull final ImagePicker module,
+                                 @NonNull final String title, String content,
+                                 @NonNull final OnExplainingPermissionCallback callback) {
+        final WeakReference<ImagePicker> reference = new WeakReference<>(module);
 
         final Activity activity = module.getActivity();
 
-        if (activity == null)
-        {
+        if (activity == null) {
             return null;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, module.getDialogThemeId());
         builder
                 .setTitle(title)
-                .setMessage(text)
+                .setMessage(content)
                 .setCancelable(false)
-                .setNegativeButton(btnOkTitle, new DialogInterface.OnClickListener()
-                {
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialogInterface,
-                                        int i)
-                    {
+                                        int i) {
                         callback.onCancel(reference, dialogInterface);
                     }
                 })
-                .setPositiveButton(btnReTryTitle, new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton("前往设置", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface,
-                                        int i)
-                    {
+                                        int i) {
                         callback.onReTry(reference, dialogInterface);
                     }
                 });
@@ -64,7 +47,8 @@ public class PermissionUtils
     }
 
     public interface OnExplainingPermissionCallback {
-        void onCancel(WeakReference<ImagePickerModule> moduleInstance, DialogInterface dialogInterface);
-        void onReTry(WeakReference<ImagePickerModule> moduleInstance, DialogInterface dialogInterface);
+        void onCancel(WeakReference<ImagePicker> moduleInstance, DialogInterface dialogInterface);
+
+        void onReTry(WeakReference<ImagePicker> moduleInstance, DialogInterface dialogInterface);
     }
 }

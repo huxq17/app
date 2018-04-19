@@ -1,17 +1,16 @@
 package com.aiqing.imagepicker.utils;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
-import com.alibaba.fastjson.JSONObject;
 
 
 public class ReadableMapUtils {
     public static
     @NonNull
-    boolean hasAndNotEmpty(@NonNull Class clazz,
-                           @NonNull final JSONObject target,
-                           @NonNull final String key) {
+    boolean hasAndNotEmpty(
+            @NonNull final Bundle target,
+            @NonNull final String key) {
         if (!target.containsKey(key)) {
             return false;
         }
@@ -20,27 +19,23 @@ public class ReadableMapUtils {
             return false;
         }
 
-        if (String.class.equals(clazz)) {
-            final String value = target.getString(key);
-            return !TextUtils.isEmpty(value);
-        }
-
-        return true;
+        final String value = target.getString(key);
+        return !TextUtils.isEmpty(value);
     }
 
 
     public static
     @NonNull
-    boolean hasAndNotNullReadableMap(@NonNull final JSONObject target,
+    boolean hasAndNotNullReadableMap(@NonNull final Bundle target,
                                      @NonNull final String key) {
-        return hasAndNotEmpty(JSONObject.class, target, key);
+        return hasAndNotEmpty(target, key);
     }
 
 
     public static
     @NonNull
-    boolean hasAndNotEmptyString(@NonNull final JSONObject target,
+    boolean hasAndNotEmptyString(@NonNull final Bundle target,
                                  @NonNull final String key) {
-        return hasAndNotEmpty(String.class, target, key);
+        return hasAndNotEmpty(target, key);
     }
 }

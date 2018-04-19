@@ -2,28 +2,28 @@ package com.aiqing.imagepicker.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.widget.ArrayAdapter;
 
-import com.aiqing.imagepicker.ImagePickerModule;
+import com.aiqing.imagepicker.ImagePicker;
 import com.aiqing.imagepicker.R;
-import com.alibaba.fastjson.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class UI {
     public static @NonNull
-    AlertDialog chooseDialog(@Nullable final ImagePickerModule module,
-                             @NonNull final JSONObject options,
+    AlertDialog chooseDialog(@Nullable final ImagePicker module,
+                             @NonNull final Bundle options,
                              @Nullable final OnAction callback) {
         final Context context = module.getActivity();
         if (context == null) {
             return null;
         }
-        final WeakReference<ImagePickerModule> reference = new WeakReference<>(module);
+        final WeakReference<ImagePicker> reference = new WeakReference<>(module);
 
         final ButtonsHelper buttons = ButtonsHelper.newInstance(options);
         final List<String> titles = buttons.getTitles();
@@ -34,9 +34,7 @@ public class UI {
                 titles
         );
         AlertDialog.Builder builder = new AlertDialog.Builder(context, module.getDialogThemeId() /*android.R.style.Theme_Holo_Light_Dialog*/);
-        if (ReadableMapUtils.hasAndNotEmptyString(options, "title")) {
-            builder.setTitle(options.getString("title"));
-        }
+        builder.setTitle(options.getString("title"));
 
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int index) {
@@ -55,8 +53,6 @@ public class UI {
                         callback.onCancel(reference.get());
                         break;
 
-                    default:
-                        callback.onCustomButton(reference.get(), action);
                 }
             }
         });
@@ -85,12 +81,10 @@ public class UI {
     }
 
     public interface OnAction {
-        void onTakePhoto(@Nullable ImagePickerModule module);
+        void onTakePhoto(@Nullable ImagePicker module);
 
-        void onUseLibrary(@Nullable ImagePickerModule module);
+        void onUseLibrary(@Nullable ImagePicker module);
 
-        void onCancel(@Nullable ImagePickerModule module);
-
-        void onCustomButton(@Nullable ImagePickerModule module, String action);
+        void onCancel(@Nullable ImagePicker module);
     }
 }
