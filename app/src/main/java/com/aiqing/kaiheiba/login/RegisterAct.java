@@ -13,14 +13,26 @@ import android.widget.EditText;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
+import com.aiqing.kaiheiba.api.Code;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
+import com.netease.nim.uikit.api.NimUIKit;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.auth.LoginInfo;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import user.User;
+import user.UserService;
 
 
 public class RegisterAct extends BaseActivity implements View.OnClickListener {
@@ -109,14 +121,75 @@ public class RegisterAct extends BaseActivity implements View.OnClickListener {
             params.put("invite_code", getText(etInviteCode));
         }
         ApiManager.INSTANCE.getApi(LoginApi.class).register(params)
-                .compose(RxSchedulers.<LoginApi.Bean>compose())
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Function<LoginApi.Bean, ObservableSource<LoginApi.Bean>>() {
+                    @Override
+                    public ObservableSource<LoginApi.Bean> apply(LoginApi.Bean bean) throws Exception {
+                        return loginNetEasyIM(bean);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<User>() {
                     @Override
-                    protected void onSuccess(User o) {
+                    protected void onSuccess(User user) {
                         toast("注册成功");
+                        user.mobile = getText(etMobile);
+                        UserService.save(user);
                         finish();
+                        UpdateProfileAct.start(RegisterAct.this);
                     }
                 });
+//                .compose(RxSchedulers.<LoginApi.Bean>compose())
+//                .subscribe(new BaseObserver<User>() {
+//                    @Override
+//                    protected void onSuccess(User o) {
+//                        toast("注册成功");
+//                        finish();
+//                    }
+//                });
+    }
+
+    private Observable<LoginApi.Bean> loginNetEasyIM(final LoginApi.Bean bean) {
+        return Observable.create(new ObservableOnSubscribe<LoginApi.Bean>() {
+            @Override
+            public void subscribe(final ObservableEmitter<LoginApi.Bean> e) throws Exception {
+                if (bean == null) {
+                    e.onNext(bean);
+                    return;
+                }
+                int code = bean.getCode();
+                if (code == Code.OK) {
+                    final User user = bean.getData();
+                    String account = user.accid;
+                    final String token = user.imToken;
+                    NimUIKit.login(new LoginInfo(account, token), new RequestCallback<LoginInfo>() {
+                        @Override
+                        public void onSuccess(LoginInfo param) {
+                            bean.getData().appKey = param.getAppKey();
+                            NimUIKit.loginSuccess(user.accid);
+                            e.onNext(bean);
+                        }
+
+                        @Override
+                        public void onFailed(int code) {
+                            if (code == 302 || code == 404) {
+                                e.onError(new Exception("帐号或密码错误"));
+                            } else {
+                                e.onError(new Exception("登录失败: " + code));
+                            }
+                        }
+
+                        @Override
+                        public void onException(Throwable exception) {
+                            e.onError(exception);
+                        }
+                    });
+                } else {
+                    e.onNext(bean);
+                }
+
+            }
+        });
     }
 
     private void requestMobileCode() {

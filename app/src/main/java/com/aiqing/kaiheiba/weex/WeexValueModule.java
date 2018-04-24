@@ -2,6 +2,9 @@ package com.aiqing.kaiheiba.weex;
 
 import android.util.Log;
 
+import com.huxq17.xprefs.LogUtils;
+import com.huxq17.xprefs.SPUtils;
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
@@ -24,6 +27,17 @@ public class WeexValueModule extends WXModule {
         map.put("userID", userId);
         map.put("userToken", usertoken);
         callback.invoke(map);
+        //callback.invoke(map);
+    }
+
+    @JSMethod
+    public void getAccountIdCallback(JSCallback callback) {
+//        if(TextUtils.isEmpty(userId)|| TextUtils.isEmpty(usertoken)){
+//            LoginAct.start(WXEnvironment.getApplication());
+//        }
+        String accountId = SPUtils.getString(WXEnvironment.getApplication(), "waccountId");
+        LogUtils.e("accountId="+accountId);
+        callback.invoke(accountId);
         //callback.invoke(map);
     }
 

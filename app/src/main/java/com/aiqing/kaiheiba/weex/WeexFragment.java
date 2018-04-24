@@ -32,6 +32,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     public static final String homeurl = "home.weex.js";
     public static final String mypageurl = "myPage.weex.js";
     public static final String onlineUrl = "http://weex.17kaiheiba.com/bundle/";
+    public static final String userMainUrl = "userHome.weex.js";
     private boolean isSucceeded = false;
 
     public WeexFragment() {
@@ -42,6 +43,9 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         switch (BuildConfig.BUILD_TYPE) {
             case "debug":
                 String baseUrl = SPUtils.getString(context, "baseUrl");
+//                if (TextUtils.isEmpty(baseUrl)) {
+//                    baseUrl = "http://172.16.244.1:8080/dist/";
+//                }
                 if (TextUtils.isEmpty(baseUrl)) {
                     baseUrl = onlineUrl;
                 }

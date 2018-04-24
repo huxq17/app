@@ -18,6 +18,7 @@ import com.aiqing.kaiheiba.weex.WeexShareModule;
 import com.aiqing.kaiheiba.weex.WeexUploadModule;
 import com.aiqing.kaiheiba.weex.WeexValueModule;
 import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
+import com.aiyou.sdk.LGSDK;
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.huxq17.xprefs.XPrefs;
 import com.lljjcoder.style.citylist.utils.CityListLoader;
@@ -70,7 +71,7 @@ public class App extends MultiDexApplication {
         options.statusBarNotificationConfig = config;
         // SDK初始化（启动后台服务，若已经存在用户登录信息， SDK 将完成自动登录）
         NIMClient.init(this, loginInfo(), options);
-
+        LGSDK.init(this, "211534", false);
         // ... your codes
         if (NIMUtil.isMainProcess(this)) {
             // 注意：以下操作必须在主进程中进行

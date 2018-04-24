@@ -1,5 +1,7 @@
 package com.aiqing.kaiheiba.bean;
 
+import android.text.TextUtils;
+
 import java.util.List;
 
 public class AccountBean {
@@ -110,8 +112,12 @@ public class AccountBean {
         this.FirstIp = FirstIp;
     }
 
-    public String getGender() {
-        return Gender;
+    public int getGender() {
+        int gender =0;
+        if (!TextUtils.isEmpty(Gender) && TextUtils.isDigitsOnly(Gender)) {
+            gender = Integer.parseInt(Gender);
+        }
+        return gender;
     }
 
     public void setGender(String Gender) {

@@ -48,8 +48,17 @@ android {
 //            signingConfig signingConfigs.config
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDir(['libs'])
+        }
+    }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.0'

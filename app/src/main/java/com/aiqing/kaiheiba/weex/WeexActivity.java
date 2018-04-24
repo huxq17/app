@@ -1,5 +1,6 @@
 package com.aiqing.kaiheiba.weex;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,13 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         mWXSDKInstance.registerRenderListener(this);
         Uri data = getIntent().getData();
         mWXSDKInstance.renderByUrl(getPackageName(), data.toString(), null, null, WXRenderStrategy.APPEND_ASYNC);
+    }
+
+    public static void start(Context context, String url) {
+        Intent intent = new Intent(context, WeexActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse(url));
+        context.startActivity(intent);
     }
 
     @Override
@@ -84,7 +92,7 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(mWXSDKInstance!=null){
+        if (mWXSDKInstance != null) {
             mWXSDKInstance.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }

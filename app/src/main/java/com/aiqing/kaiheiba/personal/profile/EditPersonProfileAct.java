@@ -404,12 +404,12 @@ public class EditPersonProfileAct extends BaseActivity {
                         setAvatar(accountBean.getAvatar());
                         setSign(accountBean.getSign());
                         setNickName(accountBean.getNickname());
-                        String gender = accountBean.getGender();
-                        if (gender.equals("1")) {
+                        int gender = accountBean.getGender();
+                        if (gender == 1) {
                             rgGender.check(R.id.rb_gender_male);
-                        } else if (gender.equals("2")) {
+                        } else if (gender == 2) {
                             rgGender.check(R.id.rb_gender_female);
-                        } else if (gender.equals("0")) {
+                        } else if (gender == 0) {
                             rgGender.check(R.id.rb_gender_secret);
                         }
                         tvDate.setText(accountBean.getBorn());

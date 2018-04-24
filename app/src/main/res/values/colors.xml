@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="contentTextColor">#7F7F7F</color>
     <color name="bgSpace">#f2f2f2</color>
+    <color name="settingsDivider">#ffffff</color>
     <!--<color name="bgSpace">#D3D3D3</color>-->
     <color name="bg_content">#FAFAFA</color>
     <color name="bind_checked_color">#2295CB</color>

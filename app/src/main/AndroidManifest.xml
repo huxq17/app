@@ -25,6 +25,8 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!--<uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -106,6 +108,8 @@
         <activity android:name=".neteasyim.session.search.DisplayMessageActivity" />
         <activity android:name=".neteasyim.session.search.SearchMessageActivity" />
         <activity android:name=".neteasyim.file.browser.FileBrowserActivity" />
+        <activity android:name=".personal.wallet.ChargeAct" />
+        <activity android:name=".login.UpdateProfileAct" />
         <activity
             android:name=".HomeActivity"
             android:launchMode="singleTask"

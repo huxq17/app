@@ -24,7 +24,10 @@ import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.Utils;
+import com.aiqing.kaiheiba.weex.WeexActivity;
+import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
+import com.huxq17.xprefs.SPUtils;
 
 public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.DataBean, FansAdapter.ViewHolder> {
 
@@ -37,7 +40,7 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
         View.OnClickListener onClickListener;
         boolean isFollow = false;
 
-        public ViewHolder(View view,final FansAdapter adapter) {
+        public ViewHolder(View view, final FansAdapter adapter) {
             super(view);
             fansAvatar = view.findViewById(R.id.fans_avatar);
             fansName = view.findViewById(R.id.fans_name);
@@ -47,30 +50,37 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
             onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!isFollow) {
-                        final int position = getAdapterPosition();
-                        final RelationshipApi.Bean.DataBean dataBean = adapter.getData(position);
-                        int followid = dataBean.getAccountId();
-                        ApiManager.INSTANCE.getApi(RelationshipApi.class).follow(followid)
-                                .compose(RxSchedulers.<BaseResponse<Object>>compose())
-                                .subscribe(new BaseObserver<Object>() {
-                                    @Override
-                                    protected void onSuccess(Object o) {
-                                        dataBean.getAccount().setIsFollowed("1");
-                                        adapter.modifyData(position, dataBean);
-                                    }
-                                });
+                    final int position = getAdapterPosition();
+                    if (v == isFollowFans) {
+                        if (!isFollow) {
+                            final RelationshipApi.Bean.DataBean dataBean = adapter.getData(position);
+                            int followid = dataBean.getAccountId();
+                            ApiManager.INSTANCE.getApi(RelationshipApi.class).follow(followid)
+                                    .compose(RxSchedulers.<BaseResponse<Object>>compose())
+                                    .subscribe(new BaseObserver<Object>() {
+                                        @Override
+                                        protected void onSuccess(Object o) {
+                                            dataBean.getAccount().setIsFollowed("1");
+                                            adapter.modifyData(position, dataBean);
+                                        }
+                                    });
+                        }
+                    } else if (v == itemView) {
+                        Context context = v.getContext();
+                        SPUtils.put(context, "waccountId", adapter.getData(position).getAccount().getID());
+                        WeexActivity.start(context, WeexFragment.getRoot() + WeexFragment.userMainUrl);
                     }
                 }
             };
             isFollowFans.setOnClickListener(onClickListener);
+            view.setOnClickListener(onClickListener);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_fans, parent, false);
-        return new ViewHolder(view,this);
+        return new ViewHolder(view, this);
     }
 
     @Override
@@ -80,7 +90,7 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
         holder.fansName.setText(accountBean.getNickname());
         holder.fansDes.setText(accountBean.getSign());
 
-        int gender = Integer.parseInt(accountBean.getGender());
+        int gender = accountBean.getGender();
         if (gender == 0) {
             holder.fansAgender.setImageResource(R.mipmap.prof_unknow_);
         } else if (gender == 1) {

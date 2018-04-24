@@ -24,7 +24,10 @@ import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.Utils;
+import com.aiqing.kaiheiba.weex.WeexActivity;
+import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.buyi.huxq17.serviceagency.ServiceAgency;
+import com.huxq17.xprefs.SPUtils;
 
 public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.DataBean, FollowAdapter.ViewHolder> {
 
@@ -37,7 +40,7 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
         View.OnClickListener onClickListener;
         FollowAdapter followAdapter;
 
-        public ViewHolder(View view, FollowAdapter adapter) {
+        public ViewHolder(final View view, FollowAdapter adapter) {
             super(view);
             followAdapter = adapter;
             fansAvatar = view.findViewById(R.id.fans_avatar);
@@ -49,17 +52,24 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
                 @Override
                 public void onClick(View v) {
                     final int position = getAdapterPosition();
-                    int followid = followAdapter.getData(position).getAccountFollowId();
-                    ApiManager.INSTANCE.getApi(RelationshipApi.class).unfollow(followid).compose(RxSchedulers.<BaseResponse<Object>>compose())
-                            .subscribe(new BaseObserver<Object>() {
-                                @Override
-                                protected void onSuccess(Object o) {
-                                    followAdapter.deleteData(position);
-                                }
-                            });
+                    if (v == isFollowFans) {
+                        int followid = followAdapter.getData(position).getAccountFollowId();
+                        ApiManager.INSTANCE.getApi(RelationshipApi.class).unfollow(followid).compose(RxSchedulers.<BaseResponse<Object>>compose())
+                                .subscribe(new BaseObserver<Object>() {
+                                    @Override
+                                    protected void onSuccess(Object o) {
+                                        followAdapter.deleteData(position);
+                                    }
+                                });
+                    } else if (v == itemView) {
+                        Context context = v.getContext();
+                        SPUtils.put(context, "waccountId", followAdapter.getData(position).getAccount().getID());
+                        WeexActivity.start(context, WeexFragment.getRoot() + WeexFragment.userMainUrl);
+                    }
                 }
             };
             isFollowFans.setOnClickListener(onClickListener);
+            view.setOnClickListener(onClickListener);
         }
     }
 
@@ -75,11 +85,7 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
         AccountBean accountBean = dataBean.getAccount();
         holder.fansName.setText(accountBean.getNickname());
         holder.fansDes.setText(accountBean.getSign());
-        String genderS = accountBean.getGender();
-        if (genderS == null) {
-            return;
-        }
-        int gender = Integer.parseInt(genderS);
+        int gender = accountBean.getGender();
         if (gender == 0) {
             holder.fansAgender.setImageResource(R.mipmap.prof_unknow_s);
         } else if (gender == 1) {

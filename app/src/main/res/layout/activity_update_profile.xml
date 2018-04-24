@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/prof_left_margin">
+
+    <ImageView
+        android:id="@+id/retrieve_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/iv_app_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/tv_retrieve_mobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/iv_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/et_mobile"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_mobile" />
+
+    <EditText
+        android:id="@+id/et_mobile"
+        style="@style/ContentTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/prof_left_margin"
+        android:layout_marginRight="@dimen/prof_left_margin"
+        android:layout_marginTop="50dp"
+        android:background="@null"
+        android:hint="输入昵称"
+        android:inputType="phone"
+        app:layout_constraintLeft_toRightOf="@id/tv_retrieve_mobile"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/retrieve_logo" />
+
+    <View
+        android:id="@+id/divider_blow_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/tv_retrieve_mobile" />
+
+    <ImageView
+        android:id="@+id/iv_retrieve_mobile_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/iv_birth_p"
+        app:layout_constraintBottom_toBottomOf="@id/et_mobile_code"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_blow_pass"
+        app:layout_constraintTop_toTopOf="@id/et_mobile_code" />
+
+    <TextView
+        android:id="@+id/et_mobile_code"
+        style="@style/ContentTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/prof_left_margin"
+        android:layout_marginRight="@dimen/prof_left_margin"
+        android:layout_marginTop="@dimen/prof_left_margin"
+        android:background="@null"
+        android:hint="输入出生日期"
+        app:layout_constraintLeft_toRightOf="@id/iv_retrieve_mobile_code"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_blow_mobile" />
+
+    <View
+        android:id="@+id/divider_blow_mobile_code"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/iv_retrieve_mobile_code" />
+
+    <ImageView
+        android:id="@+id/tv_retrieve_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/iv_sex_p"
+        app:layout_constraintBottom_toBottomOf="@id/et_pass"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_pass" />
+
+    <TextView
+        android:id="@+id/et_pass"
+        style="@style/ContentTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/prof_left_margin"
+        android:layout_marginRight="@dimen/prof_left_margin"
+        android:layout_marginTop="@dimen/prof_left_margin"
+        android:background="@null"
+        android:hint="请选择性别"
+        app:layout_constraintLeft_toRightOf="@id/tv_retrieve_pass"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_blow_mobile_code" />
+
+    <View
+        android:id="@+id/divider_blow_pass"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/bgSpace"
+        app:layout_constraintTop_toBottomOf="@id/tv_retrieve_pass" />
+
+    <Button
+        android:id="@+id/bt_retrieve"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="250dp"
+        android:layout_height="@dimen/bt_submit_height"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/up_save_bt"
+        android:onClick="retrievePassBack"
+        android:stateListAnimator="@null"
+        android:text="确认"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_blow_pass" />
+
+
+</android.support.constraint.ConstraintLayout>

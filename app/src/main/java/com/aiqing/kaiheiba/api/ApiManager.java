@@ -16,8 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory2;
 public enum ApiManager {
     INSTANCE;
     private static final HashMap<Class, Object> mCachedApi = new LinkedHashMap<>();
-    public static final String BASE_URL = "http://api.17kaiheiba.com/";
-    //    public static final String BASE_URL = "http://116.62.139.161/";
+//    public static final String BASE_URL = "http://api.17kaiheiba.com/";
+        public static final String BASE_URL = "http://116.62.139.161/";
     OkHttpClient okHttpClient;
 
     private OkHttpClient getOkHttpClient() {

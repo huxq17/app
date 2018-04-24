@@ -11,6 +11,7 @@ import com.aiqing.kaiheiba.personal.relationship.MyFansAct;
 import com.aiqing.kaiheiba.personal.relationship.MyFollowAct;
 import com.aiqing.kaiheiba.personal.wallet.MyWalletAct;
 import com.aiqing.kaiheiba.personal.wallet.TradeRecordAct;
+import com.aiqing.kaiheiba.settings.FeedbackAct;
 import com.aiqing.kaiheiba.settings.SettingsAct;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
@@ -39,6 +40,8 @@ public class WeexJumpModule extends WXModule {
             jumpToInviteFriend();
         } else if (type.equals("8")) {
             LoginAct.start(WXEnvironment.getApplication());
+        } else if (type.equals("9")) {
+            jumpTo(FeedbackAct.class);
         }
     }
 
@@ -98,7 +101,7 @@ public class WeexJumpModule extends WXModule {
         }
 
         Intent intent = new Intent(WXEnvironment.getApplication(), activity);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         WXEnvironment.getApplication().startActivity(intent);
     }
 }

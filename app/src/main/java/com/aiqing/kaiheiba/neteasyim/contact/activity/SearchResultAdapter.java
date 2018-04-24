@@ -59,7 +59,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         holder.fansName.setText(accountBean.getNickname());
         holder.fansDes.setText(accountBean.getSign());
 
-        int gender = Integer.parseInt(accountBean.getGender());
+        int gender = accountBean.getGender();
         if (gender == 0) {
             holder.fansAgender.setImageResource(R.mipmap.prof_unknow_);
         } else if (gender == 1) {

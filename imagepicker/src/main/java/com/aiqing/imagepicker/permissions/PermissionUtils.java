@@ -7,12 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
 import com.aiqing.imagepicker.ImagePicker;
+import com.aiqing.imagepicker.R;
 
 import java.lang.ref.WeakReference;
 
 public class PermissionUtils {
     public static @Nullable
-    AlertDialog explainingDialog(@NonNull final ImagePicker module,
+    AlertDialog explainingDialog( final ImagePicker module,
                                  @NonNull final String title, String content,
                                  @NonNull final OnExplainingPermissionCallback callback) {
         final WeakReference<ImagePicker> reference = new WeakReference<>(module);
@@ -23,7 +24,7 @@ public class PermissionUtils {
             return null;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity, module.getDialogThemeId());
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.DefaultExplainingPermissionsTheme);
         builder
                 .setTitle(title)
                 .setMessage(content)

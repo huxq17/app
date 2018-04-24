@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.neteasyim.DemoCache;
+import com.aiqing.kaiheiba.neteasyim.contact.ContactHelper;
 import com.aiqing.kaiheiba.neteasyim.contact.activity.UserProfileActivity;
 import com.aiqing.kaiheiba.neteasyim.session.action.FileAction;
 import com.aiqing.kaiheiba.neteasyim.session.action.GuessAction;
@@ -97,7 +98,7 @@ public class SessionHelper {
 
         // 注册消息撤回监听器
         registerMsgRevokeObserver();
-
+        ContactHelper.init();
         NimUIKit.setCommonP2PSessionCustomization(getP2pCustomization());
 
         NimUIKit.setCommonTeamSessionCustomization(getTeamCustomization());
