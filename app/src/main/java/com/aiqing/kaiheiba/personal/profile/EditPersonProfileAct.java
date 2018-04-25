@@ -1,13 +1,10 @@
 package com.aiqing.kaiheiba.personal.profile;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -42,9 +39,7 @@ import com.lljjcoder.style.citylist.bean.CityInfoBean;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -54,22 +49,12 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 import user.UserService;
 
 public class EditPersonProfileAct extends BaseActivity {
-    public static final int PHOTO_REQUEST_CAREMA = 1;
-    public static final int CROP_PHOTO = 2;
-    String[] perms = {
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-    };
-    private static final int RC_CAMERA = 1;
-    private static final int RC_SDCARD = 2;
     private Uri imageUri;
 
-    public static File tempFile;
+    public File tempFile;
     private ImageView ivAvatar;
     private TextView tvArea, tvDate, tvName;
     private DatePicker datePicker;
@@ -201,7 +186,7 @@ public class EditPersonProfileAct extends BaseActivity {
                         .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
                             @Override
                             public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
-                                String avatarUrl = getObjectKey();
+                                String avatarUrl = OssToken.Client.getObjectKey("avatar", tempFile.getName());
                                 return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
                             }
                         })
@@ -210,7 +195,7 @@ public class EditPersonProfileAct extends BaseActivity {
                             @Override
                             protected void onSuccess(Object bean) {
                                 toast("头像上传成功");
-                                String avatarUrl = getObjectKey();
+                                String avatarUrl = OssToken.Client.getObjectKey("avatar", tempFile.getName());
                                 setAvatar(avatarUrl);
                             }
 
@@ -272,59 +257,11 @@ public class EditPersonProfileAct extends BaseActivity {
         datePicker.show();
     }
 
-    @AfterPermissionGranted(RC_CAMERA)
-    private void onCameraGranted() {
-        takePhoto();
-    }
-
-    @AfterPermissionGranted(RC_SDCARD)
-    private void onSdcardGranted() {
-        log("onSdcardGranted");
-        openAlbum();
-    }
 
     public void popupDialog() {
         imagePicker.showImagePicker();
     }
 
-    private void takePhoto() {
-        if (!EasyPermissions.hasPermissions(this, perms)) {
-            EasyPermissions.requestPermissions(this, "拍照需要相机和读取外部存储权限", RC_CAMERA, perms);
-            return;
-        }
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        // 激活相机
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // 判断存储卡是否可以用，可用进行存储
-        if (hasSdcard()) {
-            SimpleDateFormat timeStampFormat = new SimpleDateFormat(
-                    "yyyy_MM_dd_HH_mm_ss");
-            String filename = timeStampFormat.format(new Date());
-            tempFile = new File(Environment.getExternalStorageDirectory(),
-                    filename + ".jpg");
-            if (currentapiVersion < 24) {
-                imageUri = Uri.fromFile(tempFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            } else {
-                //兼容android7.0 使用共享文件的形式
-                ContentValues contentValues = new ContentValues(1);
-                contentValues.put(MediaStore.Images.Media.DATA, tempFile.getAbsolutePath());
-                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            }
-        }
-        startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
-    }
-
-    private void openAlbum() {
-        if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            EasyPermissions.requestPermissions(this, "需要读取外部存储权限", RC_SDCARD, Manifest.permission.CAMERA);
-            return;
-        }
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, CROP_PHOTO);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -350,38 +287,7 @@ public class EditPersonProfileAct extends BaseActivity {
                     tvArea.setText(cityInfoBean.getName());
                 }
                 break;
-            case PHOTO_REQUEST_CAREMA:
-                if (resultCode == RESULT_OK) {
-                    Intent intent = new Intent("com.android.camera.action.CROP");
-                    intent.setDataAndType(imageUri, "image/*");
-                    intent.putExtra("scale", true);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    startActivityForResult(intent, CROP_PHOTO);
-                }
-                break;
-            case CROP_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    if (data != null) {
-                        Uri uri = data.getData();
-                        if (uri != null) {
-                            imageUri = uri;
-                        }
-                        try {
-                            tempFile = new File(getPath(imageUri));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return;
-                        }
-                    }
-
-                }
-                break;
         }
-    }
-
-    public static boolean hasSdcard() {
-        return Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED);
     }
 
     public String getPath(Uri uri) {
@@ -419,18 +325,14 @@ public class EditPersonProfileAct extends BaseActivity {
                 });
     }
 
-    public String getObjectKey() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-        return "avatar/" + format.format(calendar.getTime()) + "/" + tempFile.getName();
-    }
 
     public Observable<PutObjectResult> updateAvatar(final OssToken.OSSBean ossBean) {
         return Observable.create(new ObservableOnSubscribe<PutObjectResult>() {
             @Override
             public void subscribe(ObservableEmitter<PutObjectResult> emitter) throws Exception {
                 OSS oss = OssToken.Client.init(EditPersonProfileAct.this.getApplicationContext(), ossBean);
-                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun", getObjectKey(), tempFile.getPath());
+                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun",
+                        OssToken.Client.getObjectKey("avatar", tempFile.getName()), tempFile.getPath());
                 try {
                     PutObjectResult putResult = oss.putObject(put);
                     emitter.onNext(putResult);

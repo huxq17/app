@@ -3,6 +3,7 @@ package com.aiqing.kaiheiba;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -62,7 +63,7 @@ public class HomeActivity extends UI {
 
     private void receiverMsg(Intent intent) {
         if (intent != null) {
-            Object messages =  intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT);
+            Object messages = intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT);
 //            List<IMMessage> messages = (List<IMMessage>) intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT);
             if (messages != null) {
                 curTabId = R.id.rb_home_im;
@@ -129,14 +130,17 @@ public class HomeActivity extends UI {
     }
 
     private void replaceFragment(Fragment fragment) {
+        curFragment = fragment;
         fragmentController.show(fragment, R.id.main_fragment_layout);
     }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
+
+    private Fragment curFragment;
 
     public void onCheck(View v) {
         int checkedId = v.getId();
@@ -180,6 +184,17 @@ public class HomeActivity extends UI {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Apk.INSTANCE.onActivityResult(requestCode, resultCode, data);
+        if (curFragment != null) {
+            curFragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (curFragment != null) {
+            curFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private BaseFragment getIMFragmentById() {
@@ -210,4 +225,5 @@ public class HomeActivity extends UI {
 //        super.onBackPressed();
         moveTaskToBack(true);
     }
+
 }

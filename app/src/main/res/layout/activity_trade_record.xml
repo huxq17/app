@@ -11,7 +11,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
-        android:id="@+id/layout_record_select"
+        android:id="@+id/layout_date_select"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_item_height"
         android:background="@android:color/white"
@@ -29,6 +29,7 @@
             android:background="@color/bgSpace" />
 
         <TextView
+            android:id="@+id/tv_date"
             style="@style/ContentTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,23 +54,23 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
         android:background="@color/bgSpace"
-        app:layout_constraintTop_toBottomOf="@id/layout_record_select" />
+        app:layout_constraintTop_toBottomOf="@id/layout_date_select" />
 
     <com.aiqing.kaiheiba.widget.tablayout.TabLayout
         android:id="@+id/record_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_item_height"
-        app:tabIndicatorHeight="2dp"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/tab_top_divider"
         app:tabIndicatorColor="#0E99DA"
+        app:tabIndicatorHeight="2dp"
         app:tabPaddingBottom="0dp"
         app:tabPaddingEnd="0dp"
         app:tabPaddingStart="0dp"
         app:tabPaddingTop="0dp"
         app:tabSelectedTextColor="#2295CB"
-        android:background="@android:color/white"
-        app:tabTextColor="#7F7F7F"
         app:tabTextAppearance="@style/ContentTextStyle"
-        app:layout_constraintTop_toBottomOf="@id/tab_top_divider" />
+        app:tabTextColor="#7F7F7F" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/record_viewpager"
@@ -77,4 +78,16 @@
         android:layout_height="wrap_content"
         android:overScrollMode="never"
         app:layout_constraintTop_toBottomOf="@id/record_tab_layout" />
+
+    <FrameLayout
+        android:id="@+id/fl_date_picker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.aiqing.kaiheiba.widget.DatePicker
+            android:id="@+id/date_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

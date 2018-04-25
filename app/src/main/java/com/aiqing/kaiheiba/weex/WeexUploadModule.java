@@ -4,11 +4,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.OssToken;
-import com.aiqing.kaiheiba.api.UserApi;
-import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.sdk.android.oss.ClientException;
@@ -22,11 +21,8 @@ import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -34,6 +30,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -46,6 +43,7 @@ public class WeexUploadModule extends WXModule {
     @JSMethod
     public void uploadImg(Map<String, Object> map, JSCallback callback) {
         imgs = (JSONArray) map.get("imgDataArr");
+        String type = (String) map.get("type");
         if (imgs.size() == 0) {
             return;
         }
@@ -55,61 +53,47 @@ public class WeexUploadModule extends WXModule {
             com.alibaba.fastjson.JSONObject img = (JSONObject) imgs.get(i);
             Uri uri = Uri.parse(img.getString("path"));
             File file = new File(getPath(uri));
-            upload(file);
+            upload(type, file);
         }
         jsCallback = callback;
-//        callback.invoke(map);
     }
 
-    private void upload(final File file) {
+    private void upload(final String type, final File file) {
         ApiManager.INSTANCE.getApi(OssToken.Api.class).getToken()
                 .subscribeOn(Schedulers.io())
                 .flatMap(new Function<OssToken.Bean, ObservableSource<PutObjectResult>>() {
                     @Override
                     public ObservableSource<PutObjectResult> apply(OssToken.Bean bean) throws Exception {
                         final OssToken.OSSBean ossBean = bean.getData();
-                        return updateAvatar(ossBean, file);
-                    }
-                })
-                .flatMap(new Function<PutObjectResult, ObservableSource<UserApi.Bean>>() {
-                    @Override
-                    public ObservableSource<UserApi.Bean> apply(PutObjectResult putObjectResult) throws Exception {
-                        String avatarUrl = getObjectKey(file.getName());
-                        return ApiManager.INSTANCE.getApi(UserApi.class).uploadAvatar(avatarUrl);
+                        return updateAvatar(type, ossBean, file);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseObserver<Object>() {
+                .subscribe(new Consumer<PutObjectResult>() {
                     @Override
-                    protected void onSuccess(Object bean) {
-                        String avatarUrl = getObjectKey(file.getName());
+                    public void accept(PutObjectResult putObjectResult) throws Exception {
+                        String avatarUrl = OssToken.Client.getObjectKey(type, file.getName());
                         list.add(avatarUrl);
                         uploadedSize++;
                         if (uploadedSize == imgs.size()) {
                             jsCallback.invoke(list.toArray());
                         }
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    protected void onFailed(String msg) {
-                        super.onFailed(msg);
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        Toast.makeText(WXEnvironment.getApplication(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    public String getObjectKey(String fileName) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-        System.out.println(format.format(calendar.getTime()));
-        return "image/" + format.format(calendar.getTime()) + "/" + fileName;
-    }
-
-    public Observable<PutObjectResult> updateAvatar(final OssToken.OSSBean ossBean, final File file) {
+    public Observable<PutObjectResult> updateAvatar(final String type, final OssToken.OSSBean ossBean, final File file) {
         return Observable.create(new ObservableOnSubscribe<PutObjectResult>() {
             @Override
             public void subscribe(ObservableEmitter<PutObjectResult> emitter) throws Exception {
                 OSS oss = OssToken.Client.init(WXEnvironment.getApplication(), ossBean);
-                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun", getObjectKey(file.getName()), file.getPath());
+                PutObjectRequest put = new PutObjectRequest("aiqing-lianyun", OssToken.Client.getObjectKey(type, file.getName()), file.getPath());
                 try {
                     PutObjectResult putResult = oss.putObject(put);
                     emitter.onNext(putResult);

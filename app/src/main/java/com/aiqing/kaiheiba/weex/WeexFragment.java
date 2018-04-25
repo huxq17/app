@@ -1,6 +1,7 @@
 package com.aiqing.kaiheiba.weex;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,15 +44,31 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         switch (BuildConfig.BUILD_TYPE) {
             case "debug":
                 String baseUrl = SPUtils.getString(context, "baseUrl");
-//                if (TextUtils.isEmpty(baseUrl)) {
-//                    baseUrl = "http://172.16.244.1:8080/dist/";
-//                }
+                if (TextUtils.isEmpty(baseUrl)) {
+//                    baseUrl = "http://192.168.1.115:8080/dist/";
+                }
                 if (TextUtils.isEmpty(baseUrl)) {
                     baseUrl = onlineUrl;
                 }
                 return baseUrl;
         }
         return onlineUrl;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mWxInstance != null) {
+            mWxInstance.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (mWxInstance != null) {
+            mWxInstance.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override

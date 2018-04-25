@@ -82,6 +82,14 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (mWXSDKInstance != null) {
+            mWXSDKInstance.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mWXSDKInstance != null) {
@@ -89,11 +97,4 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mWXSDKInstance != null) {
-            mWXSDKInstance.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
 }

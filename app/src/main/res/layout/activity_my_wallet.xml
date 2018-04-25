@@ -148,7 +148,6 @@
         android:background="@android:color/white"
         android:paddingLeft="@dimen/prof_left_margin"
         android:paddingRight="@dimen/prof_left_margin"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/content_middle_divider">
 
         <TextView
@@ -171,6 +170,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/bgSpace"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/v_wallet_trade_record" />
 </android.support.constraint.ConstraintLayout>

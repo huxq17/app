@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.aiqing.kaiheiba.HomeActivity;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.UserApi;
@@ -32,7 +33,7 @@ public class UpdateProfileAct extends BaseActivity {
     private TextView etNickName, etBirth, etGender;
     private DatePicker datePicker;
     int gender = -1;
-    final List<String> mGenders = new ArrayList<>();
+    private List<String> mGenders = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,8 +89,9 @@ public class UpdateProfileAct extends BaseActivity {
                 .subscribe(new BaseObserver<Object>() {
                     @Override
                     protected void onSuccess(Object o) {
-                        toast("保存成功");
+                        toast("注册成功");
                         finish();
+                        HomeActivity.start(UpdateProfileAct.this);
                     }
 
                     @Override
@@ -100,6 +102,12 @@ public class UpdateProfileAct extends BaseActivity {
                 });
     }
 
+    private void focusSth(View view) {
+        if (!isEmpty(etNickName)) {
+            view.requestFocusFromTouch();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -107,8 +115,10 @@ public class UpdateProfileAct extends BaseActivity {
         switch (id) {
             case R.id.et_mobile_code:
                 datePicker.show();
+                focusSth(etBirth);
                 break;
             case R.id.et_pass:
+                focusSth(etGender);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         this,
                         com.aiqing.imagepicker.R.layout.list_item,

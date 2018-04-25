@@ -28,6 +28,7 @@ public class MyWalletAct extends BaseActivity {
         hideShadow();
         tvMoney = findViewById(R.id.v_wallet_balance);
         tvBao = findViewById(R.id.v_wallet_lsb_num);
+
         findViewById(R.id.v_wallet_cash).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,6 +39,12 @@ public class MyWalletAct extends BaseActivity {
             @Override
             public void onClick(View v) {
 //                toast("敬请期待");
+            }
+        });
+        findViewById(R.id.v_wallet_trade_record).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TradeRecordAct.start(MyWalletAct.this);
             }
         });
         ApiManager.INSTANCE.getApi(WalletApi.class, "http://sdk.17kaiheiba.com").queryUserInfo(UserService.getUserToken())

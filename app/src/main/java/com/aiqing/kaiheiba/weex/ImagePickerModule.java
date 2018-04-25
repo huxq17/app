@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.aiqing.imagepicker.ImagePicker;
 import com.alibaba.fastjson.JSONObject;
+import com.andbase.tractor.utils.LogUtils;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
@@ -23,7 +24,6 @@ public class ImagePickerModule extends WXModule implements ImagePicker.OnImagePi
 
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         imagePicker.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -33,9 +33,7 @@ public class ImagePickerModule extends WXModule implements ImagePicker.OnImagePi
     @JSMethod
     public void showImagePicker(final JSONObject options, final JSCallback callback) {
         this.callback = callback;
-        if (imagePicker == null) {
-            imagePicker = new ImagePicker(getActivity(), this);
-        }
+        imagePicker = new ImagePicker(getActivity(), this);
         imagePicker.showImagePicker(parseOptions(options));
     }
 
@@ -53,12 +51,10 @@ public class ImagePickerModule extends WXModule implements ImagePicker.OnImagePi
         }
         return bundle;
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         imagePicker.onActivityResult(requestCode, resultCode, data);
     }
-
 
     public Context getContext() {
         return mWXSDKInstance.getContext();
@@ -88,6 +84,7 @@ public class ImagePickerModule extends WXModule implements ImagePicker.OnImagePi
             }
         }
         responseHelper.invokeResponse(callback);
+        LogUtils.e("onSuccess");
     }
 
     @Override

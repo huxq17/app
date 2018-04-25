@@ -9,6 +9,10 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import io.reactivex.Observable;
 import retrofit2.http.POST;
 
@@ -23,6 +27,13 @@ public interface OssToken {
 
     class Client {
         public static String OSSDomain = "http://aiqing-lianyun.oss-cn-hangzhou.aliyuncs.com/";
+        private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+
+        public static String getObjectKey(String type, String name) {
+            Calendar calendar = Calendar.getInstance();
+            return type + "/" + format.format(calendar.getTime()) + "/" + name;
+        }
+
         public static OSS init(Context context, OssToken.OSSBean ossBean) {
 //            OssToken.OSSBean ossBean = XPrefs.get(OssToken.OSSBean.class);
             String AccessKeyId = ossBean.getAccessKeyId();

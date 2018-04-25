@@ -1,5 +1,9 @@
 package com.aiqing.kaiheiba.personal.wallet;
 
+import com.aiqing.kaiheiba.bean.BaseResponse;
+
+import java.util.List;
+
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -9,6 +13,9 @@ public interface WalletApi {
     @FormUrlEncoded
     @POST("/query_user_info")
     Observable<WalletBean> queryUserInfo(@Field("token") String search);
+    @FormUrlEncoded
+    @POST("/member/wealth")
+    Observable<RecordBean> queryRecordInfo(@Field("date") String date);
 
     class WalletBean {
 
@@ -44,6 +51,82 @@ public interface WalletApi {
 
         public void setStatus(int status) {
             this.status = status;
+        }
+
+
+    }
+
+    class RecordBean extends BaseResponse<RecordBean.DataBean> {
+        public static class DataBean {
+            private List<ResultBean> result;
+
+            public List<ResultBean> getResult() {
+                return result;
+            }
+
+            public static class ResultBean {
+                /**
+                 * AccountId : 114
+                 * Amount : 90
+                 * AppId : 211502
+                 * AppOrderId : 0
+                 * CreatedAt : 2018-04-19T16:38:01+08:00
+                 * Desc : 陪玩订单收款
+                 * FromTo : 113
+                 * ID : 3
+                 * Type : 4
+                 */
+
+                private String AccountId;
+                private String Amount;
+                private String AppId;
+                private String AppOrderId;
+                private String CreatedAt;
+                private String Desc;
+                private String FromTo;
+                private int ID;
+                private String Type;
+
+                public String getAccountId() {
+                    return AccountId;
+                }
+
+                public String getAmount() {
+                    return Amount;
+                }
+
+                public String getAppId() {
+                    return AppId;
+                }
+
+                public String getAppOrderId() {
+                    return AppOrderId;
+                }
+
+                public String getCreatedAt() {
+                    return CreatedAt;
+                }
+
+                public String getDesc() {
+                    return Desc;
+                }
+
+                public String getFromTo() {
+                    return FromTo;
+                }
+
+                public int getID() {
+                    return ID;
+                }
+
+                public String getType() {
+                    return Type;
+                }
+
+                public void setType(String Type) {
+                    this.Type = Type;
+                }
+            }
         }
     }
 }

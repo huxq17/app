@@ -40,7 +40,7 @@
         style="@style/ContentTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="30dp"
         android:ellipsize="end"
         android:lines="2"
         android:text="一定要好好上班fasdfasdfasdfasdfasdfasdfasdasdfasdfasdfasdfsd"

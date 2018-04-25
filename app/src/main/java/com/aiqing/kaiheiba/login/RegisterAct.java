@@ -132,7 +132,6 @@ public class RegisterAct extends BaseActivity implements View.OnClickListener {
                 .subscribe(new BaseObserver<User>() {
                     @Override
                     protected void onSuccess(User user) {
-                        toast("注册成功");
                         user.mobile = getText(etMobile);
                         UserService.save(user);
                         finish();
