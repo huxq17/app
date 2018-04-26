@@ -16,8 +16,9 @@ import retrofit2.converter.gson.GsonConverterFactory2;
 public enum ApiManager {
     INSTANCE;
     private static final HashMap<Class, Object> mCachedApi = new LinkedHashMap<>();
-//    public static final String BASE_URL = "http://api.17kaiheiba.com/";
-        public static final String BASE_URL = "http://116.62.139.161/";
+    public static final String BASE_URL = "http://api.17kaiheiba.com/";
+    public static final String TEST_BASE_URL = "http://116.62.139.161/";
+    public static final boolean ISTest = true;
     OkHttpClient okHttpClient;
 
     private OkHttpClient getOkHttpClient() {
@@ -55,9 +56,16 @@ public enum ApiManager {
 
 
     public <T> T getApi(Class<T> apiClass) {
-        return getApi(apiClass, BASE_URL);
+        return getApi(apiClass, getBaseUrl());
     }
 
+    public String getBaseUrl() {
+        if (ISTest) {
+            return TEST_BASE_URL;
+        } else {
+            return BASE_URL;
+        }
+    }
 //    public <T> T getDownloadApi(Class<T> apiClass, String url) {
 //        return getApi(apiClass, url);
 //    }

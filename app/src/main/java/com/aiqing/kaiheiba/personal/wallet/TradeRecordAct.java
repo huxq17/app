@@ -2,15 +2,19 @@ package com.aiqing.kaiheiba.personal.wallet;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
@@ -24,20 +28,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValueChangeListener, NumberPicker.Formatter {
-    private List<Fragment> mTabContents = new ArrayList<>();
+    private List<RecordFragment> mTabContents = new ArrayList<>();
     private FragmentPagerAdapter mAdapter;
     private ViewPager mViewPager;
     private List<String> mDatas = Arrays.asList("全部", "收入", "支出");
     private TabLayout mTabLayout;
     private NumberPicker mDatePicker;
-    private ViewGroup flDatePick;
-    private String[] mMonth = {"01", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-    private ViewGroup selectDateLayout;
+    private View flDatePick;
+    private TextView tvDate;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, TradeRecordAct.class);
         context.startActivity(intent);
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,21 +49,8 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
         setContentView(R.layout.activity_trade_record);
         setTitle("交易记录");
         initView();
-        initDatas();
-        //设置Tab上的标题
-//        mTabLayout.setData(mDatas);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-        mViewPager.setAdapter(mAdapter);
-        ApiManager.INSTANCE.getApi(WalletApi.class).queryRecordInfo("2018-04")
-                .compose(RxSchedulers.<WalletApi.RecordBean>compose())
-                .subscribe(new BaseObserver<WalletApi.RecordBean.DataBean>() {
-                    @Override
-                    protected void onSuccess(WalletApi.RecordBean.DataBean dataBean) {
-                        List<WalletApi.RecordBean.DataBean.ResultBean> list = dataBean.getResult();
-                        toast("list.size=" + list.size());
-                    }
-                });
     }
 
     private void initDatas() {
@@ -86,35 +77,73 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
         };
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void initView() {
         mViewPager = findViewById(R.id.record_viewpager);
         mTabLayout = findViewById(R.id.record_tab_layout);
-        flDatePick = findViewById(R.id.fl_date_picker);
-        mDatePicker = findViewById(R.id.date_picker);
-        initDatePicker();
+        tvDate = findViewById(R.id.tv_date);
         findViewById(R.id.layout_date_select).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePicker(true);
+                showDatePicker();
             }
         });
-        showDatePicker(false);
+        flDatePick = LayoutInflater.from(this).inflate(R.layout.layout_datepicker, null);
+        mDatePicker = flDatePick.findViewById(R.id.date_picker);
+        initDatas();
+        mViewPager.setAdapter(mAdapter);
+        initDatePicker();
     }
 
     private void initDatePicker() {
-        mDatePicker.setFormatter(this); //格式化数字，需重写format方法，详情见下面的代码
-        mDatePicker.setOnValueChangedListener(this); //值变化监听事件
-        mDatePicker.setMinValue(1);//最小值
-        mDatePicker.setMaxValue(12);//最大值
-        mDatePicker.setValue(4);//设置初始选定值
+        int initalMonth = 4;
+        mDatePicker.setFormatter(this);
+        mDatePicker.setOnValueChangedListener(this);
+        mDatePicker.setMinValue(1);
+        mDatePicker.setMaxValue(12);
+        mDatePicker.setValue(initalMonth);
+        setDate(initalMonth);
+        obtainData();
     }
 
-    public void showDatePicker(boolean show) {
-        flDatePick.setVisibility(show ? View.VISIBLE : View.GONE);
+    public void showDatePicker() {
+        ViewGroup parent = (ViewGroup) flDatePick.getParent();
+        if (parent != null) parent.removeView(flDatePick);
+        new AlertDialog.Builder(this)
+                .setTitle("选择月份")
+                .setView(flDatePick)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        obtainData();
+                    }
+                })
+                .show();
+    }
+
+    private void obtainData() {
+        ApiManager.INSTANCE.getApi(WalletApi.class).queryRecordInfo(getText(tvDate))
+                .compose(RxSchedulers.<WalletApi.RecordBean>compose())
+                .subscribe(new BaseObserver<WalletApi.RecordBean.DataBean>() {
+                    @Override
+                    protected void onSuccess(WalletApi.RecordBean.DataBean dataBean) {
+                        for (RecordFragment fragment : mTabContents) {
+                            fragment.refreshData(dataBean.getResult());
+                        }
+                    }
+                });
     }
 
     @Override
     public String format(int value) {
+        return getDate(value);
+    }
+
+    public String getDate(int value) {
         if (value < 10) {
             return "0" + value;
         } else {
@@ -124,6 +153,10 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
 
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        setDate(newVal);
+    }
 
+    private void setDate(int date) {
+        tvDate.setText("2018-" + getDate(date));
     }
 }

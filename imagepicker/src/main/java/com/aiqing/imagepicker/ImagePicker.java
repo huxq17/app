@@ -317,7 +317,6 @@ public class ImagePicker {
         }
 
         Bundle bundle = new Bundle();
-        // user cancel
         if (resultCode != Activity.RESULT_OK) {
             removeUselessFiles(requestCode, imageConfig);
             imagePickerListener.onCancel();

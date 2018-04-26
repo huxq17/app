@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.aiqing.imagepicker.ImagePicker;
 import com.alibaba.fastjson.JSONObject;
-import com.andbase.tractor.utils.LogUtils;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
@@ -84,7 +83,6 @@ public class ImagePickerModule extends WXModule implements ImagePicker.OnImagePi
             }
         }
         responseHelper.invokeResponse(callback);
-        LogUtils.e("onSuccess");
     }
 
     @Override

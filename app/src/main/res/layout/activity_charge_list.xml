@@ -10,17 +10,16 @@
         layout="@layout/layout_title"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/download_list"
+        android:id="@+id/charge_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="1dp"
         android:background="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/nav_layout"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:overScrollMode="never"
-        />
+        app:layout_constraintTop_toBottomOf="@id/nav_layout" />
 
 </android.support.constraint.ConstraintLayout>

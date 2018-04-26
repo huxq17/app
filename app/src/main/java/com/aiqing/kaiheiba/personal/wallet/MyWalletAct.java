@@ -16,6 +16,8 @@ import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import io.reactivex.functions.Consumer;
 import user.UserService;
 
+import static com.aiqing.kaiheiba.api.ApiManager.TEST_BASE_URL;
+
 public class MyWalletAct extends BaseActivity {
     TextView tvMoney, tvBao;
     RelativeLayout recordlayout;
@@ -39,6 +41,7 @@ public class MyWalletAct extends BaseActivity {
             @Override
             public void onClick(View v) {
 //                toast("敬请期待");
+                ChargeAct.start(MyWalletAct.this);
             }
         });
         findViewById(R.id.v_wallet_trade_record).setOnClickListener(new View.OnClickListener() {
@@ -47,7 +50,8 @@ public class MyWalletAct extends BaseActivity {
                 TradeRecordAct.start(MyWalletAct.this);
             }
         });
-        ApiManager.INSTANCE.getApi(WalletApi.class, "http://sdk.17kaiheiba.com").queryUserInfo(UserService.getUserToken())
+        String baseUrl = ApiManager.ISTest ? TEST_BASE_URL : "http://sdk.17kaiheiba.com";
+        ApiManager.INSTANCE.getApi(WalletApi.class, baseUrl).queryUserInfo(UserService.getUserToken())
                 .compose(RxSchedulers.<WalletApi.WalletBean>compose())
                 .subscribe(new Consumer<WalletApi.WalletBean>() {
                     @Override
@@ -57,8 +61,8 @@ public class MyWalletAct extends BaseActivity {
                         if (!TextUtils.isEmpty(wMoney)) {
                             money = (int) Double.parseDouble(wMoney);
                         }
-                        tvMoney.setText("价值" + money * 10 + " (元)");
-                        tvBao.setText(money + "包");
+                        tvMoney.setText("价值" + money + " (元)");
+                        tvBao.setText(money * 10 + "包");
                     }
                 }, new Consumer<Throwable>() {
                     @Override

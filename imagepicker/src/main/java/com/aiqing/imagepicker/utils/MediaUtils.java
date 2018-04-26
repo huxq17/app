@@ -27,31 +27,26 @@ import java.util.UUID;
 
 import static com.aiqing.imagepicker.ImagePicker.REQUEST_LAUNCH_IMAGE_CAPTURE;
 
-public class MediaUtils
-{
+public class MediaUtils {
     public static @Nullable
     File createNewFile(@NonNull final Context reactContext,
                        @NonNull final Bundle options,
-                       @NonNull final boolean forceLocal)
-    {
+                       @NonNull final boolean forceLocal) {
         final String filename = new StringBuilder("image-")
                 .append(UUID.randomUUID().toString())
                 .append(".jpg")
                 .toString();
 
-        final File path = ReadableMapUtils.hasAndNotNullReadableMap(options, "storageOptions") && !forceLocal
+        final File path = !forceLocal
                 ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 : reactContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         File result = new File(path, filename);
 
-        try
-        {
+        try {
             path.mkdirs();
             result.createNewFile();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             result = null;
         }
@@ -59,13 +54,13 @@ public class MediaUtils
         return result;
     }
 
-    public static @NonNull ImageConfig getResizedImage(@NonNull final Context context,
-                                                       @NonNull final Bundle options,
-                                                       @NonNull final ImageConfig imageConfig,
-                                                       int initialWidth,
-                                                       int initialHeight,
-                                                       final int requestCode)
-    {
+    public static @NonNull
+    ImageConfig getResizedImage(@NonNull final Context context,
+                                @NonNull final Bundle options,
+                                @NonNull final ImageConfig imageConfig,
+                                int initialWidth,
+                                int initialHeight,
+                                final int requestCode) {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inScaled = false;
         imageOptions.inSampleSize = 1;
@@ -81,20 +76,17 @@ public class MediaUtils
 
         Bitmap photo = BitmapFactory.decodeFile(imageConfig.original.getAbsolutePath(), imageOptions);
 
-        if (photo == null)
-        {
+        if (photo == null) {
             return null;
         }
 
         ImageConfig result = imageConfig;
 
         Bitmap scaledPhoto = null;
-        if (imageConfig.maxWidth == 0 || imageConfig.maxWidth > initialWidth)
-        {
+        if (imageConfig.maxWidth == 0 || imageConfig.maxWidth > initialWidth) {
             result = result.withMaxWidth(initialWidth);
         }
-        if (imageConfig.maxHeight == 0 || imageConfig.maxWidth > initialHeight)
-        {
+        if (imageConfig.maxHeight == 0 || imageConfig.maxWidth > initialHeight) {
             result = result.withMaxHeight(initialHeight);
         }
 
@@ -110,14 +102,12 @@ public class MediaUtils
         matrix.postScale((float) ratio, (float) ratio);
 
         ExifInterface exif;
-        try
-        {
+        try {
             exif = new ExifInterface(result.original.getAbsolutePath());
 
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
 
-            switch (orientation)
-            {
+            switch (orientation) {
                 case 6:
                     matrix.postRotate(90);
                     break;
@@ -128,9 +118,7 @@ public class MediaUtils
                     matrix.postRotate(270);
                     break;
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -141,15 +129,12 @@ public class MediaUtils
         final boolean forceLocal = requestCode == REQUEST_LAUNCH_IMAGE_CAPTURE;
         final File resized = createNewFile(context, options, !forceLocal);
 
-        if (resized == null)
-        {
-            if (photo != null)
-            {
+        if (resized == null) {
+            if (photo != null) {
                 photo.recycle();
                 photo = null;
             }
-            if (scaledPhoto != null)
-            {
+            if (scaledPhoto != null) {
                 scaledPhoto.recycle();
                 scaledPhoto = null;
             }
@@ -159,23 +144,18 @@ public class MediaUtils
         result = result.withResizedFile(resized);
 
         FileOutputStream fos;
-        try
-        {
+        try {
             fos = new FileOutputStream(result.resized);
             fos.write(bytes.toByteArray());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (photo != null)
-        {
+        if (photo != null) {
             photo.recycle();
             photo = null;
         }
-        if (scaledPhoto != null)
-        {
+        if (scaledPhoto != null) {
             scaledPhoto.recycle();
             scaledPhoto = null;
         }
@@ -183,49 +163,38 @@ public class MediaUtils
     }
 
     public static void removeUselessFiles(final int requestCode,
-                                          @NonNull final ImageConfig imageConfig)
-    {
-        if (requestCode != REQUEST_LAUNCH_IMAGE_CAPTURE)
-        {
+                                          @NonNull final ImageConfig imageConfig) {
+        if (requestCode != REQUEST_LAUNCH_IMAGE_CAPTURE) {
             return;
         }
 
-        if (imageConfig.original != null && imageConfig.original.exists())
-        {
+        if (imageConfig.original != null && imageConfig.original.exists()) {
             imageConfig.original.delete();
         }
 
-        if (imageConfig.resized != null && imageConfig.resized.exists())
-        {
+        if (imageConfig.resized != null && imageConfig.resized.exists()) {
             imageConfig.resized.delete();
         }
     }
 
     public static void fileScan(@Nullable final Context reactContext,
-                                @NonNull final String path)
-    {
-        if (reactContext == null)
-        {
+                                @NonNull final String path) {
+        if (reactContext == null) {
             return;
         }
         MediaScannerConnection.scanFile(reactContext,
-                new String[] { path }, null,
-                new MediaScannerConnection.OnScanCompletedListener()
-                {
-                    public void onScanCompleted(String path, Uri uri)
-                    {
+                new String[]{path}, new String[]{"image/jpeg"},
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
                     }
                 });
     }
 
     public static ReadExifResult readExifInterface(@NonNull Bundle responseHelper,
-                                                   @NonNull final ImageConfig imageConfig)
-    {
+                                                   @NonNull final ImageConfig imageConfig) {
         ReadExifResult result;
         int currentRotation = 0;
-
-        try
-        {
+        try {
             ExifInterface exif = new ExifInterface(imageConfig.original.getAbsolutePath());
 
             // extract lat, long, and timestamp and add to the response
@@ -233,8 +202,7 @@ public class MediaUtils
             exif.getLatLong(latlng);
             float latitude = latlng[0];
             float longitude = latlng[1];
-            if(latitude != 0f || longitude != 0f)
-            {
+            if (latitude != 0f || longitude != 0f) {
                 responseHelper.putDouble("latitude", latitude);
                 responseHelper.putDouble("longitude", longitude);
             }
@@ -245,13 +213,12 @@ public class MediaUtils
             final DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-            try
-            {
+            try {
                 final String isoFormatString = new StringBuilder(isoFormat.format(exifDatetimeFormat.parse(timestamp)))
                         .append("Z").toString();
                 responseHelper.putString("timestamp", isoFormatString);
+            } catch (Exception e) {
             }
-            catch (Exception e) {}
 
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
             boolean isVertical = true;
@@ -271,9 +238,7 @@ public class MediaUtils
             responseHelper.putInt("originalRotation", currentRotation);
             responseHelper.putBoolean("isVertical", isVertical);
             result = new ReadExifResult(currentRotation, null);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             result = new ReadExifResult(currentRotation, e);
         }
@@ -281,29 +246,23 @@ public class MediaUtils
         return result;
     }
 
-    public static @Nullable RolloutPhotoResult rolloutPhotoFromCamera(@NonNull final ImageConfig imageConfig)
-    {
+    public static @Nullable
+    RolloutPhotoResult rolloutPhotoFromCamera(@NonNull final ImageConfig imageConfig) {
         RolloutPhotoResult result = null;
-        final File oldFile = imageConfig.resized == null ? imageConfig.original: imageConfig.resized;
+        final File oldFile = imageConfig.resized == null ? imageConfig.original : imageConfig.resized;
         final File newDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         final File newFile = new File(newDir.getPath(), oldFile.getName());
 
-        try
-        {
+        try {
             moveFile(oldFile, newFile);
             ImageConfig newImageConfig;
-            if (imageConfig.resized != null)
-            {
+            if (imageConfig.resized != null) {
                 newImageConfig = imageConfig.withResizedFile(newFile);
-            }
-            else
-            {
+            } else {
                 newImageConfig = imageConfig.withOriginalFile(newFile);
             }
             result = new RolloutPhotoResult(newImageConfig, null);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             result = new RolloutPhotoResult(imageConfig, e);
         }
@@ -312,61 +271,50 @@ public class MediaUtils
 
     /**
      * Move a file from one location to another.
-     *
+     * <p>
      * This is done via copy + deletion, because Android will throw an error
      * if you try to move a file across mount points, e.g. to the SD card.
      */
     private static void moveFile(@NonNull final File oldFile,
-                                 @NonNull final File newFile) throws IOException
-    {
+                                 @NonNull final File newFile) throws IOException {
         FileChannel oldChannel = null;
         FileChannel newChannel = null;
 
-        try
-        {
+        try {
             oldChannel = new FileInputStream(oldFile).getChannel();
             newChannel = new FileOutputStream(newFile).getChannel();
             oldChannel.transferTo(0, oldChannel.size(), newChannel);
 
             oldFile.delete();
-        }
-        finally
-        {
-            try
-            {
+        } finally {
+            try {
                 if (oldChannel != null) oldChannel.close();
                 if (newChannel != null) newChannel.close();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
 
-    public static class RolloutPhotoResult
-    {
+    public static class RolloutPhotoResult {
         public final ImageConfig imageConfig;
         public final Throwable error;
 
         public RolloutPhotoResult(@NonNull final ImageConfig imageConfig,
-                                  @Nullable final Throwable error)
-        {
+                                  @Nullable final Throwable error) {
             this.imageConfig = imageConfig;
             this.error = error;
         }
     }
 
 
-    public static class ReadExifResult
-    {
+    public static class ReadExifResult {
         public final int currentRotation;
         public final Throwable error;
 
         public ReadExifResult(int currentRotation,
-                              @Nullable final Throwable error)
-        {
+                              @Nullable final Throwable error) {
             this.currentRotation = currentRotation;
             this.error = error;
         }

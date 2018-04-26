@@ -31,15 +31,33 @@ public class RecordFragment extends android.support.v4.app.Fragment {
         mAdapter = new TradeRecordAdapter();
         recyclerView.setBackgroundColor(Color.WHITE);
         recyclerView.setAdapter(mAdapter);
-        mockData();
+        isCreatedView = true;
+        refreshData(mDataList);
         return recyclerView;
     }
 
-    private void mockData() {
-        List<TradeBean> list = new ArrayList<>();
-        list.add(new TradeBean());
-        list.add(new TradeBean());
-        list.add(new TradeBean());
+    private boolean isCreatedView = false;
+    List<WalletApi.RecordBean.DataBean.ResultBean> mDataList = new ArrayList<>();
+
+    public void refreshData(List<WalletApi.RecordBean.DataBean.ResultBean> dataList) {
+        mDataList = dataList;
+        if (!isCreatedView || dataList == null) {
+            return;
+        }
+        List<WalletApi.RecordBean.DataBean.ResultBean> list = new ArrayList<>();
+        for (WalletApi.RecordBean.DataBean.ResultBean resultBean : dataList) {
+            if (mTitle.equals("全部")) {
+                list.add(resultBean);
+            } else if (mTitle.equals("收入")) {
+                if (resultBean.isIncome()) {
+                    list.add(resultBean);
+                }
+            } else if (mTitle.equals("支出")) {
+                if (!resultBean.isIncome()) {
+                    list.add(resultBean);
+                }
+            }
+        }
         mAdapter.setData(list);
     }
 

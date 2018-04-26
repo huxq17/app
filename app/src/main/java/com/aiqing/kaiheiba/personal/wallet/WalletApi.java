@@ -7,15 +7,20 @@ import java.util.List;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface WalletApi {
     @FormUrlEncoded
     @POST("/query_user_info")
     Observable<WalletBean> queryUserInfo(@Field("token") String search);
+
     @FormUrlEncoded
     @POST("/member/wealth")
     Observable<RecordBean> queryRecordInfo(@Field("date") String date);
+
+    @GET("/recharge/list")
+    Observable<ChargeListBean> queryChargeList();
 
     class WalletBean {
 
@@ -74,7 +79,7 @@ public interface WalletApi {
                  * Desc : 陪玩订单收款
                  * FromTo : 113
                  * ID : 3
-                 * Type : 4
+                 * Type : 4 // 3陪玩订单支付 4陪玩订单收款 5陪玩订单退款 6帖子打赏支付 7帖子打赏收款
                  */
 
                 private String AccountId;
@@ -92,7 +97,11 @@ public interface WalletApi {
                 }
 
                 public String getAmount() {
-                    return Amount;
+                    if (isIncome()) {
+                        return "+收入 " + Amount;
+                    } else {
+                        return "-支出 " + Amount;
+                    }
                 }
 
                 public String getAppId() {
@@ -117,6 +126,10 @@ public interface WalletApi {
 
                 public int getID() {
                     return ID;
+                }
+
+                public boolean isIncome() {
+                    return !Type.equals("3") && !Type.equals("6");
                 }
 
                 public String getType() {
