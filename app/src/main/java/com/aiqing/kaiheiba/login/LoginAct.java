@@ -19,6 +19,9 @@ import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.neteasyim.LogoutHelper;
 import com.aiqing.kaiheiba.neteasyim.Preferences;
 import com.aiqing.kaiheiba.rxjava.BaseObserver;
+import com.aiyou.sdk.Constants.Constants;
+import com.aiyou.sdk.bean.UserInfo;
+import com.huxq17.xprefs.XPrefs;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.LoginInfo;
@@ -120,10 +123,19 @@ public class LoginAct extends BaseActivity {
                         toast("登录成功");
                         user.mobile = getText(etMobile);
                         UserService.save(user);
+                        UserInfo userInfo = new UserInfo();
+                        userInfo.auth = user.token;
+                        userInfo.userType = Constants.USER_TYPE_PHONE;
+                        userInfo.isOnline = true;
+                        loginSDK(userInfo);
                         HomeActivity.start(LoginAct.this);
                         finish();
                     }
                 });
+    }
+
+    public static void loginSDK(UserInfo userInfo) {
+        XPrefs.saveAll(userInfo);
     }
 
     private Observable<LoginApi.Bean> loginNetEasyIM(final LoginApi.Bean bean) {
@@ -181,6 +193,11 @@ public class LoginAct extends BaseActivity {
             user.mobile = UserService.getMobile();
             UserService.save(user);
             LogoutHelper.logout();
+            UserInfo userInfo = new UserInfo();
+            userInfo.isOnline = false;
+            userInfo.auth = "";
+            userInfo.userType = 0;
+            loginSDK(userInfo);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

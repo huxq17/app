@@ -7,27 +7,25 @@
     android:background="@drawable/skin_global_bg"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CBCBCB" />
-
     <TextView
         android:id="@+id/contact_search"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
+        android:textColor="#333333"
         android:gravity="center_vertical"
-        android:text="请输入搜索内容"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/icon_add_friend"
+        android:text="添加好友"
         android:textSize="@dimen/sp_16" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#CBCBCB" />
+        android:background="#D9D9D9" />
 
     <LinearLayout
         android:id="@+id/contact_fragment"

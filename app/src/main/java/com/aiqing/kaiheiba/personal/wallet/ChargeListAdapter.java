@@ -12,9 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aiqing.kaiheiba.R;
+import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.common.BaseRecyclerViewAdapter;
+import com.aiqing.kaiheiba.rxjava.BaseObserver;
+import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import com.aiqing.kaiheiba.utils.DensityUtil;
 import com.aiqing.kaiheiba.utils.Utils;
+import com.aiyou.sdk.LGSDK;
+
+import io.reactivex.Observable;
 
 public class ChargeListAdapter extends BaseRecyclerViewAdapter<ChargeListBean.DataBean.AndroidBean, ChargeListAdapter.ViewHolder> {
 
@@ -38,15 +44,16 @@ public class ChargeListAdapter extends BaseRecyclerViewAdapter<ChargeListBean.Da
                 public void onClick(View v) {
                     final int position = getAdapterPosition();
                     if (v == btBuy) {
-                        String subject = followAdapter.getData(position).getNumber();
-                        int price = followAdapter.getData(position).getPrice();
-//                        ApiManager.INSTANCE.getApi(RelationshipApi.class).unBlock(followid).compose(RxSchedulers.<BaseResponse<Object>>compose())
-//                                .subscribe(new BaseObserver<Object>() {
-//                                    @Override
-//                                    protected void onSuccess(Object o) {
-//                                        followAdapter.deleteData(position);
-//                                    }
-//                                });
+                        Observable<WalletApi.OrderBean> createOrder = ApiManager.INSTANCE.getApi(WalletApi.class).createOrder(followAdapter.getData(position).getID());
+                        createOrder.compose(RxSchedulers.<WalletApi.OrderBean>compose())
+                                .subscribe(new BaseObserver<WalletApi.OrderBean.DataBean>() {
+                                    @Override
+                                    protected void onSuccess(WalletApi.OrderBean.DataBean dataBean) {
+                                        com.aiyou.sdk.Constants.Constants.APP_ID = dataBean.getApp_id();
+                                        LGSDK.LGPay(context, Integer.parseInt(dataBean.getPrice()), dataBean.getSubject(), dataBean.getOrder_name(), dataBean.getApp_order_id(), dataBean.getApp_user_id(),
+                                                dataBean.getApp_username(), dataBean.getApp_notify_url(), dataBean.getApp_attach(), dataBean.getSign());
+                                    }
+                                });
                     }
                 }
             };

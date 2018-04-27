@@ -19,6 +19,7 @@ import com.aiqing.kaiheiba.weex.WeexUploadModule;
 import com.aiqing.kaiheiba.weex.WeexValueModule;
 import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
 import com.aiyou.sdk.LGSDK;
+import com.aiyou.sdk.bean.UserInfo;
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.huxq17.xprefs.XPrefs;
 import com.lljjcoder.style.citylist.utils.CityListLoader;
@@ -58,7 +59,7 @@ public class App extends MultiDexApplication {
         CityListLoader.getInstance().loadCityData(this);
 
         SDKOptions options = new SDKOptions();
-        options.sdkStorageRootPath = getAppCacheDir(this)+"/im";
+        options.sdkStorageRootPath = getAppCacheDir(this) + "/im";
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         config.notificationEntrance = HomeActivity.class;// 点击通知栏跳转到该Activity
         config.notificationSmallIconId = R.mipmap.iv_app_icon;
@@ -72,6 +73,9 @@ public class App extends MultiDexApplication {
         // SDK初始化（启动后台服务，若已经存在用户登录信息， SDK 将完成自动登录）
         NIMClient.init(this, loginInfo(), options);
         LGSDK.init(this, "211534", false);
+        UserInfo userInfo = com.aiyou.toolkit.sp.XPrefs.get(UserInfo.class);
+        userInfo.isOnline = true;
+        XPrefs.saveAll(userInfo);
         // ... your codes
         if (NIMUtil.isMainProcess(this)) {
             // 注意：以下操作必须在主进程中进行
@@ -120,6 +124,7 @@ public class App extends MultiDexApplication {
     public static Context getContext() {
         return context;
     }
+
     /**
      * 配置 APP 保存图片/语音/文件/log等数据的目录
      * 这里示例用SD卡的应用扩展存储目录
