@@ -108,10 +108,12 @@
         <activity android:name=".neteasyim.session.search.DisplayMessageActivity" />
         <activity android:name=".neteasyim.session.search.SearchMessageActivity" />
         <activity android:name=".neteasyim.file.browser.FileBrowserActivity" />
-        <activity android:name=".personal.wallet.ChargeAct" />
+        <activity android:name=".personal.wallet.ChargeAct"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name=".login.UpdateProfileAct" />
         <activity
             android:name=".HomeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".settings.AboutUsAct" />
@@ -193,6 +195,8 @@
         <activity
             android:name="com.aiyou.sdk.SDKActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" />
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"

@@ -14,7 +14,6 @@ import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
-import com.andbase.tractor.utils.LogUtils;
 
 import io.reactivex.functions.Consumer;
 import user.UserService;
@@ -28,13 +27,11 @@ public class MyWalletAct extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        LogUtils.e("MyWalletAct onNewIntent");
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.e("MyWalletAct onCreate");
         setTitle("我的钱包");
         setContentView(R.layout.activity_my_wallet);
         hideShadow();

@@ -47,6 +47,7 @@ public class ContactListFragment extends MainTabFragment {
      */
     final static class FuncItem extends AbsContactItem {
         static final FuncItem VERIFY = new FuncItem();
+        static final FuncItem ADD_FRIEND = new FuncItem();
 
         @Override
         public int getItemType() {
@@ -91,9 +92,13 @@ public class ContactListFragment extends MainTabFragment {
                             updateUnreadNum(item.getUnread());
                         }
                     });
+                } else {
+                    funcName.setText("添加好友");
+                    image.setImageResource(R.drawable.icon_add_friend);
+                    image.setScaleType(ScaleType.FIT_XY);
                 }
 
-                if (item != VERIFY) {
+                if (item != VERIFY || item != ADD_FRIEND) {
                     image.setScaleType(ScaleType.FIT_XY);
                     unreadNum.setVisibility(View.GONE);
                 }
@@ -113,6 +118,7 @@ public class ContactListFragment extends MainTabFragment {
         static List<AbsContactItem> provide() {
             List<AbsContactItem> items = new ArrayList<AbsContactItem>();
             items.add(VERIFY);
+            items.add(ADD_FRIEND);
 
             return items;
         }
@@ -120,6 +126,8 @@ public class ContactListFragment extends MainTabFragment {
         static void handle(Context context, AbsContactItem item) {
             if (item == VERIFY) {
                 SystemMessageActivity.start(context);
+            } else if (item == ADD_FRIEND) {
+                AddFriendActivity.start(context);
             }
         }
     }
@@ -173,12 +181,6 @@ public class ContactListFragment extends MainTabFragment {
     @Override
     public void onLayoutLoaded(ViewGroup parent) {
         super.onLayoutLoaded(parent);
-        parent.findViewById(R.id.contact_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddFriendActivity.start(getActivity());
-            }
-        });
     }
 
     @Override

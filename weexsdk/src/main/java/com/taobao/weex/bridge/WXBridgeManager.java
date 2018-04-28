@@ -47,7 +47,6 @@ import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXJSBridgeMsgType;
 import com.taobao.weex.common.WXJSExceptionInfo;
-import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
@@ -66,7 +65,6 @@ import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 import com.taobao.weex.utils.batch.BactchExecutor;
 import com.taobao.weex.utils.batch.Interceptor;
-import com.taobao.weex.wson.Wson;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -86,10 +84,10 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static com.taobao.weex.bridge.WXModuleManager.getDomModule;
+
 import static com.taobao.weex.bridge.WXModuleManager.createDomModule;
+import static com.taobao.weex.bridge.WXModuleManager.getDomModule;
 
 
 /**
@@ -2358,7 +2356,7 @@ public void invokeDestoryInstance(String instanceId, String namespace, String fu
           String module = iter.next();
           if (module != null) {
             WXModuleManager.resetModuleState(module, true);
-            WXLogUtils.e("[WXBridgeManager]invokeRegisterModules METHOD_REGISTER_MODULES success module:" + module);
+//            WXLogUtils.e("[WXBridgeManager]invokeRegisterModules METHOD_REGISTER_MODULES success module:" + module);
           }
 
         }

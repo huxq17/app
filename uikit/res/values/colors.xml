@@ -37,7 +37,7 @@
     <color name="main_bg_color">#FFFFFF</color>
 
     <!-- session -->
-    <color name="color_message_default_bg">#e9ecf0</color>
+    <color name="color_message_default_bg">#00000000</color>
     <color name="input_panel_text_color_757572">#757572</color>
     <color name="color_gray_cbd0d8">#cbd0d8</color>
 
@@ -49,7 +49,7 @@
     <color name="contact_list_hover">#d9d9d9</color>
     <color name="contact_letter_idx_bg">#33000000</color>
     <color name="contacts_letters_color">#80807c</color>
-    <color name="color_background">#ECF1F5</color>
+    <color name="color_background">#00000000</color>
     <color name="press_mask">#33000000</color>
     <color name="color_grey_ababab">#ababab</color>
     <color name="color_yellow_796413">#796413</color>

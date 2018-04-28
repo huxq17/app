@@ -17,12 +17,19 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@android:color/white"
             app:titleTextAppearance="@style/Toolbar.TitleText">
 
             <include layout="@layout/nim_action_bar_right_clickable_tv" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
+
+    <View
+        android:id="@+id/nav_bottom_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/iv_title_bottom_shader"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.netease.nim.uikit.common.ui.widget.ClearableEditTextWithIcon
         android:id="@+id/search_friend_edit"

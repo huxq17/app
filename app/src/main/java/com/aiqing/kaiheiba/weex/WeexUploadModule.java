@@ -34,6 +34,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.aiqing.imagepicker.utils.MediaUtils.fileScan;
+
 public class WeexUploadModule extends WXModule {
     private int uploadedSize;
     JSONArray imgs;
@@ -78,10 +80,18 @@ public class WeexUploadModule extends WXModule {
                         if (uploadedSize == imgs.size()) {
                             jsCallback.invoke(list.toArray());
                         }
+                        if (file.exists()) {
+                            file.delete();
+                            fileScan(WXEnvironment.getApplication(), file.getAbsolutePath());
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        if (file.exists()) {
+                            file.delete();
+                            fileScan(WXEnvironment.getApplication(), file.getAbsolutePath());
+                        }
                         throwable.printStackTrace();
                         Toast.makeText(WXEnvironment.getApplication(), "上传失败", Toast.LENGTH_SHORT).show();
                     }

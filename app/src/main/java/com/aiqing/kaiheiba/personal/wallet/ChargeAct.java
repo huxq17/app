@@ -48,18 +48,6 @@ public class ChargeAct extends BaseActivity implements SDKListener {
         LGSDK.LGSetListener(null);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LGSDK.onActivityResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LGSDK.onActivityPause(this);
-    }
-
     public static void start(Context context) {
         Intent intent = new Intent(context, ChargeAct.class);
         context.startActivity(intent);

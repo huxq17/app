@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.aiqing.imagepicker.ImagePicker;
+import com.aiqing.kaiheiba.App;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.OssToken;
@@ -50,6 +51,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import user.UserService;
+
+import static com.aiqing.imagepicker.utils.MediaUtils.fileScan;
 
 public class EditPersonProfileAct extends BaseActivity {
     private Uri imageUri;
@@ -197,6 +200,10 @@ public class EditPersonProfileAct extends BaseActivity {
                                 toast("头像上传成功");
                                 String avatarUrl = OssToken.Client.getObjectKey("avatar", tempFile.getName());
                                 setAvatar(avatarUrl);
+                                if (tempFile.exists()) {
+                                    tempFile.delete();
+                                    fileScan(App.getContext(), tempFile.getAbsolutePath());
+                                }
                             }
 
                             @Override
@@ -204,6 +211,10 @@ public class EditPersonProfileAct extends BaseActivity {
                                 super.onFailed(msg);
                                 log(msg);
                                 toast(msg);
+                                if (tempFile.exists()) {
+                                    tempFile.delete();
+                                    fileScan(App.getContext(), tempFile.getAbsolutePath());
+                                }
                             }
                         });
             }

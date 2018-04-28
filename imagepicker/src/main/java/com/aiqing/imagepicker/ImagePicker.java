@@ -167,7 +167,7 @@ public class ImagePicker {
             return;
         }
         this.options = options;
-        imageConfig = new ImageConfig(null, null, 0, 0, 100, 0, false);
+        imageConfig = new ImageConfig(null, null, 200, 200, 100, 0, false);
 
         final AlertDialog dialog = UI.chooseDialog(this, options, new UI.OnAction() {
             @Override
@@ -377,6 +377,9 @@ public class ImagePicker {
         int initialHeight = options.outHeight;
         updatedResultResponse(bundle, uri, imageConfig.original.getAbsolutePath());
         // don't create a new file if contraint are respected
+        imageConfig.maxWidth = 1600;
+        imageConfig.maxHeight = 1600;
+        imageConfig.quality=90;
         if (imageConfig.useOriginal(initialWidth, initialHeight, result.currentRotation)) {
             bundle.putInt("width", initialWidth);
             bundle.putInt("height", initialHeight);
@@ -387,7 +390,7 @@ public class ImagePicker {
                 removeUselessFiles(requestCode, imageConfig);
                 bundle.putString("error", "Can't resize the image");
             } else {
-                uri = Uri.fromFile(imageConfig.resized);
+                uri = RealPathUtil.compatUriFromFile(application, imageConfig.resized);
                 BitmapFactory.decodeFile(imageConfig.resized.getAbsolutePath(), options);
                 bundle.putInt("width", options.outWidth);
                 bundle.putInt("height", options.outHeight);

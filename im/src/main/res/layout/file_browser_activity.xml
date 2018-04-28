@@ -22,6 +22,12 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
+    <View
+        android:id="@+id/nav_bottom_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/iv_title_bottom_shader" />
+
     <ListView
         android:id="@+id/file_list"
         android:layout_width="wrap_content"

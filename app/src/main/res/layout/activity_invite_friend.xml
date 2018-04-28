@@ -11,6 +11,14 @@
         layout="@layout/layout_title"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <android.support.constraint.Guideline
+        android:id="@+id/gd_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+
     <ImageView
         android:id="@+id/v_invte_head"
         android:layout_width="match_parent"
@@ -23,24 +31,24 @@
         android:id="@+id/v_invite_num_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
+        android:layout_marginTop="13dp"
         android:text="邀请好友数量"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@id/v_invite_num"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/v_invte_head"
+        app:layout_constraintRight_toRightOf="@id/gd_vertical"
         app:layout_constraintTop_toTopOf="@id/v_invte_head" />
 
     <TextView
         android:id="@+id/v_invite_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
-        app:layout_constraintLeft_toLeftOf="@id/v_invite_num_tips"
-        app:layout_constraintRight_toRightOf="@id/v_invite_num_tips"
+        app:layout_constraintLeft_toLeftOf="@id/v_invte_head"
+        app:layout_constraintRight_toRightOf="@id/gd_vertical"
         app:layout_constraintTop_toBottomOf="@id/v_invite_num_tips" />
 
     <TextView
@@ -50,22 +58,19 @@
         android:text="我的帐号"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/v_invite_num"
-        app:layout_constraintLeft_toLeftOf="@id/v_my_account"
-        app:layout_constraintRight_toRightOf="@id/v_my_account"
+        app:layout_constraintBottom_toTopOf="@id/v_my_account"
+        app:layout_constraintLeft_toLeftOf="@id/gd_vertical"
+        app:layout_constraintRight_toRightOf="@id/v_invte_head"
         app:layout_constraintTop_toTopOf="@id/v_invte_head" />
 
     <TextView
         android:id="@+id/v_my_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:text=" "
         app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
+        app:layout_constraintLeft_toLeftOf="@id/gd_vertical"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/v_my_account_tips" />
 
@@ -84,7 +89,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="我的邀请码：A123456789"
         app:layout_constraintTop_toBottomOf="@id/content_top_divider" />
 
     <TextView
@@ -204,4 +208,5 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/v_myinvite_account" />
     </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>

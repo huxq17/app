@@ -21,5 +21,11 @@
             app:titleTextAppearance="@style/Toolbar.TitleText"
             app:subtitleTextAppearance="@style/Toolbar.SubTitleText"/>
     </android.support.design.widget.AppBarLayout>
+    <View
+        android:id="@+id/nav_bottom_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/iv_title_bottom_shader"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </LinearLayout>

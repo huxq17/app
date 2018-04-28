@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -54,17 +55,25 @@ public class MediaUtils {
         return result;
     }
 
+    public static long getBitmapsize(Bitmap bitmap) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            return bitmap.getByteCount()/1024/1024;
+        }
+        return bitmap.getRowBytes() * bitmap.getHeight()/1024/1024;
+
+    }
+
     public static @NonNull
-    ImageConfig getResizedImage(@NonNull final Context context,
-                                @NonNull final Bundle options,
-                                @NonNull final ImageConfig imageConfig,
+    ImageConfig getResizedImage(final Context context,
+                                final Bundle options,
+                                final ImageConfig imageConfig,
                                 int initialWidth,
                                 int initialHeight,
                                 final int requestCode) {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inScaled = false;
         imageOptions.inSampleSize = 1;
-
         if (imageConfig.maxWidth != 0 || imageConfig.maxHeight != 0) {
             while ((imageConfig.maxWidth == 0 || initialWidth > 2 * imageConfig.maxWidth) &&
                     (imageConfig.maxHeight == 0 || initialHeight > 2 * imageConfig.maxHeight)) {

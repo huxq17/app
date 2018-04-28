@@ -6,14 +6,14 @@ import android.support.annotation.Nullable;
 
 import java.io.File;
 
-public class ImageConfig
-{
+public class ImageConfig {
     public @Nullable
     final File original;
-    public @Nullable final File resized;
-    public final int maxWidth;
-    public final int maxHeight;
-    public final int quality;
+    public @Nullable
+    final File resized;
+    public int maxWidth;
+    public int maxHeight;
+    public int quality;
     public final int rotation;
     public final boolean saveToCameraRoll;
 
@@ -23,8 +23,7 @@ public class ImageConfig
                        final int maxHeight,
                        final int quality,
                        final int rotation,
-                       final boolean saveToCameraRoll)
-    {
+                       final boolean saveToCameraRoll) {
         this.original = original;
         this.resized = resized;
         this.maxWidth = maxWidth;
@@ -35,8 +34,7 @@ public class ImageConfig
     }
 
     public @NonNull
-    ImageConfig withMaxWidth(final int maxWidth)
-    {
+    ImageConfig withMaxWidth(final int maxWidth) {
         return new ImageConfig(
                 this.original, this.resized, maxWidth,
                 this.maxHeight, this.quality, this.rotation,
@@ -44,8 +42,8 @@ public class ImageConfig
         );
     }
 
-    public @NonNull ImageConfig withMaxHeight(final int maxHeight)
-    {
+    public @NonNull
+    ImageConfig withMaxHeight(final int maxHeight) {
         return new ImageConfig(
                 this.original, this.resized, this.maxWidth,
                 maxHeight, this.quality, this.rotation,
@@ -54,8 +52,8 @@ public class ImageConfig
 
     }
 
-    public @NonNull ImageConfig withQuality(final int quality)
-    {
+    public @NonNull
+    ImageConfig withQuality(final int quality) {
         return new ImageConfig(
                 this.original, this.resized, this.maxWidth,
                 this.maxHeight, quality, this.rotation,
@@ -63,8 +61,8 @@ public class ImageConfig
         );
     }
 
-    public @NonNull ImageConfig withRotation(final int rotation)
-    {
+    public @NonNull
+    ImageConfig withRotation(final int rotation) {
         return new ImageConfig(
                 this.original, this.resized, this.maxWidth,
                 this.maxHeight, this.quality, rotation,
@@ -72,8 +70,8 @@ public class ImageConfig
         );
     }
 
-    public @NonNull ImageConfig withOriginalFile(@Nullable final File original)
-    {
+    public @NonNull
+    ImageConfig withOriginalFile(@Nullable final File original) {
         return new ImageConfig(
                 original, this.resized, this.maxWidth,
                 this.maxHeight, this.quality, this.rotation,
@@ -81,8 +79,8 @@ public class ImageConfig
         );
     }
 
-    public @NonNull ImageConfig withResizedFile(@Nullable final File resized)
-    {
+    public @NonNull
+    ImageConfig withResizedFile(@Nullable final File resized) {
         return new ImageConfig(
                 this.original, resized, this.maxWidth,
                 this.maxHeight, this.quality, this.rotation,
@@ -90,8 +88,8 @@ public class ImageConfig
         );
     }
 
-    public @NonNull ImageConfig withSaveToCameraRoll(@Nullable final boolean saveToCameraRoll)
-    {
+    public @NonNull
+    ImageConfig withSaveToCameraRoll(@Nullable final boolean saveToCameraRoll) {
         return new ImageConfig(
                 this.original, this.resized, this.maxWidth,
                 this.maxHeight, this.quality, this.rotation,
@@ -99,26 +97,22 @@ public class ImageConfig
         );
     }
 
-    public @NonNull ImageConfig updateFromOptions(@NonNull final Bundle options)
-    {
+    public @NonNull
+    ImageConfig updateFromOptions(@NonNull final Bundle options) {
         int maxWidth = 0;
-        if (options.containsKey("maxWidth"))
-        {
+        if (options.containsKey("maxWidth")) {
             maxWidth = options.getInt("maxWidth");
         }
         int maxHeight = 0;
-        if (options.containsKey("maxHeight"))
-        {
+        if (options.containsKey("maxHeight")) {
             maxHeight = options.getInt("maxHeight");
         }
         int quality = 100;
-        if (options.containsKey("quality"))
-        {
+        if (options.containsKey("quality")) {
             quality = (int) (options.getDouble("quality") * 100);
         }
         int rotation = 0;
-        if (options.containsKey("rotation"))
-        {
+        if (options.containsKey("rotation")) {
             rotation = options.getInt("rotation");
         }
 //        boolean saveToCameraRoll = false;
@@ -135,15 +129,13 @@ public class ImageConfig
 
     public boolean useOriginal(int initialWidth,
                                int initialHeight,
-                               int currentRotation)
-    {
+                               int currentRotation) {
         return ((initialWidth < maxWidth && maxWidth > 0) || maxWidth == 0) &&
                 ((initialHeight < maxHeight && maxHeight > 0) || maxHeight == 0) &&
                 quality == 100 && (rotation == 0 || currentRotation == rotation);
     }
 
-    public File getActualFile()
-    {
-        return resized != null ? resized: original;
+    public File getActualFile() {
+        return resized != null ? resized : original;
     }
 }

@@ -18,6 +18,7 @@ import com.aiqing.kaiheiba.weex.WeexShareModule;
 import com.aiqing.kaiheiba.weex.WeexUploadModule;
 import com.aiqing.kaiheiba.weex.WeexValueModule;
 import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
+import com.aiyou.sdk.Constants.Constants;
 import com.aiyou.sdk.LGSDK;
 import com.aiyou.sdk.bean.UserInfo;
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
@@ -52,6 +53,7 @@ public class App extends MultiDexApplication {
         super.onCreate();
         MultiDex.install(this);
         context = this;
+        Constants.showFloatBall = false;
         XPrefs.bind(this);
         InitConfig initConfig = new InitConfig.Builder().setImgAdapter(new WeexImageAdapter()).build();
         WXSDKEngine.initialize(this, initConfig);
@@ -72,7 +74,7 @@ public class App extends MultiDexApplication {
         options.statusBarNotificationConfig = config;
         // SDK初始化（启动后台服务，若已经存在用户登录信息， SDK 将完成自动登录）
         NIMClient.init(this, loginInfo(), options);
-        LGSDK.init(this, "211534", false);
+        LGSDK.init(this, "211543", false);
         UserInfo userInfo = com.aiyou.toolkit.sp.XPrefs.get(UserInfo.class);
         userInfo.isOnline = true;
         XPrefs.saveAll(userInfo);

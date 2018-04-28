@@ -75,7 +75,6 @@ public class WXLogUtils {
 	if(msg != null && tag != null && sLogWatcher !=null){
 	  sLogWatcher.onLog(level.getName(), tag, msg);
 	}
-
 	if (WXEnvironment.isApkDebugable()) {
         Log.println(level.getPriority(),tag, msg);
       // if not debug level then print log
@@ -83,9 +82,9 @@ public class WXLogUtils {
 		writeConsoleLog(level.getName(), msg);
 	  }
     }else {
-	  if(level.getPriority() - LogLevel.WARN.getPriority() >=0){
-		Log.println(level.getPriority(),tag, msg);
-	  }
+//	  if(level.getPriority() - LogLevel.WARN.getPriority() >=0){
+//		Log.println(level.getPriority(),tag, msg);
+//	  }
 	}
   }
 
