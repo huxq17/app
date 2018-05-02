@@ -379,7 +379,6 @@ public class ImagePicker {
         // don't create a new file if contraint are respected
         imageConfig.maxWidth = 1600;
         imageConfig.maxHeight = 1600;
-        imageConfig.quality=90;
         if (imageConfig.useOriginal(initialWidth, initialHeight, result.currentRotation)) {
             bundle.putInt("width", initialWidth);
             bundle.putInt("height", initialHeight);

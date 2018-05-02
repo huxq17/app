@@ -125,6 +125,7 @@ public class LoginAct extends BaseActivity {
                         UserService.save(user);
                         UserInfo userInfo = new UserInfo();
                         userInfo.auth = user.token;
+                        userInfo.openId = user.openId;
                         userInfo.userType = Constants.USER_TYPE_PHONE;
                         userInfo.isOnline = true;
                         loginSDK(userInfo);

@@ -46,6 +46,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
                 String baseUrl = SPUtils.getString(context, "baseUrl");
                 if (TextUtils.isEmpty(baseUrl)) {
 //                    baseUrl = "http://172.16.244.1:8080/dist/";
+//                    baseUrl = "http://192.168.1.115:8080/dist/";
                 }
                 if (TextUtils.isEmpty(baseUrl)) {
                     baseUrl = onlineUrl;

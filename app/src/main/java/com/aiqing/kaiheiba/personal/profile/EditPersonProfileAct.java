@@ -329,7 +329,11 @@ public class EditPersonProfileAct extends BaseActivity {
                         } else if (gender == 0) {
                             rgGender.check(R.id.rb_gender_secret);
                         }
-                        tvDate.setText(accountBean.getBorn());
+                        String born = accountBean.getBorn();
+                        if (!isEmpty(born)) {
+                            born = born.substring(0, 10);
+                            tvDate.setText(born);
+                        }
                         tvArea.setText(accountBean.getProvince());
                         tvName.setText("UID:" + accountBean.getAccountId());
                     }

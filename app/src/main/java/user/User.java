@@ -14,5 +14,6 @@ public class User {
     public String accid = "";
     public String appKey = "";
     public String isRealAuth = "";
+    public String openId;
 
 }

@@ -1,7 +1,10 @@
 package com.aiqing.kaiheiba.personal.wallet;
 
+import android.text.TextUtils;
+
 import com.aiqing.kaiheiba.bean.BaseResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -174,10 +177,16 @@ public interface WalletApi {
                 }
 
                 public String getAmount() {
+                    if (!TextUtils.isEmpty(Amount) && !TextUtils.isDigitsOnly(Amount)) {
+                        return "0";
+                    }
+                    int amount = Integer.parseInt(Amount);
+                    String result = BigDecimal.valueOf(amount).
+                            divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_DOWN) + "元";
                     if (isIncome()) {
-                        return "+收入 " + Amount;
+                        return "+收入 " + result;
                     } else {
-                        return "-支出 " + Amount;
+                        return "-支出 " + result;
                     }
                 }
 

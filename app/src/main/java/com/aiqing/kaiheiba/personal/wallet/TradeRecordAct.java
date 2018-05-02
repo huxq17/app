@@ -36,6 +36,7 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
     private NumberPicker mDatePicker;
     private View flDatePick;
     private TextView tvDate;
+    private int selectMonth;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, TradeRecordAct.class);
@@ -100,17 +101,17 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
     }
 
     private void initDatePicker() {
-        int initalMonth = 4;
+        selectMonth = 4;
         mDatePicker.setFormatter(this);
         mDatePicker.setOnValueChangedListener(this);
         mDatePicker.setMinValue(1);
         mDatePicker.setMaxValue(12);
-        mDatePicker.setValue(initalMonth);
-        setDate(initalMonth);
-        obtainData();
+        setDate(selectMonth);
+        obtainData(selectMonth);
     }
 
     public void showDatePicker() {
+        mDatePicker.setValue(selectMonth);
         ViewGroup parent = (ViewGroup) flDatePick.getParent();
         if (parent != null) parent.removeView(flDatePick);
         new AlertDialog.Builder(this)
@@ -119,13 +120,15 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        obtainData();
+                        obtainData(mDatePicker.getValue());
                     }
                 })
                 .show();
     }
 
-    private void obtainData() {
+    private void obtainData(int date) {
+        selectMonth = date;
+        setDate(selectMonth);
         ApiManager.INSTANCE.getApi(WalletApi.class).queryRecordInfo(getText(tvDate))
                 .compose(RxSchedulers.<WalletApi.RecordBean>compose())
                 .subscribe(new BaseObserver<WalletApi.RecordBean.DataBean>() {
@@ -153,7 +156,6 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
 
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-        setDate(newVal);
     }
 
     private void setDate(int date) {

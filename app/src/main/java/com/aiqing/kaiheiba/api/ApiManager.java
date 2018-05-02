@@ -19,7 +19,7 @@ public enum ApiManager {
     public static final String BASE_URL = "http://api.17kaiheiba.com/";
     public static final String TEST_BASE_URL = "http://116.62.139.161/";
     public static final boolean ISTest = false;
-    OkHttpClient okHttpClient;
+    private OkHttpClient okHttpClient;
 
     private OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {

@@ -108,6 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/bgSpace"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/v_wallet_charge" />
 
     <RelativeLayout
@@ -116,6 +117,7 @@
         android:layout_height="@dimen/settings_item_height"
         android:background="@android:color/white"
         android:paddingLeft="@dimen/prof_left_margin"
+        android:visibility="gone"
         android:paddingRight="@dimen/prof_left_margin"
         app:layout_constraintTop_toBottomOf="@id/content_top_divider">
 

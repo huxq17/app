@@ -57,6 +57,12 @@ public class MyWalletAct extends BaseActivity {
                 TradeRecordAct.start(MyWalletAct.this);
             }
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         String baseUrl = ApiManager.ISTest ? TEST_BASE_URL : "http://sdk.17kaiheiba.com";
         ApiManager.INSTANCE.getApi(WalletApi.class, baseUrl).queryUserInfo(UserService.getUserToken())
                 .compose(RxSchedulers.<WalletApi.WalletBean>compose())
