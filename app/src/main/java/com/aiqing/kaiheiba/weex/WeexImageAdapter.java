@@ -27,11 +27,13 @@ public class WeexImageAdapter implements IWXImgLoaderAdapter {
                 if (url.startsWith("//")) {
                     temp = "http:" + url;
                 }
-                if (view.getLayoutParams().width <= 0 || view.getLayoutParams().height <= 0) {
+                int width = view.getLayoutParams().width;
+                int height = view.getLayoutParams().height;
+                if (width <= 0 || height <= 0) {
                     return;
                 }
                 ImageLoader imageLoader = ServiceAgency.getService(ImageLoader.class);
-                imageLoader.loadImage(temp, view);
+                imageLoader.loadImage(temp, view, width, height);
             }
         }, 0);
     }

@@ -8,10 +8,12 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
+import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.neteasyim.DemoCache;
 import com.aiqing.kaiheiba.neteasyim.mixpush.DemoPushContentProvider;
 import com.aiqing.kaiheiba.neteasyim.session.SessionHelper;
 import com.aiqing.kaiheiba.weex.ImagePickerModule;
+import com.aiqing.kaiheiba.weex.WXHttpAdapter;
 import com.aiqing.kaiheiba.weex.WeexImageAdapter;
 import com.aiqing.kaiheiba.weex.WeexJumpModule;
 import com.aiqing.kaiheiba.weex.WeexShareModule;
@@ -55,7 +57,10 @@ public class App extends MultiDexApplication {
         context = this;
         Constants.showFloatBall = false;
         XPrefs.bind(this);
-        InitConfig initConfig = new InitConfig.Builder().setImgAdapter(new WeexImageAdapter()).build();
+        InitConfig initConfig = new InitConfig.Builder().
+                setImgAdapter(new WeexImageAdapter())
+                .setHttpAdapter(new WXHttpAdapter(ApiManager.INSTANCE.getOkHttpClient()))
+                .build();
         WXSDKEngine.initialize(this, initConfig);
         WXEnvironment.sLogLevel = LogLevel.ERROR;
         CityListLoader.getInstance().loadCityData(this);

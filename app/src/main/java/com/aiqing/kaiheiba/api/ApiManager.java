@@ -21,7 +21,7 @@ public enum ApiManager {
     public static final boolean ISTest = false;
     private OkHttpClient okHttpClient;
 
-    private OkHttpClient getOkHttpClient() {
+    public OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
                     .connectTimeout(5, TimeUnit.SECONDS)

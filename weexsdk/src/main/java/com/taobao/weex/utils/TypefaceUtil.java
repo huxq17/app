@@ -176,6 +176,11 @@ public class TypefaceUtil {
       }
 
       @Override
+      public void onVerifyCache(WXRequest request, Map<String, List<String>> headers) {
+
+      }
+
+      @Override
       public void onHeadersReceived(int statusCode, Map<String, List<String>> headers) {
 
       }

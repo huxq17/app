@@ -5,7 +5,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
-import com.andbase.tractor.utils.LogUtils;
 import com.andbase.tractor.utils.Util;
 import com.huxq17.xprefs.SPUtils;
 import com.taobao.weex.WXEnvironment;
@@ -64,9 +63,6 @@ public class WeexValueModule extends WXModule {
         if (!EasyPermissions.hasPermissions(mWXSDKInstance.getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             return;
         }
-        LogUtils.e("url=" + url);
-//        final String url2="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3322172181,3457997126&fm=27&gp=0.jpg";
-
         Observable.create(new ObservableOnSubscribe<File>() {
             @Override
             public void subscribe(ObservableEmitter<File> e) throws Exception {

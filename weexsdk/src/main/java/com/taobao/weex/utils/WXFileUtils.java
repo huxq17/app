@@ -153,7 +153,7 @@ public class WXFileUtils {
       digest.update(bts);
       BigInteger bigInt = new BigInteger(1, digest.digest());
       return  bigInt.toString(16);
-    } catch (NoSuchAlgorithmException e) {;
+    } catch (NoSuchAlgorithmException e) {
       return  "";
     }
   }

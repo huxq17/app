@@ -22,7 +22,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -32,7 +31,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -56,10 +54,10 @@ import com.taobao.weex.ui.view.border.BorderDrawable;
 import com.taobao.weex.utils.ImageDrawable;
 import com.taobao.weex.utils.ImgURIUtil;
 import com.taobao.weex.utils.SingleFunctionParser;
-import com.taobao.weex.utils.WXViewToImageUtil;
 import com.taobao.weex.utils.WXDomUtils;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewToImageUtil;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -185,7 +183,6 @@ public class WXImage extends WXComponent<ImageView> {
     }
     return scaleType;
   }
-
   @WXComponentProp(name = Constants.Name.RESIZE)
   public void setResize(String resize) {
     (getHostView()).setScaleType(getResizeMode(resize));

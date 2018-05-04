@@ -27,15 +27,21 @@
         android:src="@mipmap/wallet_head_bg"
         app:layout_constraintTop_toBottomOf="@id/nav_layout" />
 
+    <View
+        android:id="@+id/gd_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
+        app:layout_constraintTop_toTopOf="@id/v_invte_head" />
+
     <TextView
         android:id="@+id/v_invite_num_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
         android:text="邀请好友数量"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/v_invite_num"
+        app:layout_constraintBottom_toTopOf="@id/gd_horizontal"
         app:layout_constraintLeft_toLeftOf="@id/v_invte_head"
         app:layout_constraintRight_toRightOf="@id/gd_vertical"
         app:layout_constraintTop_toTopOf="@id/v_invte_head" />
@@ -46,10 +52,9 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:textSize="40sp"
-        app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
         app:layout_constraintLeft_toLeftOf="@id/v_invte_head"
         app:layout_constraintRight_toRightOf="@id/gd_vertical"
-        app:layout_constraintTop_toBottomOf="@id/v_invite_num_tips" />
+        app:layout_constraintTop_toTopOf="@id/gd_horizontal" />
 
     <TextView
         android:id="@+id/v_my_account_tips"
@@ -58,7 +63,7 @@
         android:text="我的帐号"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/v_my_account"
+        app:layout_constraintBottom_toBottomOf="@id/gd_horizontal"
         app:layout_constraintLeft_toLeftOf="@id/gd_vertical"
         app:layout_constraintRight_toRightOf="@id/v_invte_head"
         app:layout_constraintTop_toTopOf="@id/v_invte_head" />
@@ -69,10 +74,10 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/v_invte_head"
+        app:layout_constraintBottom_toBottomOf="@id/v_invite_num"
         app:layout_constraintLeft_toLeftOf="@id/gd_vertical"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/v_my_account_tips" />
+        app:layout_constraintTop_toTopOf="@id/v_invite_num" />
 
     <View
         android:id="@+id/content_top_divider"

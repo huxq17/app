@@ -15,7 +15,6 @@ import com.aiqing.kaiheiba.App;
 import com.aiqing.kaiheiba.BuildConfig;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseFragment;
-import com.huxq17.xprefs.LogUtils;
 import com.huxq17.xprefs.SPUtils;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
@@ -35,6 +34,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     public static final String onlineUrl = "http://weex.17kaiheiba.com/bundle/";
     public static final String userMainUrl = "userHome.weex.js";
     private boolean isSucceeded = false;
+    private boolean isFirst = true;
 
     public WeexFragment() {
     }
@@ -82,6 +82,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         tag = getArguments() == null ? null : getArguments().getString("tag");
         mWxInstance = new WXSDKInstance(getActivity());
         mWxInstance.registerRenderListener(this);
+        isFirst = true;
         loadJs();
     }
 
@@ -129,7 +130,10 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     @Override
     public void onResume() {
         super.onResume();
-        loadJs();
+        if (!isFirst) {
+            loadJs();
+        }
+        isFirst = false;
     }
 
     @Override
@@ -146,6 +150,5 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
-        LogUtils.e("onException msg=" + msg);
     }
 }

@@ -15,13 +15,25 @@ import com.taobao.weex.common.WXRenderStrategy;
 
 public class WeexActivity extends AppCompatActivity implements IWXRenderListener {
     protected WXSDKInstance mWXSDKInstance;
+    public static String DATA_KEY = "data_key";
+    private Uri data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWXSDKInstance = new WXSDKInstance(this);
         mWXSDKInstance.registerRenderListener(this);
-        Uri data = getIntent().getData();
+        if (savedInstanceState != null) {
+            data = savedInstanceState.getParcelable(DATA_KEY);
+        } else {
+            data = getIntent().getData();
+        }
+//        Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+//            @Override
+//            public void doFrame(long frameTimeNanos) {
+//
+//            }
+//        });
         mWXSDKInstance.renderByUrl(getPackageName(), data.toString(), null, null, WXRenderStrategy.APPEND_ASYNC);
     }
 
@@ -30,6 +42,12 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(url));
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(DATA_KEY, data);
     }
 
     @Override
@@ -92,8 +110,10 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        data = null;
         if (mWXSDKInstance != null) {
             mWXSDKInstance.onActivityDestroy();
+            mWXSDKInstance = null;
         }
     }
 

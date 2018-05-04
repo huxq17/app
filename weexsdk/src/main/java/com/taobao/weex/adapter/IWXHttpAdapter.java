@@ -27,42 +27,47 @@ import java.util.Map;
 
 public interface IWXHttpAdapter {
 
-  /**
-   * http request method
-   *
-   * @param request weex assemble request
-   * @param listener http response notify
-   */
-  void sendRequest(WXRequest request, OnHttpListener listener);
-
-  interface OnHttpListener {
-
     /**
-     * start request
+     * http request method
+     *
+     * @param request  weex assemble request
+     * @param listener http response notify
      */
-    void onHttpStart();
+    void sendRequest(WXRequest request, OnHttpListener listener);
 
-    /**
-     * headers received
-     */
-    void onHeadersReceived(int statusCode, Map<String, List<String>> headers);
+    interface OnHttpListener {
 
-    /**
-     * post progress
-     * @param uploadProgress
-     */
-    void onHttpUploadProgress(int uploadProgress);
+        /**
+         * start request
+         */
+        void onHttpStart();
 
-    /**
-     * response loaded length (bytes), full length should read from headers (content-length)
-     * @param loadedLength
-     */
-    void onHttpResponseProgress(int loadedLength);
+        void onVerifyCache(WXRequest request,Map<String, List<String>> headers);
 
-    /**
-     * http response finish
-     * @param response
-     */
-    void onHttpFinish(WXResponse response);
-  }
+        /**
+         * headers received
+         */
+        void onHeadersReceived(int statusCode, Map<String, List<String>> headers);
+
+        /**
+         * post progress
+         *
+         * @param uploadProgress
+         */
+        void onHttpUploadProgress(int uploadProgress);
+
+        /**
+         * response loaded length (bytes), full length should read from headers (content-length)
+         *
+         * @param loadedLength
+         */
+        void onHttpResponseProgress(int loadedLength);
+
+        /**
+         * http response finish
+         *
+         * @param response
+         */
+        void onHttpFinish(WXResponse response);
+    }
 }
