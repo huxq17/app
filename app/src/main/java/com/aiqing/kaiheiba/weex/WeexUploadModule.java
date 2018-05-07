@@ -76,26 +76,28 @@ public class WeexUploadModule extends WXModule {
                     public void accept(PutObjectResult putObjectResult) throws Exception {
                         String avatarUrl = OssToken.Client.getObjectKey(type, file.getName());
                         list.add(avatarUrl);
+
                         uploadedSize++;
                         if (uploadedSize == imgs.size()) {
                             jsCallback.invoke(list.toArray());
                         }
-                        if (file.exists()) {
-                            file.delete();
-                            fileScan(WXEnvironment.getApplication(), file.getAbsolutePath());
-                        }
+                        deleteTempFile(file);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (file.exists()) {
-                            file.delete();
-                            fileScan(WXEnvironment.getApplication(), file.getAbsolutePath());
-                        }
+                        deleteTempFile(file);
                         throwable.printStackTrace();
                         Toast.makeText(WXEnvironment.getApplication(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void deleteTempFile(File file) {
+        if (file.getName().contains("resize") && file.exists()) {
+            file.delete();
+            fileScan(WXEnvironment.getApplication(), file.getAbsolutePath());
+        }
     }
 
     public Observable<PutObjectResult> updateAvatar(final String type, final OssToken.OSSBean ossBean, final File file) {

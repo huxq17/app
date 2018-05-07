@@ -8,8 +8,6 @@ import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import okhttp3.Call;
@@ -88,12 +86,8 @@ public class WXHttpAdapter implements IWXHttpAdapter {
                         if (listener != null) {
                             WXResponse wxResponse = new WXResponse();
                             int statusCode = response.code();
-                            if (call.request().method().equalsIgnoreCase("HEAD")) {
-                                Map<String, List<String>> headers = response.headers().toMultimap();
-                                listener.onVerifyCache(request, headers);
-                                return;
-                            }
                             wxResponse.statusCode = String.valueOf(statusCode);
+                            listener.onHeadersReceived(statusCode,response.headers().toMultimap());
                             ResponseBody body = response.body();
                             if (body == null) {
                                 wxResponse.errorMsg = "body为空";

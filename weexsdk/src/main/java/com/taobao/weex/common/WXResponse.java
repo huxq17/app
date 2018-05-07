@@ -22,35 +22,34 @@ import java.util.Map;
 
 public class WXResponse {
 
-  /**
-   * Status code
-   */
-  public String statusCode;
+    /**
+     * Status code
+     */
+    public String statusCode;
 
-  /**
-   * Byte stream fetched from the connection
-   */
-  public String data;
+    /**
+     * Byte stream fetched from the connection
+     */
+    public String data;
 
-  public byte[] originalData;
+    public byte[] originalData;
 
-  /**
-   * Server internal error
-   */
-  public String errorCode;
+    /**
+     * Server internal error
+     */
+    public String errorCode;
 
-  /**
-   * Server error message
-   */
-  public String errorMsg;
+    /**
+     * Server error message
+     */
+    public String errorMsg;
 
-  /**
-   * Message for toast
-   */
-  public String toastMsg;
-
-  /**
-   * Parameter for further extension.
-   */
-  public Map<String, Object> extendParams;
+    /**
+     * Message for toast
+     */
+    public String toastMsg;
+    /**
+     * Parameter for further extension.
+     */
+    public Map<String, Object> extendParams;
 }

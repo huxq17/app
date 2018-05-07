@@ -38,11 +38,12 @@ public class CacheDBService {
         return instance;
     }
 
-    public synchronized void updateCache(String url, String md5, String content) {
+    public synchronized void updateCache(String url, String md5, String content, String ims) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put("url", url);
         values.put("md5", md5);
+        values.put("ims", ims);
         values.put("content", content);
 
         database.replace(CacheDBHelper.JS_CACHE_TABLE_NAME, null, values);
@@ -52,13 +53,14 @@ public class CacheDBService {
 
     public synchronized CacheBean getCachebyUrl(String url) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        String sql = "select url,md5,content from " + CacheDBHelper.JS_CACHE_TABLE_NAME + " where url=?";
+        String sql = "select url,md5,ims,content from " + CacheDBHelper.JS_CACHE_TABLE_NAME + " where url=?";
         Cursor cursor = database.rawQuery(sql, new String[]{url});
         CacheBean cacheBean = null;
         while (cursor.moveToNext()) {
             String md5 = cursor.getString(1);
-            String content = cursor.getString(2);
-            cacheBean = new CacheBean(url, md5, content);
+            String ims = cursor.getString(2);
+            String content = cursor.getString(3);
+            cacheBean = new CacheBean(url, md5, content, ims);
         }
         cursor.close();
         database.close();

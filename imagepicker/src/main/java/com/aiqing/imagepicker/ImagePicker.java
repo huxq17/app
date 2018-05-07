@@ -16,9 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Patterns;
 import android.webkit.MimeTypeMap;
 
 import com.aiqing.imagepicker.media.ImageConfig;
@@ -311,7 +309,6 @@ public class ImagePicker {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //robustness code
         if (passResult(requestCode)) {
             return;
         }
@@ -332,18 +329,18 @@ public class ImagePicker {
             case REQUEST_LAUNCH_IMAGE_LIBRARY:
                 uri = data.getData();
                 String realPath = getRealPathFromURI(uri);
-                final boolean isUrl = !TextUtils.isEmpty(realPath) &&
-                        Patterns.WEB_URL.matcher(realPath).matches();
-                if (realPath == null || isUrl) {
-                    try {
-                        File file = createFileFromURI(uri);
-                        realPath = file.getAbsolutePath();
-                        uri = Uri.fromFile(file);
-                    } catch (Exception e) {
-                        imagePickerListener.onError("Could not read photo");
-                        return;
-                    }
-                }
+//                final boolean isUrl = !TextUtils.isEmpty(realPath) &&
+//                        Patterns.WEB_URL.matcher(realPath).matches();
+//                if (realPath == null || isUrl) {
+//                    try {
+//                        File file = createFileFromURI(uri);
+//                        realPath = file.getAbsolutePath();
+//                        uri = Uri.fromFile(file);
+//                    } catch (Exception e) {
+//                        imagePickerListener.onError("Could not read photo");
+//                        return;
+//                    }
+//                }
                 imageConfig = imageConfig.withOriginalFile(new File(realPath));
                 break;
 

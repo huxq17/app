@@ -13,7 +13,7 @@ public class CacheDBHelper extends SQLiteOpenHelper {
     }
 
     public CacheDBHelper(Context context, String dbName) {
-        super(context, dbName, null, 1);
+        super(context, dbName, null, 2);
     }
 
     /**
@@ -29,7 +29,7 @@ public class CacheDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + JS_CACHE_TABLE_NAME + "(url char primary key,md5 char,content char)");
+        db.execSQL("create table " + JS_CACHE_TABLE_NAME + "(url char primary key,md5 char,ims char,content char)");
     }
 
     @Override

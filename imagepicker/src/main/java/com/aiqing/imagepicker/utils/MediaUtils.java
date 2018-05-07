@@ -35,6 +35,7 @@ public class MediaUtils {
                        @NonNull final boolean forceLocal) {
         final String filename = new StringBuilder("image-")
                 .append(UUID.randomUUID().toString())
+                .append(options.getString("temp", ""))
                 .append(".jpg")
                 .toString();
 
@@ -58,9 +59,9 @@ public class MediaUtils {
     public static long getBitmapsize(Bitmap bitmap) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-            return bitmap.getByteCount()/1024/1024;
+            return bitmap.getByteCount() / 1024 / 1024;
         }
-        return bitmap.getRowBytes() * bitmap.getHeight()/1024/1024;
+        return bitmap.getRowBytes() * bitmap.getHeight() / 1024 / 1024;
 
     }
 
@@ -75,8 +76,8 @@ public class MediaUtils {
         imageOptions.inScaled = false;
         imageOptions.inSampleSize = 1;
         if (imageConfig.maxWidth != 0 || imageConfig.maxHeight != 0) {
-            while ((imageConfig.maxWidth == 0 || initialWidth > 2 * imageConfig.maxWidth) &&
-                    (imageConfig.maxHeight == 0 || initialHeight > 2 * imageConfig.maxHeight)) {
+            while ((imageConfig.maxWidth == 0 || initialWidth > imageConfig.maxWidth) &&
+                    (imageConfig.maxHeight == 0 || initialHeight > imageConfig.maxHeight)) {
                 imageOptions.inSampleSize *= 2;
                 initialHeight /= 2;
                 initialWidth /= 2;
@@ -136,6 +137,7 @@ public class MediaUtils {
         scaledPhoto.compress(Bitmap.CompressFormat.JPEG, result.quality, bytes);
 
         final boolean forceLocal = requestCode == REQUEST_LAUNCH_IMAGE_CAPTURE;
+        options.putString("temp", "resize");
         final File resized = createNewFile(context, options, !forceLocal);
 
         if (resized == null) {

@@ -31,37 +31,39 @@ import java.util.Map;
  */
 public class WXHttpUtil {
 
-  private static String sDefautUA = null;
+    private static String sDefautUA = null;
 
-  public static final String KEY_USER_AGENT = "user-agent";
+    public static final String KEY_USER_AGENT = "user-agent";
+    public static final String KEY_IF_MODIFIED_SINCE = "if-modified-since";
+    public static final String KEY_LAST_MODIFIED = "last-modified";
 
-  public static String assembleUserAgent(Context ctx,Map<String, String> config) {
-    if (TextUtils.isEmpty(sDefautUA)) {
-      StringBuilder builder = new StringBuilder();
-      builder.append(config.get(WXConfig.sysModel))
-          .append("(Android/")
-          .append(config.get(WXConfig.sysVersion))
-          .append(")")
-          .append(" ")
+    public static String assembleUserAgent(Context ctx, Map<String, String> config) {
+        if (TextUtils.isEmpty(sDefautUA)) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(config.get(WXConfig.sysModel))
+                    .append("(Android/")
+                    .append(config.get(WXConfig.sysVersion))
+                    .append(")")
+                    .append(" ")
 
-          .append(TextUtils.isEmpty(config.get(WXConfig.appGroup)) ? "" : config.get(WXConfig.appGroup))
-          .append("(")
-          .append(TextUtils.isEmpty(config.get(WXConfig.appName)) ? "" : config.get(WXConfig.appName))
-          .append("/")
-          .append(config.get(WXConfig.appVersion))
-          .append(")")
-          .append(" ")
+                    .append(TextUtils.isEmpty(config.get(WXConfig.appGroup)) ? "" : config.get(WXConfig.appGroup))
+                    .append("(")
+                    .append(TextUtils.isEmpty(config.get(WXConfig.appName)) ? "" : config.get(WXConfig.appName))
+                    .append("/")
+                    .append(config.get(WXConfig.appVersion))
+                    .append(")")
+                    .append(" ")
 
-          .append("Weex/")
-          .append(config.get(WXConfig.weexVersion))
-          .append(" ")
+                    .append("Weex/")
+                    .append(config.get(WXConfig.weexVersion))
+                    .append(" ")
 
-          .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : config.get(WXConfig.externalUserAgent))
-          .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : " ")
+                    .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : config.get(WXConfig.externalUserAgent))
+                    .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : " ")
 
-          .append(WXViewUtils.getScreenWidth(ctx) + "x" + WXViewUtils.getScreenHeight(ctx));
-      sDefautUA = builder.toString();
+                    .append(WXViewUtils.getScreenWidth(ctx) + "x" + WXViewUtils.getScreenHeight(ctx));
+            sDefautUA = builder.toString();
+        }
+        return sDefautUA;
     }
-    return sDefautUA;
-  }
 }

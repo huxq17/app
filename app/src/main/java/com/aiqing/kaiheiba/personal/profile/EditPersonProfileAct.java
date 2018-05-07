@@ -200,7 +200,7 @@ public class EditPersonProfileAct extends BaseActivity {
                                 toast("头像上传成功");
                                 String avatarUrl = OssToken.Client.getObjectKey("avatar", tempFile.getName());
                                 setAvatar(avatarUrl);
-                                if (tempFile.exists()) {
+                                if (tempFile.getName().contains("resize") && tempFile.exists()) {
                                     tempFile.delete();
                                     fileScan(App.getContext(), tempFile.getAbsolutePath());
                                 }

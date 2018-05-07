@@ -18,7 +18,7 @@ public enum ApiManager {
     private static final HashMap<Class, Object> mCachedApi = new LinkedHashMap<>();
     public static final String BASE_URL = "http://api.17kaiheiba.com/";
     public static final String TEST_BASE_URL = "http://116.62.139.161/";
-    public static final boolean ISTest = false;
+    public static final boolean ISTest = true;
     private OkHttpClient okHttpClient;
 
     public OkHttpClient getOkHttpClient() {

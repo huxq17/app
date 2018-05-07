@@ -22,31 +22,31 @@ import java.util.Map;
 
 public class WXRequest {
 
-  /**
-   * The request parameter
-   */
-  public Map<String, String> paramMap;
+    /**
+     * The request parameter
+     */
+    public Map<String, String> paramMap;
 
-  /**
-   * The request URL
-   */
-  public String url;
-  /**
-   * The request method
-   */
-  public String method;
-  /**
-   * The request body
-   */
-  public String body;
+    /**
+     * The request URL
+     */
+    public String url;
+    /**
+     * The request method
+     */
+    public String method;
+    /**
+     * The request body
+     */
+    public String body;
 
-  /**
-   * The request time out
-   */
-  public int timeoutMs = WXRequest.DEFAULT_TIMEOUT_MS;
+    /**
+     * The request time out
+     */
+    public int timeoutMs = WXRequest.DEFAULT_TIMEOUT_MS;
 
-  /**
-   * The default timeout
-   */
-  public static final int DEFAULT_TIMEOUT_MS = 3000;
+    /**
+     * The default timeout
+     */
+    public static final int DEFAULT_TIMEOUT_MS = 3000;
 }

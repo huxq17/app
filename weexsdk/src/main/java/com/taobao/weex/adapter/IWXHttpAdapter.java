@@ -42,8 +42,6 @@ public interface IWXHttpAdapter {
          */
         void onHttpStart();
 
-        void onVerifyCache(WXRequest request,Map<String, List<String>> headers);
-
         /**
          * headers received
          */
