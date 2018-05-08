@@ -25,6 +25,7 @@ import com.aiqing.kaiheiba.widget.tablayout.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValueChangeListener, NumberPicker.Formatter {
@@ -101,7 +102,7 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
     }
 
     private void initDatePicker() {
-        selectMonth = 4;
+        selectMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
         mDatePicker.setFormatter(this);
         mDatePicker.setOnValueChangedListener(this);
         mDatePicker.setMinValue(1);

@@ -86,6 +86,11 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         loadJs();
     }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return rootView;
+    }
+
     private void loadJs() {
         if (isSucceeded) return;
         Map<String, Object> options = new HashMap<>();
@@ -100,15 +105,6 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         }
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (rootView.getParent() != null) {
-            ((ViewGroup) rootView.getParent()).removeAllViews();
-        }
-        return rootView;
-    }
-
     public static WeexFragment newInstance(String url) {
         Bundle args = new Bundle();
         args.putString(WXSDKInstance.BUNDLE_URL, getRoot() + url);
@@ -119,6 +115,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
 
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
+        rootView.removeAllViews();
         rootView.addView(view);
     }
 
@@ -150,5 +147,14 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
+        if (rootView == null) return;
+        rootView.removeAllViews();
+        View.inflate(getActivity(), R.layout.layout_error, rootView)
+                .findViewById(R.id.bt_retry).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadJs();
+            }
+        });
     }
 }

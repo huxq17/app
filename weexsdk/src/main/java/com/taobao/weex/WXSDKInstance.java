@@ -144,8 +144,6 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
     public long mRenderStartNanos;
     public int mExecJSTraceId = WXTracing.nextId();
 
-    private CacheBean mCacheBean;
-
     /**
      * for network tracker
      */
@@ -607,11 +605,10 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
         if (wxRequest.paramMap == null) {
             wxRequest.paramMap = new HashMap<String, String>();
         }
-
-        mCacheBean = CacheDBService.getInstance(mContext).getCachebyUrl(wxRequest.url.split("\\?")[0]);
-        if (mCacheBean != null && !TextUtils.isEmpty(mCacheBean.content)) {
-            renderInternal(pageName, mCacheBean.content, options, jsonInitData, flag);
-            wxRequest.paramMap.put(KEY_IF_MODIFIED_SINCE, mCacheBean.ims);
+        CacheBean cacheBean = CacheDBService.getInstance(mContext).getCachebyUrl(CacheBean.getKeyByUrl(wxRequest.url));
+        if (cacheBean != null && !TextUtils.isEmpty(cacheBean.content)) {
+            renderInternal(pageName, cacheBean.content, renderOptions, jsonInitData, flag);
+            wxRequest.paramMap.put(KEY_IF_MODIFIED_SINCE, cacheBean.ims);
         }
         wxRequest.paramMap.put(KEY_USER_AGENT, WXHttpUtil.assembleUserAgent(mContext, WXEnvironment.getConfig()));
         WXHttpListener httpListener =
@@ -1426,7 +1423,6 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
             mScrollView = null;
             mContext = null;
             mRenderListener = null;
-            mCacheBean = null;
             isDestroy = true;
             mStatisticsListener = null;
             if (responseHeaders != null) {
@@ -1776,19 +1772,17 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
 
         public void onVerifyCache(String template) {
             String contentMD5 = getContentMD5();
-            if (mCacheBean == null) {
+            CacheBean cacheBean = CacheDBService.getInstance(mContext).getCachebyUrl(CacheBean.getKeyByUrl(mBundleUrl));
+            if (cacheBean == null) {
                 render2(template);
-                WXLogUtils.e("1 rend new bundleUrl = " + mBundleUrl );
                 return;
             }
-            String localContentMD5 = mCacheBean.md5;
-            String content = mCacheBean.content;
+            String localContentMD5 = cacheBean.md5;
+            String content = cacheBean.content;
             if (TextUtils.isEmpty(contentMD5) || !contentMD5.equals(localContentMD5) || TextUtils.isEmpty(content)) {
                 render2(template);
-                WXLogUtils.e("2 rend new bundleUrl = " + mBundleUrl + ";contentMD5=" + contentMD5 + ";localContentMD5=" + localContentMD5);
                 return;
             }
-            WXLogUtils.e("render from cache = " + mBundleUrl );
         }
 
         private void render2(String template) {
@@ -1796,7 +1790,7 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
             List<String> ifModifySinces = this.instance.responseHeaders.get(KEY_LAST_MODIFIED);
             if (ifModifySinces != null) {
                 String ims = ifModifySinces.get(0);
-                CacheDBService.getInstance(mContext).updateCache(mBundleUrl, getContentMD5(), template, ims);
+                CacheDBService.getInstance(mContext).updateCache(CacheBean.getKeyByUrl(mBundleUrl), getContentMD5(), template, ims);
             }
         }
 

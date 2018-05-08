@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.aiqing.kaiheiba.R;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -34,6 +35,10 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
 //
 //            }
 //        });
+        render();
+    }
+
+    private void render() {
         mWXSDKInstance.renderByUrl(getPackageName(), data.toString(), null, null, WXRenderStrategy.APPEND_ASYNC);
     }
 
@@ -53,6 +58,8 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
         setContentView(view);
+//        view.setFitsSystemWindows(true);
+//        AndroidBug5497Workaround.assistActivity(this);
     }
 
     @Override
@@ -65,6 +72,13 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
+        setContentView(R.layout.layout_error);
+        findViewById(R.id.bt_retry).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                render();
+            }
+        });
     }
 
     @Override

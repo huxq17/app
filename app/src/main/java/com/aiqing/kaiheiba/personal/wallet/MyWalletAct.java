@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +13,8 @@ import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
+
+import java.math.BigDecimal;
 
 import io.reactivex.functions.Consumer;
 import user.UserService;
@@ -69,13 +70,9 @@ public class MyWalletAct extends BaseActivity {
                 .subscribe(new Consumer<WalletApi.WalletBean>() {
                     @Override
                     public void accept(WalletApi.WalletBean walletBean) throws Exception {
-                        int money = 0;
-                        String wMoney = walletBean.getMoney();
-                        if (!TextUtils.isEmpty(wMoney)) {
-                            money = (int) Double.parseDouble(wMoney);
-                        }
-                        tvMoney.setText("价值" + money + " (元)");
-                        tvBao.setText(money * 10 + "包");
+                        String wMoney =walletBean.getMoney();
+                        tvMoney.setText(new StringBuilder("价值").append(wMoney).append(" (元)"));
+                        tvBao.setText(getLingShiBao(wMoney) + "包");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -83,6 +80,28 @@ public class MyWalletAct extends BaseActivity {
                         throwable.printStackTrace();
                     }
                 });
+    }
+
+    public String getLingShiBao(String amount) {
+        String currency = amount.replaceAll("\\$|\\￥|\\,", "");  //处理包含, ￥ 或者$的金额
+        int index = currency.indexOf(".");
+        int length = currency.length();
+        Long amLong = 0l;
+        int scale = 0;
+        if (index == -1) {
+            amLong = Long.valueOf(currency + "00");
+        } else if (length - index >= 3) {
+            amLong = Long.valueOf((currency.substring(0, index + 3)).replace(".", ""));
+            scale=1;
+        } else if (length - index == 2) {
+            amLong = Long.valueOf((currency.substring(0, index + 2)).replace(".", "") + 0);
+        } else {
+            amLong = Long.valueOf((currency.substring(0, index + 1)).replace(".", "") + "00");
+        }
+        int fen = amLong.intValue();
+        String result = BigDecimal.valueOf(fen).
+                divide(new BigDecimal(10), scale, BigDecimal.ROUND_HALF_DOWN).toString();
+        return result;
     }
 
     public static void start(Context context) {
