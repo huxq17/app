@@ -84,6 +84,9 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
         mWxInstance.registerRenderListener(this);
         isFirst = true;
         loadJs();
+        if (mWxInstance != null) {
+            mWxInstance.onActivityCreate();
+        }
     }
 
     @Override
@@ -120,6 +123,15 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mWxInstance != null) {
+            mWxInstance.onActivityDestroy();
+        }
+    }
+
+
+    @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
         isSucceeded = true;
     }
@@ -131,6 +143,33 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
             loadJs();
         }
         isFirst = false;
+        if (mWxInstance != null) {
+            mWxInstance.onActivityResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mWxInstance != null) {
+            mWxInstance.onActivityPause();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mWxInstance != null) {
+            mWxInstance.onActivityStart();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mWxInstance != null) {
+            mWxInstance.onActivityStop();
+        }
     }
 
     @Override

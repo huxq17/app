@@ -63,6 +63,7 @@ public class RegisterAct extends BaseActivity implements View.OnClickListener {
         cbPassVisibility = findViewById(R.id.cb_pass_visiblity);
         cbGetMobileCode = findViewById(R.id.cb_get_mobile_code);
         cbProtocol = findViewById(R.id.cb_protocol);
+        cbProtocol.setChecked(true);
         cbPassVisibility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -1,20 +1,26 @@
 package com.aiqing.kaiheiba.weex;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.aiqing.kaiheiba.R;
+import com.aiqing.kaiheiba.common.BaseActivity;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 
-public class WeexActivity extends AppCompatActivity implements IWXRenderListener {
+import java.util.HashMap;
+import java.util.Map;
+
+public class WeexActivity extends BaseActivity implements IWXRenderListener {
     protected WXSDKInstance mWXSDKInstance;
     public static String DATA_KEY = "data_key";
     private Uri data;
@@ -38,6 +44,37 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         render();
     }
 
+    boolean isVisiableForLast = false;
+
+    public void addOnSoftKeyBoardVisibleListener(Activity activity) {
+        final View decorView = activity.getWindow().getDecorView();
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                decorView.getWindowVisibleDisplayFrame(rect);
+                //计算出可见屏幕的高度
+                int displayHight = rect.bottom - rect.top;
+                //获得屏幕整体的高度
+                int hight = decorView.getHeight();
+                //获得键盘高度
+                int keyboardHeight = hight - displayHight;
+                boolean visible = (double) displayHight / hight < 0.8;
+                if (visible != isVisiableForLast) {
+                    if (visible) {
+                        if (mWXSDKInstance != null) {
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("keyboardHeight", keyboardHeight);
+                            mWXSDKInstance.fireGlobalEventCallback("SoftKeyBoardHeight", params);
+                        }
+                    }
+//                    listener.onSoftKeyBoardVisible(visible,keyboardHeight );
+                }
+                isVisiableForLast = visible;
+            }
+        });
+    }
+
     private void render() {
         mWXSDKInstance.renderByUrl(getPackageName(), data.toString(), null, null, WXRenderStrategy.APPEND_ASYNC);
     }
@@ -58,6 +95,7 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
         setContentView(view);
+        addOnSoftKeyBoardVisibleListener(this);
 //        view.setFitsSystemWindows(true);
 //        AndroidBug5497Workaround.assistActivity(this);
     }

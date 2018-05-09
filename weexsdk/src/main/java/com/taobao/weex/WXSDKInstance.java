@@ -564,6 +564,8 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
         WXSDKManager.getInstance().setCrashInfo(WXEnvironment.WEEX_CURRENT_KEY, pageName);
 
         WXSDKManager.getInstance().createInstance(this, template, renderOptions, jsonInitData);
+//        WXSDKManager.getInstance().destroy();
+//        WXSDKManager.getInstance().destroyInstance();
         mRendered = true;
     }
 
@@ -714,7 +716,7 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
                 mContext.sendBroadcast(intent);
             }
             // mRendered = false;
-            //    destroy();
+//                destroy();
             // renderInternal(mPackage, mTemplate, mOptions, mJsonInitData, mFlag);
             // refreshInstance("{}");
         }
@@ -1787,9 +1789,9 @@ public class WXSDKInstance implements IWXActivityStateListener, DomContext, View
 
         private void render2(String template) {
             render(pageName, template, options, jsonInitData, flag);
-            List<String> ifModifySinces = this.instance.responseHeaders.get(KEY_LAST_MODIFIED);
-            if (ifModifySinces != null) {
-                String ims = ifModifySinces.get(0);
+            List<String> ifModifySince = this.instance.responseHeaders.get(KEY_LAST_MODIFIED);
+            if (ifModifySince != null) {
+                String ims = ifModifySince.get(0);
                 CacheDBService.getInstance(mContext).updateCache(CacheBean.getKeyByUrl(mBundleUrl), getContentMD5(), template, ims);
             }
         }

@@ -9,6 +9,7 @@ import com.aiqing.kaiheiba.personal.invite.InviteFriendAct;
 import com.aiqing.kaiheiba.personal.profile.EditPersonProfileAct;
 import com.aiqing.kaiheiba.personal.relationship.MyFansAct;
 import com.aiqing.kaiheiba.personal.relationship.MyFollowAct;
+import com.aiqing.kaiheiba.personal.wallet.ChargeAct;
 import com.aiqing.kaiheiba.personal.wallet.MyWalletAct;
 import com.aiqing.kaiheiba.personal.wallet.TradeRecordAct;
 import com.aiqing.kaiheiba.settings.FeedbackAct;
@@ -42,6 +43,8 @@ public class WeexJumpModule extends WXModule {
             LoginAct.start(WXEnvironment.getApplication());
         } else if (type.equals("9")) {
             jumpTo(FeedbackAct.class);
+        } else if (type.equals("10")) {
+            jumpTo(ChargeAct.class);
         }
     }
 
