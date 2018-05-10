@@ -46,6 +46,7 @@ public class ImagePicker {
 
     public static final int REQUEST_LAUNCH_IMAGE_CAPTURE = 13001;
     public static final int REQUEST_LAUNCH_IMAGE_LIBRARY = 13002;
+    public static final int REQUEST_LAUNCH_IMAGE_CROP = 13005;
     public static final int REQUEST_LAUNCH_VIDEO_LIBRARY = 13003;
     public static final int REQUEST_LAUNCH_VIDEO_CAPTURE = 13004;
     public static final int REQUEST_PERMISSIONS_FOR_CAMERA = 14001;
@@ -241,7 +242,6 @@ public class ImagePicker {
 
             final File original = createNewFile(application, this.options, false);
             imageConfig = imageConfig.withOriginalFile(original);
-
             cameraCaptureURI = RealPathUtil.compatUriFromFile(application, imageConfig.original);
             if (cameraCaptureURI == null) {
                 imagePickerListener.onError("Couldn't get file path for photo");
@@ -308,6 +308,18 @@ public class ImagePicker {
         }
     }
 
+    private void cropPicture(Uri uri, int width, int height) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", true);
+        intent.putExtra("scale", true);
+        intent.putExtra("outputX", width);
+        intent.putExtra("outputY", height);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra("return-data", false);
+        getActivity().startActivityForResult(intent, REQUEST_LAUNCH_IMAGE_CROP);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (passResult(requestCode)) {
             return;
@@ -317,6 +329,15 @@ public class ImagePicker {
         if (resultCode != Activity.RESULT_OK) {
             removeUselessFiles(requestCode, imageConfig);
             imagePickerListener.onCancel();
+            switch (requestCode) {
+                case REQUEST_LAUNCH_IMAGE_CAPTURE:
+                case REQUEST_LAUNCH_IMAGE_CROP:
+                    if (imageConfig.original.exists()) {
+                        imageConfig.original.delete();
+                        fileScan(application, imageConfig.original.getAbsolutePath());
+                    }
+                    break;
+            }
             return;
         }
 
@@ -324,8 +345,11 @@ public class ImagePicker {
         switch (requestCode) {
             case REQUEST_LAUNCH_IMAGE_CAPTURE:
                 uri = cameraCaptureURI;
+                cropPicture(uri, 1600, 1600);
+                return;
+            case REQUEST_LAUNCH_IMAGE_CROP:
+                uri = cameraCaptureURI;
                 break;
-
             case REQUEST_LAUNCH_IMAGE_LIBRARY:
                 uri = data.getData();
                 String realPath = getRealPathFromURI(uri);
@@ -376,7 +400,7 @@ public class ImagePicker {
         // don't create a new file if contraint are respected
         imageConfig.maxWidth = 1600;
         imageConfig.maxHeight = 1600;
-        if (imageConfig.useOriginal(initialWidth, initialHeight, result.currentRotation)) {
+        if (requestCode == REQUEST_LAUNCH_IMAGE_LIBRARY || imageConfig.useOriginal(initialWidth, initialHeight, result.currentRotation)) {
             bundle.putInt("width", initialWidth);
             bundle.putInt("height", initialHeight);
             fileScan(application, imageConfig.original.getAbsolutePath());
@@ -424,7 +448,7 @@ public class ImagePicker {
     private boolean passResult(int requestCode) {
         return imagePickerListener == null || (cameraCaptureURI == null && requestCode == REQUEST_LAUNCH_IMAGE_CAPTURE)
                 || (requestCode != REQUEST_LAUNCH_IMAGE_CAPTURE && requestCode != REQUEST_LAUNCH_IMAGE_LIBRARY
-                && requestCode != REQUEST_LAUNCH_VIDEO_LIBRARY && requestCode != REQUEST_LAUNCH_VIDEO_CAPTURE);
+                && requestCode != REQUEST_LAUNCH_VIDEO_LIBRARY && requestCode != REQUEST_LAUNCH_VIDEO_CAPTURE && requestCode != REQUEST_LAUNCH_IMAGE_CROP);
     }
 
     private void updatedResultResponse(Bundle bundle, final Uri uri,

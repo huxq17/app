@@ -51,6 +51,7 @@ public class WeexUploadModule extends WXModule {
         }
         uploadedSize = 0;
         list = new ArrayList<>();
+        Observable.just(imgs.toArray(new String[imgs.size()]));
         for (int i = 0; i < imgs.size(); i++) {
             com.alibaba.fastjson.JSONObject img = (JSONObject) imgs.get(i);
             Uri uri = Uri.parse(img.getString("path"));

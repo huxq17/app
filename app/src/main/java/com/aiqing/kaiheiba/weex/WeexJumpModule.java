@@ -2,6 +2,7 @@ package com.aiqing.kaiheiba.weex;
 
 import android.content.Intent;
 
+import com.aiqing.kaiheiba.imagebrowser.ImageBrowserActivity;
 import com.aiqing.kaiheiba.login.LoginAct;
 import com.aiqing.kaiheiba.personal.download.MyBusinessInfLocal;
 import com.aiqing.kaiheiba.personal.download.MyDownloadAct;
@@ -14,10 +15,15 @@ import com.aiqing.kaiheiba.personal.wallet.MyWalletAct;
 import com.aiqing.kaiheiba.personal.wallet.TradeRecordAct;
 import com.aiqing.kaiheiba.settings.FeedbackAct;
 import com.aiqing.kaiheiba.settings.SettingsAct;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 import user.UserService;
 
@@ -57,6 +63,14 @@ public class WeexJumpModule extends WXModule {
                 downloadurl.hashCode(), downName, downIcon, downloadurl);
         MyDownloadAct.start(WXEnvironment.getApplication(), myBusinessInfLocal);
 
+    }
+
+    @JSMethod
+    public void viewPicture(Map<String, Object> map) {
+        JSONArray imgs = (JSONArray) map.get("imgs");
+        int index = (int) map.get("index");
+        ArrayList<String> imageList = new ArrayList<>(Arrays.asList(imgs.toArray(new String[imgs.size()])));
+        ImageBrowserActivity.start(WXEnvironment.getApplication(), index, imageList);
     }
 
     public void jumpToPersonalProfile() {

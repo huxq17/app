@@ -110,6 +110,7 @@ public class WeexActivity extends BaseActivity implements IWXRenderListener {
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
+        if (instance.mEnd) return;
         setContentView(R.layout.layout_error);
         findViewById(R.id.bt_retry).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -70,7 +70,7 @@ public class MyWalletAct extends BaseActivity {
                 .subscribe(new Consumer<WalletApi.WalletBean>() {
                     @Override
                     public void accept(WalletApi.WalletBean walletBean) throws Exception {
-                        String wMoney =walletBean.getMoney();
+                        String wMoney = walletBean.getMoney();
                         tvMoney.setText(new StringBuilder("价值").append(wMoney).append(" (元)"));
                         tvBao.setText(getLingShiBao(wMoney) + "包");
                     }
@@ -92,16 +92,19 @@ public class MyWalletAct extends BaseActivity {
             amLong = Long.valueOf(currency + "00");
         } else if (length - index >= 3) {
             amLong = Long.valueOf((currency.substring(0, index + 3)).replace(".", ""));
-            scale=1;
+            scale = 1;
         } else if (length - index == 2) {
             amLong = Long.valueOf((currency.substring(0, index + 2)).replace(".", "") + 0);
         } else {
             amLong = Long.valueOf((currency.substring(0, index + 1)).replace(".", "") + "00");
         }
         int fen = amLong.intValue();
-        String result = BigDecimal.valueOf(fen).
-                divide(new BigDecimal(10), scale, BigDecimal.ROUND_HALF_DOWN).toString();
-        return result;
+        if (fen != 0) {
+            return BigDecimal.valueOf(fen).
+                    divide(new BigDecimal(10), scale, BigDecimal.ROUND_HALF_DOWN).toString();
+        } else {
+            return "0";
+        }
     }
 
     public static void start(Context context) {

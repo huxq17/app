@@ -214,6 +214,10 @@
             android:exported="false"
             android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+        <activity
+            android:name=".imagebrowser.ImageBrowserActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="behind" />
     </application>
 
 </manifest>

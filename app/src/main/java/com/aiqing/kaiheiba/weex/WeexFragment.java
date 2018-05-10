@@ -33,7 +33,6 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     public static final String mypageurl = "myPage.weex.js";
     public static final String onlineUrl = "http://weex.17kaiheiba.com/bundle/";
     public static final String userMainUrl = "userHome.weex.js";
-    private boolean isSucceeded = false;
     private boolean isFirst = true;
 
     public WeexFragment() {
@@ -45,7 +44,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
             case "debug":
                 String baseUrl = SPUtils.getString(context, "baseUrl");
                 if (TextUtils.isEmpty(baseUrl)) {
-//                    baseUrl = "http://172.16.244.1:8080/dist/";
+                    baseUrl = "http://172.16.244.1:8080/dist/";
 //                    baseUrl = "http://192.168.1.115:8080/dist/";
                 }
                 if (TextUtils.isEmpty(baseUrl)) {
@@ -75,7 +74,6 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isSucceeded = false;
         View view = View.inflate(getActivity(), R.layout.frg_weex, null);
         rootView = view.findViewById(R.id.weex_frg_container);
         url = getArguments() == null ? null : getArguments().getString(WXSDKInstance.BUNDLE_URL);
@@ -95,7 +93,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
     }
 
     private void loadJs() {
-        if (isSucceeded) return;
+        if (mWxInstance.mEnd) return;
         Map<String, Object> options = new HashMap<>();
         options.put(WXSDKInstance.BUNDLE_URL, url);
         mWxInstance.renderByUrl(getActivity().getPackageName(), url, options, null, WXRenderStrategy.APPEND_ASYNC);
@@ -133,7 +131,6 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
 
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
-        isSucceeded = true;
     }
 
     @Override
@@ -186,6 +183,7 @@ public class WeexFragment extends BaseFragment implements IWXRenderListener {
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
+        if(mWxInstance.mEnd)return;
         if (rootView == null) return;
         rootView.removeAllViews();
         View.inflate(getActivity(), R.layout.layout_error, rootView)
