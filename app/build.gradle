@@ -104,4 +104,5 @@ dependencies {
     implementation 'com.alibaba.android:bindingx_weex_plugin:1.0.1'
 
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
+
 }

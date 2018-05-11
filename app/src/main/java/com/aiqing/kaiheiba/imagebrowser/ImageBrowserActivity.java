@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
+import com.aiqing.kaiheiba.widget.XCircleIndicator;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
@@ -22,19 +23,26 @@ public class ImageBrowserActivity extends BaseActivity {
 
     private ViewPager imageViewPager;
     private int lastPostion;
+    private XCircleIndicator indicator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser_images);
-        int position = getIntent().getIntExtra(IMAG_INDEX_KEY, 0);
-
-        List<String> imageList = getIntent().getStringArrayListExtra(IMAGS_KEY);
-
+        int position;
+        List<String> imageList;
+        if (savedInstanceState != null) {
+            position = savedInstanceState.getInt(IMAG_INDEX_KEY, 0);
+            imageList = savedInstanceState.getStringArrayList(IMAGS_KEY);
+        } else {
+            position = getIntent().getIntExtra(IMAG_INDEX_KEY, 0);
+            imageList = getIntent().getStringArrayListExtra(IMAGS_KEY);
+        }
         imageViewPager = findViewById(R.id.vp_image_browser);
+        indicator = findViewById(R.id.xCircleIndicator);
         imageViewPager.setOffscreenPageLimit(2);
 
-        final PagerAdapter adapter = new ImageBroswerPagerAdapter(imageList);
+        final PagerAdapter adapter = new ImageBrowserPagerAdapter(imageList);
         imageViewPager.setAdapter(adapter);
         lastPostion = position;
         imageViewPager.setCurrentItem(lastPostion);
@@ -56,7 +64,7 @@ public class ImageBrowserActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                indicator.setCurrentPage(position);
             }
 
             @Override
@@ -64,12 +72,26 @@ public class ImageBrowserActivity extends BaseActivity {
 
             }
         });
-
+        indicator.initData(adapter.getCount(), 0);
+        indicator.setCurrentPage(lastPostion);
     }
 
-    public static void start(Context context, int index, ArrayList<String> imgs) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        imageViewPager.setAdapter(null);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(IMAGS_KEY, getIntent().getStringArrayListExtra(IMAGS_KEY));
+        outState.putInt(IMAG_INDEX_KEY, lastPostion);
+    }
+
+    public static void start(Context context, int index, ArrayList<String> imgList) {
         Intent intent = new Intent(context, ImageBrowserActivity.class);
-        intent.putStringArrayListExtra(IMAGS_KEY, imgs);
+        intent.putStringArrayListExtra(IMAGS_KEY, imgList);
         intent.putExtra(IMAG_INDEX_KEY, index);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

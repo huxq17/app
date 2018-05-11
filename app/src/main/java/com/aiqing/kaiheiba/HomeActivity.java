@@ -19,6 +19,7 @@ import com.aiqing.kaiheiba.utils.FragmentController;
 import com.aiqing.kaiheiba.utils.VersionUpgrade;
 import com.aiqing.kaiheiba.weex.WeexFragment;
 import com.aiqing.kaiheiba.weex.WeexWindowSizeModule;
+import com.bumptech.glide.Glide;
 import com.huxq17.xprefs.XPrefs;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nimlib.sdk.NimIntent;
@@ -132,6 +133,9 @@ public class HomeActivity extends UI {
     private void replaceFragment(Fragment fragment) {
         curFragment = fragment;
         fragmentController.show(fragment, R.id.main_fragment_layout);
+        if (fragment != imFragment) {
+            Glide.get(this).clearMemory();
+        }
     }
 
     public static void start(Context context) {

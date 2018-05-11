@@ -60,7 +60,6 @@ public class BitmapDecoder {
         int[] bound = decodeBound(pathName);
         // pick request bound
         int[] reqBound = pickReqBoundWithRatio(bound, reqBounds, ratio);
-
         int width = bound[0];
         int height = bound[1];
         int reqWidth = reqBound[0];

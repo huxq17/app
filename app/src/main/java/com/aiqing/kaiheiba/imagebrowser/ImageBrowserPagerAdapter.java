@@ -10,14 +10,10 @@ import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.List;
 
-/**
- * Created by Administrator on 2018/5/10.
- */
-
-public class ImageBroswerPagerAdapter extends PagerAdapter {
+public class ImageBrowserPagerAdapter extends PagerAdapter {
     List<String> imgs;
 
-    public ImageBroswerPagerAdapter(List<String> imgs) {
+    public ImageBrowserPagerAdapter(List<String> imgs) {
         this.imgs = imgs;
     }
 
@@ -41,9 +37,8 @@ public class ImageBroswerPagerAdapter extends PagerAdapter {
 
         String imgUrl = imgs.get(position);
         PhotoView photoView = new PhotoView(container.getContext());
-        ServiceAgency.getService(ImageLoader.class).loadImage(imgUrl, photoView);
+        ServiceAgency.getService(ImageLoader.class).loadBigImage(imgUrl, photoView);
         container.addView(photoView);
         return photoView;
-
     }
 }
