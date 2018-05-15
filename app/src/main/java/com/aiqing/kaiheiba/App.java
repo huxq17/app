@@ -37,10 +37,13 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.utils.LogLevel;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.IOException;
 
 import user.UserService;
+
+import static com.netease.nimlib.sdk.util.NIMUtil.getProcessName;
 
 public class App extends MultiDexApplication {
     private static Context context;
@@ -83,6 +86,7 @@ public class App extends MultiDexApplication {
         UserInfo userInfo = com.aiyou.toolkit.sp.XPrefs.get(UserInfo.class);
         userInfo.isOnline = true;
         XPrefs.saveAll(userInfo);
+        initBugly();
         // ... your codes
         if (NIMUtil.isMainProcess(this)) {
             // 注意：以下操作必须在主进程中进行
@@ -118,6 +122,20 @@ public class App extends MultiDexApplication {
         } else {
             return null;
         }
+    }
+
+    private void initBugly() {
+        Context context = getApplicationContext();
+        // 获取当前包名
+        String packageName = context.getPackageName();
+        // 获取当前进程名
+        String processName = getProcessName(context);
+        // 设置是否为上报进程
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
+        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+        // 初始化Bugly
+        CrashReport.initCrashReport(context, "c1c2c30ff2", false, strategy);
+//        CrashReport.testJavaCrash();
     }
 
     private void initUiKit() {

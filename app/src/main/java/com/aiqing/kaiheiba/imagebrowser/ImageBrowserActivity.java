@@ -12,7 +12,8 @@ import android.view.View;
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.widget.XCircleIndicator;
-import com.github.chrisbanes.photoview.PhotoView;
+import com.github.piasy.biv.BigImageViewer;
+import com.github.piasy.biv.view.BigImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class ImageBrowserActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser_images);
+        BigImageViewer.initialize(com.github.piasy.biv.loader.glide.GlideImageLoader.with(getApplicationContext()));
         int position;
         List<String> imageList;
         if (savedInstanceState != null) {
@@ -54,9 +56,9 @@ public class ImageBrowserActivity extends BaseActivity {
                     int childCount = imageViewPager.getChildCount();
                     for (int i = 0; i < childCount; i++) {
                         View childAt = imageViewPager.getChildAt(i);
-                        if (childAt != null && childAt instanceof PhotoView) {
-                            PhotoView photoView = (PhotoView) childAt;
-                            photoView.getAttacher().setScale(1);
+                        if (childAt != null && childAt instanceof BigImageView) {
+                            BigImageView bigImageView = (BigImageView) childAt;
+                            bigImageView.getSSIV().resetScaleAndCenter();
                         }
                     }
                 }
@@ -80,6 +82,12 @@ public class ImageBrowserActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         imageViewPager.setAdapter(null);
+    }
+
+    @Override
+    protected void onPause() {
+        overridePendingTransition(0,0);
+        super.onPause();
     }
 
     @Override

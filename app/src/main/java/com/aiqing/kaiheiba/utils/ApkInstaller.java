@@ -22,7 +22,6 @@ public enum ApkInstaller {
     // use for android N
     private String authority;
 
-
     public ApkInstaller init(Apk apk, Context context) {
         this.apk = apk;
         contextWeakRef = new WeakReference<>(context);

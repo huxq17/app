@@ -20,9 +20,11 @@ import pub.devrel.easypermissions.EasyPermissions;
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     TextView navTitle;
     View navShadow;
+    private boolean isRunning = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        isRunning = true;
 //        this.getWindow().getDecorView().setBackgroundDrawable(null);
         super.onCreate(savedInstanceState);
         if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
@@ -59,6 +61,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRunning = false;
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return !isRunning;
+    }
+
     public void log(String msg) {
         Log.e("tag", msg);
     }
@@ -91,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public void loadBase(Context context) {

@@ -104,7 +104,7 @@ public class XCircleIndicator extends View {
 	private int mTextHeight;
 
 	private void initColors(int fillColor, int strokeColor) {
-		mPaintStroke.setStyle(Style.STROKE);
+		mPaintStroke.setStyle(Style.FILL);
 		mPaintStroke.setColor(strokeColor);
 		mPaintFill.setStyle(Style.FILL);
 		mPaintFill.setColor(fillColor);
@@ -112,7 +112,6 @@ public class XCircleIndicator extends View {
 		mPaintText.setTextSize(18 * mDensity);
 		FontMetrics fm = mPaintText.getFontMetrics();
 		mTextHeight = (int) Math.ceil(fm.descent - fm.top) + 2;
-		;
 	}
 
 	@Override

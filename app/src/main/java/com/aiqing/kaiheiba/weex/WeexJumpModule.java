@@ -68,7 +68,10 @@ public class WeexJumpModule extends WXModule {
     @JSMethod
     public void viewPicture(Map<String, Object> map) {
         JSONArray imgs = (JSONArray) map.get("imgs");
-        int index = (int) map.get("index");
+        int index = 0;
+        Object o = map.get("index");
+        if (o != null)
+            index = (int) map.get("index");
         ArrayList<String> imageList = new ArrayList<>(Arrays.asList(imgs.toArray(new String[imgs.size()])));
         ImageBrowserActivity.start(WXEnvironment.getApplication(), index, imageList);
     }

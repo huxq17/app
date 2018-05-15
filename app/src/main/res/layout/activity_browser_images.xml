@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:indicator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.aiqing.kaiheiba.imagebrowser.ImageBrowserViewPager
         android:id="@+id/vp_image_browser"
@@ -16,7 +17,7 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="20dp"
         indicator:indicator_circleInterval="10dp"
-        indicator:indicator_fillColor="#F96A0E"
+        indicator:indicator_fillColor="#ffffff"
         indicator:indicator_radius="4dp"
-        indicator:indicator_strokeColor="#cecece" />
+        indicator:indicator_strokeColor="#999999" />
 </FrameLayout>
