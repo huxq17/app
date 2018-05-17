@@ -86,6 +86,7 @@ public class ImageBrowserPagerAdapter extends PagerAdapter implements View.OnLon
 
             @Override
             public void onSuccess(File image) {
+                image.setLastModified(System.currentTimeMillis());
                 imageView.setTag(image.getAbsolutePath());
                 imageView.setOnLongClickListener(ImageBrowserPagerAdapter.this);
                 imageView.setOnClickListener(ImageBrowserPagerAdapter.this);
@@ -111,18 +112,18 @@ public class ImageBrowserPagerAdapter extends PagerAdapter implements View.OnLon
         final Context context = v.getContext();
         BottomAnimDialog bottomAnimDialog = new BottomAnimDialog((Activity) context);
         int itemHeight = DensityUtil.dip2px(context, 50);
-        bottomAnimDialog.addItem(new BottomAnimDialog.Item("保存图片", new BottomAnimDialog.OnClickListener() {
-            @Override
-            public void onClick() {
-                saveImageIntoGallery(context, imagePath);
-            }
-        }).height(itemHeight))
-                .addItem(new BottomAnimDialog.Item("取消", new BottomAnimDialog.OnClickListener() {
+        bottomAnimDialog.addItem(new BottomAnimDialog.Item("保存图片").height(itemHeight))
+                .addItem(new BottomAnimDialog.Item("取消").height(itemHeight))
+                .setOnItemClickListener(new BottomAnimDialog.OnItemClickListener() {
                     @Override
-                    public void onClick() {
+                    public void onItemClick(String text) {
+                        if (text.equals("保存图片")) {
+                            saveImageIntoGallery(context, imagePath);
+                        } else if (text.equals("取消")) {
 
+                        }
                     }
-                }).height(itemHeight))
+                })
                 .build();
         bottomAnimDialog.show();
         return true;

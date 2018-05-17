@@ -34,6 +34,13 @@ public class BottomAnimDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
+    private OnItemClickListener onItemClickListener;
+
+    public BottomAnimDialog setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+        return this;
+    }
+
     public void build() {
         LinearLayout rootView = new LinearLayout(activity);
         rootView.setOrientation(LinearLayout.VERTICAL);
@@ -70,9 +77,11 @@ public class BottomAnimDialog extends Dialog implements View.OnClickListener {
             window.setAttributes(lp);
         }
     }
-    public static interface OnClickListener {
-        void onClick();
+
+    public interface OnItemClickListener {
+        void onItemClick(String text);
     }
+
     public static class Item {
         int id;
         String text;
@@ -80,16 +89,14 @@ public class BottomAnimDialog extends Dialog implements View.OnClickListener {
         int textSize;
         int height;
         int width;
-        OnClickListener onClickListener;
 
-        public Item(String text, OnClickListener onClickListener) {
+        public Item(String text) {
             this.text = text;
             gravity = Gravity.CENTER;
             id = IDFactory.generateId();
             this.textSize = 16;
             width = ViewGroup.LayoutParams.MATCH_PARENT;
             height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            this.onClickListener = onClickListener;
         }
 
         public Item gravity(int gravity) {
@@ -113,21 +120,14 @@ public class BottomAnimDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    public interface BottomAnimDialogListener {
-
-        void onItemClick();
-
-        void onCancel();
-    }
-
     @Override
     public void onClick(View v) {
         dismiss();
         Object tag = v.getTag();
-        if (tag == null || !(tag instanceof Item)) return;
+        if (onItemClickListener == null || tag == null || !(tag instanceof Item)) return;
         Item item = (Item) tag;
         if (item != null) {
-            item.onClickListener.onClick();
+            onItemClickListener.onItemClick(item.text);
         }
     }
 

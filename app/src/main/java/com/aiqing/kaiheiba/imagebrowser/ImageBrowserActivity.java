@@ -11,10 +11,12 @@ import android.view.View;
 
 import com.aiqing.kaiheiba.R;
 import com.aiqing.kaiheiba.common.BaseActivity;
+import com.aiqing.kaiheiba.utils.CacheDataManager;
 import com.aiqing.kaiheiba.widget.XCircleIndicator;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.view.BigImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,11 +84,13 @@ public class ImageBrowserActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         imageViewPager.setAdapter(null);
+        File glideCachedFile = new File(getExternalCacheDir(), "glide/");
+        CacheDataManager.limitFileCount(glideCachedFile, 12);
     }
 
     @Override
     protected void onPause() {
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         super.onPause();
     }
 
