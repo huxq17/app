@@ -117,7 +117,7 @@ public class LoginAct extends BaseActivity {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseObserver<User>() {
+                .subscribe(new BaseObserver<User>(this,"正在登录...") {
                     @Override
                     protected void onSuccess(User user) {
                         toast("登录成功");

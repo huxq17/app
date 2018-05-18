@@ -55,7 +55,7 @@ public class FollowAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.
                     if (v == isFollowFans) {
                         int followid = followAdapter.getData(position).getAccountFollowId();
                         ApiManager.INSTANCE.getApi(RelationshipApi.class).unfollow(followid).compose(RxSchedulers.<BaseResponse<Object>>compose())
-                                .subscribe(new BaseObserver<Object>() {
+                                .subscribe(new BaseObserver<Object>(view.getContext()) {
                                     @Override
                                     protected void onSuccess(Object o) {
                                         followAdapter.deleteData(position);

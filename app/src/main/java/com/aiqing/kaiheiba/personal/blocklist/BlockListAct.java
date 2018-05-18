@@ -11,7 +11,6 @@ import com.aiqing.kaiheiba.api.ApiManager;
 import com.aiqing.kaiheiba.api.RelationshipApi;
 import com.aiqing.kaiheiba.common.BaseActivity;
 import com.aiqing.kaiheiba.decoration.FansDivider;
-import com.aiqing.kaiheiba.personal.relationship.FansAdapter;
 import com.aiqing.kaiheiba.rxjava.BaseObserver;
 import com.aiqing.kaiheiba.rxjava.RxSchedulers;
 import com.aiqing.kaiheiba.utils.DensityUtil;
@@ -40,7 +39,7 @@ public class BlockListAct extends BaseActivity {
     public void obtainFollowers() {
         ApiManager.INSTANCE.getApi(RelationshipApi.class).getBlockedList()
                 .compose(RxSchedulers.<RelationshipApi.BlockBean>compose())
-                .subscribe(new BaseObserver<List<RelationshipApi.BlockBean.DataBean>>() {
+                .subscribe(new BaseObserver<List<RelationshipApi.BlockBean.DataBean>>(this) {
                     @Override
                     protected void onSuccess(List<RelationshipApi.BlockBean.DataBean> datas) {
                         applyData(datas);

@@ -142,7 +142,7 @@ public class EditPersonProfileAct extends BaseActivity {
                 params.put("province", getText(tvArea));
                 ApiManager.INSTANCE.getApi(UserApi.class).updateProf(params)
                         .compose(RxSchedulers.<UserApi.Bean>compose())
-                        .subscribe(new BaseObserver<Object>() {
+                        .subscribe(new BaseObserver<Object>(EditPersonProfileAct.this,"保存中...") {
                             @Override
                             protected void onSuccess(Object o) {
                                 toast("保存成功");
@@ -194,7 +194,7 @@ public class EditPersonProfileAct extends BaseActivity {
                             }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new BaseObserver<Object>() {
+                        .subscribe(new BaseObserver<Object>(EditPersonProfileAct.this,"上传中...") {
                             @Override
                             protected void onSuccess(Object bean) {
                                 toast("头像上传成功");
@@ -315,7 +315,7 @@ public class EditPersonProfileAct extends BaseActivity {
     public void obtainProf() {
         ApiManager.INSTANCE.getApi(UserApi.class).obtainProf()
                 .compose(RxSchedulers.<ProfileBean>compose())
-                .subscribe(new BaseObserver<AccountBean>() {
+                .subscribe(new BaseObserver<AccountBean>(this) {
                     @Override
                     protected void onSuccess(AccountBean accountBean) {
                         setAvatar(accountBean.getAvatar());

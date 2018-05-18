@@ -79,7 +79,7 @@ public class ForgetPassAct extends BaseActivity {
         params.put("code", getText(etCode));
         ApiManager.INSTANCE.getApi(LoginApi.class).resetPass(params)
                 .compose(RxSchedulers.<LoginApi.Bean>compose())
-                .subscribe(new BaseObserver<User>() {
+                .subscribe(new BaseObserver<User>(this) {
                     @Override
                     protected void onSuccess(User o) {
                         toast("操作成功");

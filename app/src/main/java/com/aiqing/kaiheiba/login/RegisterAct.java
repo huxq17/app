@@ -130,7 +130,7 @@ public class RegisterAct extends BaseActivity implements View.OnClickListener {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseObserver<User>() {
+                .subscribe(new BaseObserver<User>(this, "正在提交...") {
                     @Override
                     protected void onSuccess(User user) {
                         user.mobile = getText(etMobile);

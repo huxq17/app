@@ -86,7 +86,7 @@ public class UpdateProfileAct extends BaseActivity {
         params.put("province", "");
         ApiManager.INSTANCE.getApi(UserApi.class).updateProf(params)
                 .compose(RxSchedulers.<UserApi.Bean>compose())
-                .subscribe(new BaseObserver<Object>() {
+                .subscribe(new BaseObserver<Object>(this, "注册中...") {
                     @Override
                     protected void onSuccess(Object o) {
                         toast("注册成功");

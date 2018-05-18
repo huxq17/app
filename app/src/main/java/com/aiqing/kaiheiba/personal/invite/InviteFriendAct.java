@@ -81,7 +81,7 @@ public class InviteFriendAct extends BaseActivity {
         });
         ApiManager.INSTANCE.getApi(UserApi.class).getInvitors()
                 .compose(RxSchedulers.<BaseResponse<AccountBean>>compose())
-                .subscribe(new BaseObserver<AccountBean>() {
+                .subscribe(new BaseObserver<AccountBean>(this) {
                     @Override
                     protected void onSuccess(AccountBean accountBean) {
                         List<AccountBean.InviteBean> list = accountBean.invitors;

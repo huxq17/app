@@ -3,6 +3,7 @@ package com.aiqing.kaiheiba.rxjava;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 
 import com.aiqing.kaiheiba.App;
 import com.aiqing.kaiheiba.bean.BaseResponse;
@@ -18,14 +19,22 @@ public abstract class BaseObserver<T> implements Observer<BaseResponse<T>> {
     private static final String TAG = "BaseObserver";
     private ProgressDialog mDialog;
     private Disposable mDisposable;
-    private Context mContext;
 
     public BaseObserver() {
+        this(null);
     }
 
     public BaseObserver(Context context) {
-        this.mContext = context;
-        mDialog = new ProgressDialog(context);
+        this(context, "请求中...");
+    }
+
+    public BaseObserver(Context context, String msg) {
+        if (context != null) {
+            mDialog = new ProgressDialog(context);
+            if (!TextUtils.isEmpty(msg)) {
+                mDialog.setMessage(msg);
+            }
+        }
         if (mDialog != null) {
             mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -45,8 +54,8 @@ public abstract class BaseObserver<T> implements Observer<BaseResponse<T>> {
     @Override
     public void onNext(BaseResponse<T> value) {
         LogUtils.d("onNext code=" + value.getCode() + ";msg=" + value.getMsg());
+        closeDialog();
         if (value.isSuccess()) {
-            closeDialog();
             T t = value.getData();
             onSuccess(t);
         } else {

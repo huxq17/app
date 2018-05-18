@@ -35,7 +35,7 @@ public class VerifyTrueNameAct extends BaseActivity {
         ApiManager.INSTANCE.getApi(UserApi.class)
                 .verifyTrueName(UserService.getUserToken(), getText(etName), getText(etID))
                 .compose(RxSchedulers.<BaseResponse<Object>>compose())
-                .subscribe(new BaseObserver<Object>() {
+                .subscribe(new BaseObserver<Object>(this) {
                     @Override
                     protected void onSuccess(Object o) {
                         toast("验证成功");

@@ -132,7 +132,7 @@ public class TradeRecordAct extends BaseActivity implements NumberPicker.OnValue
         setDate(selectMonth);
         ApiManager.INSTANCE.getApi(WalletApi.class).queryRecordInfo(getText(tvDate))
                 .compose(RxSchedulers.<WalletApi.RecordBean>compose())
-                .subscribe(new BaseObserver<WalletApi.RecordBean.DataBean>() {
+                .subscribe(new BaseObserver<WalletApi.RecordBean.DataBean>(this) {
                     @Override
                     protected void onSuccess(WalletApi.RecordBean.DataBean dataBean) {
                         for (RecordFragment fragment : mTabContents) {

@@ -39,7 +39,7 @@ public class MyFollowAct extends BaseActivity {
     public void obtainFollowers() {
         ApiManager.INSTANCE.getApi(RelationshipApi.class).obtainFollowers()
                 .compose(RxSchedulers.<RelationshipApi.Bean>compose())
-                .subscribe(new BaseObserver<List<RelationshipApi.Bean.DataBean>>() {
+                .subscribe(new BaseObserver<List<RelationshipApi.Bean.DataBean>>(this) {
                     @Override
                     protected void onSuccess(List<RelationshipApi.Bean.DataBean> datas) {
                         applyData(datas);

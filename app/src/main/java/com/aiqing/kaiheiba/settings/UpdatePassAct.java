@@ -86,7 +86,7 @@ public class UpdatePassAct extends BaseActivity {
         ApiManager.INSTANCE.getApi(LoginApi.class)
                 .updatePass(params)
                 .compose(RxSchedulers.<LoginApi.Bean>compose())
-                .subscribe(new BaseObserver<User>() {
+                .subscribe(new BaseObserver<User>(this,"正在修改密码...") {
                     @Override
                     protected void onSuccess(User dataBean) {
                         toast("修改密码成功");

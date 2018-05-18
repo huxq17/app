@@ -37,7 +37,7 @@ public class FeedbackAct extends BaseActivity {
     private void submit(String content) {
         ApiManager.INSTANCE.getApi(FeedbackApi.class).feedback(content)
                 .compose(RxSchedulers.<SimpleBean>compose())
-                .subscribe(new BaseObserver<Object>() {
+                .subscribe(new BaseObserver<Object>(this,"正在提交...") {
                     @Override
                     protected void onSuccess(Object o) {
                         toast("提交成功");

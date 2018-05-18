@@ -32,7 +32,7 @@ public class ChargeListAdapter extends BaseRecyclerViewAdapter<ChargeListBean.Da
         ChargeListAdapter followAdapter;
         Context context;
 
-        public ViewHolder(View view, ChargeListAdapter adapter) {
+        public ViewHolder(final View view, ChargeListAdapter adapter) {
             super(view);
             context = view.getContext();
             followAdapter = adapter;
@@ -44,9 +44,10 @@ public class ChargeListAdapter extends BaseRecyclerViewAdapter<ChargeListBean.Da
                 public void onClick(View v) {
                     final int position = getAdapterPosition();
                     if (v == btBuy) {
-                        Observable<WalletApi.OrderBean> createOrder = ApiManager.INSTANCE.getApi(WalletApi.class).createOrder(followAdapter.getData(position).getID());
+                        Observable<WalletApi.OrderBean> createOrder = ApiManager.INSTANCE.getApi(WalletApi.class)
+                                .createOrder(followAdapter.getData(position).getID());
                         createOrder.compose(RxSchedulers.<WalletApi.OrderBean>compose())
-                                .subscribe(new BaseObserver<WalletApi.OrderBean.DataBean>() {
+                                .subscribe(new BaseObserver<WalletApi.OrderBean.DataBean>(view.getContext(),"正在下订单...") {
                                     @Override
                                     protected void onSuccess(WalletApi.OrderBean.DataBean dataBean) {
                                         com.aiyou.sdk.Constants.Constants.APP_ID = dataBean.getApp_id();

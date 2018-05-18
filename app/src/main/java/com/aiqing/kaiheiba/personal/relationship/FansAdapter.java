@@ -40,7 +40,7 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
         View.OnClickListener onClickListener;
         boolean isFollow = false;
 
-        public ViewHolder(View view, final FansAdapter adapter) {
+        public ViewHolder(final View view, final FansAdapter adapter) {
             super(view);
             fansAvatar = view.findViewById(R.id.fans_avatar);
             fansName = view.findViewById(R.id.fans_name);
@@ -57,7 +57,7 @@ public class FansAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bean.Da
                             int followid = dataBean.getAccountId();
                             ApiManager.INSTANCE.getApi(RelationshipApi.class).follow(followid)
                                     .compose(RxSchedulers.<BaseResponse<Object>>compose())
-                                    .subscribe(new BaseObserver<Object>() {
+                                    .subscribe(new BaseObserver<Object>(view.getContext()) {
                                         @Override
                                         protected void onSuccess(Object o) {
                                             dataBean.getAccount().setIsFollowed("1");

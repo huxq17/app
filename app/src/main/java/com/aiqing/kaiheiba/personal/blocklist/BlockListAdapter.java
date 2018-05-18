@@ -40,7 +40,7 @@ public class BlockListAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bl
         View.OnClickListener onClickListener;
         BlockListAdapter followAdapter;
 
-        public ViewHolder(View view, BlockListAdapter adapter) {
+        public ViewHolder(final View view, BlockListAdapter adapter) {
             super(view);
             followAdapter = adapter;
             fansAvatar = view.findViewById(R.id.fans_avatar);
@@ -55,7 +55,7 @@ public class BlockListAdapter extends BaseRecyclerViewAdapter<RelationshipApi.Bl
                     if (v == isFollowFans) {
                         int followid = followAdapter.getData(position).getID();
                         ApiManager.INSTANCE.getApi(RelationshipApi.class).unBlock(followid).compose(RxSchedulers.<BaseResponse<Object>>compose())
-                                .subscribe(new BaseObserver<Object>() {
+                                .subscribe(new BaseObserver<Object>(view.getContext(),"正在删除...") {
                                     @Override
                                     protected void onSuccess(Object o) {
                                         followAdapter.deleteData(position);

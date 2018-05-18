@@ -29,7 +29,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/prof_avatar"
             android:gravity="center"
-            android:text="UID:123456" />
+            android:text="UID:" />
 
         <ImageView
             android:id="@+id/prof_change_avatar"

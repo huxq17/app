@@ -33,7 +33,7 @@ public class ChargeAct extends BaseActivity implements SDKListener {
         mRvChargeList.setAdapter(mAdapter);
         ApiManager.INSTANCE.getApi(WalletApi.class).queryChargeList()
                 .compose(RxSchedulers.<ChargeListBean>compose())
-                .subscribe(new BaseObserver<ChargeListBean.DataBean>() {
+                .subscribe(new BaseObserver<ChargeListBean.DataBean>(this) {
                     @Override
                     protected void onSuccess(ChargeListBean.DataBean dataBean) {
                         mAdapter.setData(dataBean.getAndroid());
