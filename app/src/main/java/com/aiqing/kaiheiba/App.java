@@ -100,10 +100,6 @@ public class App extends MultiDexApplication {
                 WXSDKEngine.registerModule("imageUploader", WeexUploadModule.class);
                 WXSDKEngine.registerModule("sharePost", WeexShareModule.class);
                 WXSDKEngine.registerModule("windowSize", WeexWindowSizeModule.class);
-            } catch (WXException e) {
-                e.printStackTrace();
-            }
-            try {
                 BindingX.register();
             } catch (WXException e) {
                 e.printStackTrace();

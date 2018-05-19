@@ -142,7 +142,7 @@ public class EditPersonProfileAct extends BaseActivity {
                 params.put("province", getText(tvArea));
                 ApiManager.INSTANCE.getApi(UserApi.class).updateProf(params)
                         .compose(RxSchedulers.<UserApi.Bean>compose())
-                        .subscribe(new BaseObserver<Object>(EditPersonProfileAct.this,"保存中...") {
+                        .subscribe(new BaseObserver<Object>(EditPersonProfileAct.this, "保存中...") {
                             @Override
                             protected void onSuccess(Object o) {
                                 toast("保存成功");
@@ -176,7 +176,7 @@ public class EditPersonProfileAct extends BaseActivity {
                     e.printStackTrace();
                     return;
                 }
-                toastL("头像上传中...");
+//                toastL("头像上传中...");
                 ApiManager.INSTANCE.getApi(OssToken.Api.class).getToken()
                         .subscribeOn(Schedulers.io())
                         .flatMap(new Function<OssToken.Bean, ObservableSource<PutObjectResult>>() {
@@ -194,16 +194,13 @@ public class EditPersonProfileAct extends BaseActivity {
                             }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new BaseObserver<Object>(EditPersonProfileAct.this,"上传中...") {
+                        .subscribe(new BaseObserver<Object>(EditPersonProfileAct.this, "上传中...") {
                             @Override
                             protected void onSuccess(Object bean) {
-                                toast("头像上传成功");
+//                                toast("头像上传成功");
                                 String avatarUrl = OssToken.Client.getObjectKey("avatar", tempFile.getName());
                                 setAvatar(avatarUrl);
-                                if (tempFile.getName().contains("resize") && tempFile.exists()) {
-                                    tempFile.delete();
-                                    fileScan(App.getContext(), tempFile.getAbsolutePath());
-                                }
+                                deleteTempFile(tempFile);
                             }
 
                             @Override
@@ -211,10 +208,7 @@ public class EditPersonProfileAct extends BaseActivity {
                                 super.onFailed(msg);
                                 log(msg);
                                 toast(msg);
-                                if (tempFile.exists()) {
-                                    tempFile.delete();
-                                    fileScan(App.getContext(), tempFile.getAbsolutePath());
-                                }
+                                deleteTempFile(tempFile);
                             }
                         });
             }
@@ -224,6 +218,13 @@ public class EditPersonProfileAct extends BaseActivity {
 
             }
         });
+    }
+
+    private void deleteTempFile(File tempFile) {
+        if (tempFile.getName().contains("resize") && tempFile.exists()) {
+            tempFile.delete();
+            fileScan(App.getContext(), tempFile.getAbsolutePath());
+        }
     }
 
     private void setAvatar(String url) {
@@ -344,7 +345,7 @@ public class EditPersonProfileAct extends BaseActivity {
     public Observable<PutObjectResult> updateAvatar(final OssToken.OSSBean ossBean) {
         return Observable.create(new ObservableOnSubscribe<PutObjectResult>() {
             @Override
-            public void subscribe(ObservableEmitter<PutObjectResult> emitter) throws Exception {
+            public void subscribe(ObservableEmitter<PutObjectResult> emitter) {
                 OSS oss = OssToken.Client.init(EditPersonProfileAct.this.getApplicationContext(), ossBean);
                 PutObjectRequest put = new PutObjectRequest("aiqing-lianyun",
                         OssToken.Client.getObjectKey("avatar", tempFile.getName()), tempFile.getPath());
@@ -352,9 +353,18 @@ public class EditPersonProfileAct extends BaseActivity {
                     PutObjectResult putResult = oss.putObject(put);
                     emitter.onNext(putResult);
                 } catch (ClientException e) {
-                    emitter.onError(e);
+                    if (!emitter.isDisposed()) {
+                        emitter.onError(e);
+                    } else {
+                        //已经取消了上传头像，删除需要删除的缓存照片
+                        deleteTempFile(tempFile);
+                    }
                 } catch (ServiceException e) {
-                    emitter.onError(e);
+                    if (!emitter.isDisposed()) {
+                        emitter.onError(e);
+                    } else {
+                        deleteTempFile(tempFile);
+                    }
                     // 服务异常
                     Log.e("RequestId", e.getRequestId());
                     Log.e("ErrorCode", e.getErrorCode());
